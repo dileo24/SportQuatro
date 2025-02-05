@@ -1,0 +1,31 @@
+/* Elimina márgenes y rellenos predeterminados */
+html,
+body,
+#root {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden; /* Evita el desbordamiento horizontal */
+}
+
+/* Contenedor principal */
+.app-container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+/* Navbar y Footer */
+Navbar {
+	flex-shrink: 0;
+}
+
+Footer {
+	flex-shrink: 0;
+}
+
+/* Contenido principal */
+.main-content {
+	flex-grow: 1;
+	display: flex; /* Asegura que el contenido interno ocupe todo el espacio */
+}

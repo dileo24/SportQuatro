@@ -1,0 +1,10 @@
+nav {
+	padding: 0 !important;
+}
+
+@media (min-width: 992px) {
+	.navbar-collapse {
+		display: flex;
+		justify-content: flex-end;
+	}
+}
