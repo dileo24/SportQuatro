@@ -1,0 +1,63 @@
+const sharp = require("sharp");
+const express = require("express");
+const multer = require("multer");
+const { Router } = require("express");
+const path = require("path");
+
+const router = Router();
+
+const fileFilter = (req, file, callback) => {
+  const allowedTypes = [
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "video/mp4",
+    "video/mpeg",
+    "video/quicktime",
+    "application/pdf",
+  ];
+  if (allowedTypes.includes(file.mimetype)) {
+    callback(null, true);
+  } else {
+    const error = {
+      status: 400,
+      resp: "¡El formato del archivo no es válido! Solo se permiten imágenes (PNG, JPEG, JPG) o videos (MP4, MPEG, QuickTime).",
+      input: "file",
+    };
+    callback(error);
+  }
+};
+
+const helperImg = (filePath, fileName, size = 300) => {
+  const outputFilePath = path.join(__dirname, `../optimize/${fileName}`);
+  return sharp(filePath).resize(size).toFile(outputFilePath);
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, "uploads/");
+  },
+  filename: (req, file, callback) => {
+    let prefix = "";
+    if (file.mimetype.startsWith("image/")) {
+      prefix = "img";
+    } else if (file.mimetype.startsWith("video/")) {
+      prefix = "video";
+    } else if (file.mimetype === "application/pdf") {
+      prefix = "pdf";
+    }
+    const ext = file.originalname.split(".").pop();
+    callback(null, `${prefix}_${Date.now()}.${ext}`);
+  },
+});
+
+/* const upload = multer({ dest: 'uploads' }); //cargar nombre de carpeta destino*/
+
+const uploadFile = multer({ storage, fileFilter });
+router.post("/", uploadFile.single("file"), (req, res) => {
+  res.send({ status: 200, resp: "Archivo cargado." });
+});
+
+router.use("/", express.static(path.join(__dirname, "../../uploads")));
+
+module.exports = router;

@@ -1,40 +1,44 @@
 const { Auto, Categoria } = require("../../db");
 
-const updateAuto = async (req, res, next) => {
+const updateAuto = async (req, res) => {
   try {
-    const { auto } = req.body;
+    const { id } = req.params;
+    const auto = req.body;
 
-    const id = req.params.id;
     const AutoFinded = await Auto.findByPk(id);
 
-    if (AutoFinded.length !== 0) {
-      if (auto.id_categ) {
-        const categ = await Categoria.findByPk(auto.id_categ);
-        if (!categ) {
-          throw new Error(`Categoria con id ${auto.id_categ} no encontrada.`);
+    if (!AutoFinded) {
+      return res.status(404).json({ status: "404", resp: `Auto con id: ${id} no encontrado.` });
+    }
+
+    if (auto.id_categ) {
+      let categorias;
+      if (Array.isArray(auto.id_categ)) {
+        categorias = await Categoria.findAll({
+          where: { id: auto.id_categ },
+        });
+        if (categorias.length !== auto.id_categ.length) {
+          return res.status(404).json({ status: "404", resp: "Algunas categorías no fueron encontradas." });
         }
-        await AutoFinded.setCategoria(categ);
+      } else {
+        categorias = await Categoria.findByPk(auto.id_categ);
+        if (!categorias) {
+          return res.status(404).json({ status: "404", resp: `Categoría con id ${auto.id_categ} no encontrada.` });
+        }
       }
 
-      await AutoFinded.update(
-        {
-          auto: auto || AutoFinded.auto,
-        },
-        { where: { id: AutoFinded.id } },
-      );
-      req.body = {
-        status: 200,
-        resp: `El auto ${auto.modelo} se ha actualizado exitosamente`,
-      };
-      next();
-    } else {
-      throw new Error(`Auto con id: ${id} no encontrado`);
+      await AutoFinded.setCategorias(categorias);
     }
+
+    await AutoFinded.update(auto);
+
+    return res.status(200).json({
+      status: "200",
+      resp: `El auto ${auto.modelo || AutoFinded.modelo} se ha actualizado exitosamente.`,
+    });
+
   } catch (error) {
-    req.body = {
-      status: 400,
-      resp: error.message,
-    };
+    return res.status(500).json({ status: "500", resp: error.message });
   }
 };
 

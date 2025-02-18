@@ -12,6 +12,15 @@ const server = express();
 
 server.name = "API";
 
+// Deshabilitamos el uso de etag para evitar respuestas 304
+server.disable("etag");
+
+// Middleware para agregar encabezado Cache-Control a todas las respuestas
+server.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store"); // No almacenar en caché
+  next();
+});
+
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 server.use(bodyParser.json({ limit: "50mb" }));
 server.use(cookieParser());

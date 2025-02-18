@@ -6,20 +6,12 @@ const updateAuto = require("../middlewares/autos/updateAuto");
 
 const router = Router();
 
-router.get("/", allAutos, async (req, res) => {
-  return res.json(req.body);
-});
+router.get("/", allAutos);
 
-router.post("/", createAuto, async (req, res) => {
-  return res.status(200).send(req.body);
-});
+router.post("/", createAuto);
 
-router.delete("/:id", deleteAuto, async (req, res) => {
-  return res.json(req.body);
-});
+router.delete("/:id", deleteAuto);
 
-router.put("/:id", updateAuto, async (req, res) => {
-  return res.json(req.body);
-});
+router.put("/:id", updateAuto);
 
 module.exports = router;

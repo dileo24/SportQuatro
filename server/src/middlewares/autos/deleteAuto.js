@@ -1,23 +1,26 @@
 const { Auto } = require("../../db");
 
-const deleteAuto = async (req, res, next) => {
+const deleteAuto = async (req, res) => {
   try {
-    const id = req.params.id;
+    let { id } = req.params;
+    id = Number(id);
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ status: "400", resp: "El ID debe ser un número válido." });
+    }
+
     const auto = await Auto.findByPk(id);
     if (!auto) {
-      throw new Error(`No existe el auto con ID: ${id}`);
-    } else {
-      await Auto.destroy({ where: { id: auto.id } });
-      req.body = {
-        status: 200,
-        resp: `El auto ${auto.modelo} ha sido eliminado`,
-      };
-      next();
+      return res.status(404).json({ status: "404", resp: "Auto no encontrado." });
     }
+    await auto.destroy();
+
+    return res.status(200).json({
+      status: "200",
+      resp: `El auto con ID ${id} ha sido eliminado correctamente.`,
+    });
+
   } catch (err) {
-    console.log(err);
-    req.body = { status: 404, resp: err.message };
-    next();
+    return res.status(500).json({ status: "500", resp: err.message });
   }
 };
 

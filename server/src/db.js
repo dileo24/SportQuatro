@@ -29,13 +29,15 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 const { Auto, Categoria } = sequelize.models;
 
-Categoria.hasMany(Auto, {
-  foreignKey: { name: "categ", allowNull: false },
+Categoria.belongsToMany(Auto, {
+  through: "Auto_Categoria",
+  foreignKey: "categoriaId",
   as: "autos",
 });
-Auto.belongsTo(Categoria, {
-  foreignKey: "categ",
-  as: "categoria",
+Auto.belongsToMany(Categoria, {
+  through: "Auto_Categoria",
+  foreignKey: "autoId",
+  as: "categorias",
 });
 
 module.exports = {

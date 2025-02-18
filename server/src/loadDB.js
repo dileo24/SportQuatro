@@ -2,13 +2,13 @@ const autos = require("./json/autos.json");
 const categorias = require("./json/categorias.json");
 const { encrypt } = require("./helpers/handleCrypt");
 const { Admin, Auto, Categoria } = require("./db.js");
+require("dotenv").config();
 
 async function fnCategorias() {
   for (const categ of categorias) {
     await Categoria.create(categ);
   }
 }
-
 async function fnAutos() {
   for (const auto of autos) {
     const newAuto = await Auto.create({
@@ -23,10 +23,14 @@ async function fnAutos() {
       img: auto.img,
     });
 
-    const categ = await Categoria.findByPk(auto.id_categ);
-    await newAuto.setCategoria(categ);
+    const categorias = await Categoria.findAll({
+      where: { id: auto.id_categ },
+    });
+
+    await newAuto.addCategorias(categorias);
   }
 }
+
 
 async function fnAdmin() {
   const admin = await Admin.create({
