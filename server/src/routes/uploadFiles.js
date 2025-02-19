@@ -7,11 +7,7 @@ const path = require("path");
 const router = Router();
 
 const fileFilter = (req, file, callback) => {
-  const allowedTypes = [
-    "image/png",
-    "image/jpeg",
-    "image/jpg",
-  ];
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
   if (allowedTypes.includes(file.mimetype)) {
     callback(null, true);
   } else {
@@ -43,11 +39,13 @@ const storage = multer.diskStorage({
   },
 });
 
-/* const upload = multer({ dest: 'uploads' }); //cargar nombre de carpeta destino*/
+const upload = multer({ dest: "uploads" }); //cargar nombre de carpeta destino
 
 const uploadFile = multer({ storage, fileFilter });
-router.post("/", uploadFile.single("file"), (req, res) => {
-  res.send({ status: 200, resp: "Archivo cargado." });
+
+router.post("/", uploadFile.single("file"), async (req, res) => {
+  const fileName = req.file.filename;
+  res.status(200).json({ status: 200, resp: true, fileName });
 });
 
 router.use("/", express.static(path.join(__dirname, "../../uploads")));

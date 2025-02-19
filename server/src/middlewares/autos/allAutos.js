@@ -12,11 +12,17 @@ const allAutos = async (req, res, next) => {
       ],
       order: [["precio", "ASC"]],
     });
-
+    
+    const autosWithImgs = allAutos.map(auto => {
+      console.log(auto.img); 
+      return auto.toJSON();  
+    });
+    
     res.status(200).json({
       status: 200,
-      resp: allAutos,
+      resp: autosWithImgs,
     });
+    
   } catch (err) {
     res.status(500).json({ error: "Error interno del servidor" });
   }

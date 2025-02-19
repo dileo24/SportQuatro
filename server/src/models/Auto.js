@@ -43,8 +43,8 @@ module.exports = sequelize => {
         allowNull: false,
       },
       img: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type:  DataTypes.JSON,
+        allowNull: false, defaultValue: [],
       },
     },
     {
