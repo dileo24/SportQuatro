@@ -11,17 +11,13 @@ const fileFilter = (req, file, callback) => {
     "image/png",
     "image/jpeg",
     "image/jpg",
-    "video/mp4",
-    "video/mpeg",
-    "video/quicktime",
-    "application/pdf",
   ];
   if (allowedTypes.includes(file.mimetype)) {
     callback(null, true);
   } else {
     const error = {
       status: 400,
-      resp: "°El formato del archivo no es v·lido! Solo se permiten im·genes (PNG, JPEG, JPG) o videos (MP4, MPEG, QuickTime).",
+      resp: "El formato del archivo no es v√°lido! Solo se permiten im√°genes (PNG, JPEG, JPG).",
       input: "file",
     };
     callback(error);
@@ -41,10 +37,6 @@ const storage = multer.diskStorage({
     let prefix = "";
     if (file.mimetype.startsWith("image/")) {
       prefix = "img";
-    } else if (file.mimetype.startsWith("video/")) {
-      prefix = "video";
-    } else if (file.mimetype === "application/pdf") {
-      prefix = "pdf";
     }
     const ext = file.originalname.split(".").pop();
     callback(null, `${prefix}_${Date.now()}.${ext}`);
