@@ -1,8 +1,133 @@
-.container {
+/* Contenedor principal */
+.home-container {
 	margin: 0;
 	padding: 0;
 	width: 100vw;
 	height: 100vh;
-	border: 2px solid red;
-	margin: 0 !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.containerPrincipal {
+	display: flex;
+}
+
+.texto {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 2vw;
+}
+
+.texto1 {
+	color: rgba(255, 0, 0, 0.925);
+	font-size: 4.5vw;
+	font-weight: bolder;
+	text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.329);
+	margin-bottom: 1vw;
+}
+
+.texto2 {
+	color: rgb(228, 228, 228);
+	font-size: 1.3vw;
+	text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.329);
+}
+
+.imgDivContainer {
+	width: 40%;
+	height: 30%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.imgDiv {
+	height: 250px;
+	width: 100%;
+	background-color: #101010;
+	border-radius: 10%;
+	box-shadow: 16px 14px 20px #0000008c;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.imgDiv::before {
+	content: "";
+	position: absolute;
+	height: 300px;
+	width: 100%;
+	background-image: conic-gradient(red 20deg, transparent 120deg);
+	animation: rotar 2s linear infinite;
+}
+
+@keyframes rotar {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(-360deg);
+	}
+}
+
+.imgDiv::after {
+	content: "";
+	position: absolute;
+	height: 240px;
+	width: 98%;
+	background-image: url("../../assets/imgHero.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	border-radius: 10%;
+	box-shadow: inset 16px 14px 20px #0000008c;
+}
+
+.button-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 50px;
+	margin-top: -15vh;
+	margin-bottom: 10vh;
+	transition: 0.5s;
+	letter-spacing: 1px;
+}
+button {
+	width: 12vw;
+	height: 100%;
+	letter-spacing: 1px;
+	font-size: 19px !important;
+	font-weight: 500;
+	background: #bd0101ab;
+	border-radius: 2.5px !important;
+	border: none !important;
+	color: #d8d8d8;
+	cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+button:hover {
+    transform: scale(1.05);
+	border: none !important;
+
+}
+
+@media (max-width: 991px) {
+	.imgDivContainer {
+		display: none;
+	}
+
+	.texto1 {
+		font-size: 15vw;
+		font-weight: bolder;
+	}
+
+	.texto2 {
+		font-size: 5vw;
+	}
 }

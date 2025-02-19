@@ -3,10 +3,10 @@ import "./Navbar.css";
 
 export default function Navbar() {
 	return (
-		<nav className="navbar navbar-expand-lg bg-body-tertiary">
+		<nav className="navbar navbar-expand-lg bg-dark bg-gradient fixed-top">
 			<div className="container-fluid">
 				<a className="navbar-brand" href="#">
-					<img src="src/assets/logo_sinFondo.png" alt="logo" width="150" />
+					<img src="src/assets/logo_sinFondo_blanco.png" alt="logo" width="150" />
 				</a>
 				<button
 					className="navbar-toggler"
@@ -21,22 +21,22 @@ export default function Navbar() {
 				</button>
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav mb-2 mb-lg-0">
-						<li className="nav-item">
+						<li className="nav-item me-2">
 							<a className="nav-link active" aria-current="page" href="#">
 								Inicio
 							</a>
 						</li>
-						<li className="nav-item">
+						<li className="nav-item me-2">
 							<a className="nav-link active" aria-current="page" href="#">
 								Vehículos
 							</a>
 						</li>
-						<li className="nav-item">
+						<li className="nav-item me-2">
 							<a className="nav-link" href="#">
 								Sobre la agencia
 							</a>
 						</li>
-						<li className="nav-item">
+						<li className="nav-item me-2">
 							<a className="nav-link" href="#">
 								Beneficios y servicios
 							</a>

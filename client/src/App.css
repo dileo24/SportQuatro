@@ -1,21 +1,17 @@
-/* Elimina márgenes y rellenos predeterminados */
-html,
-body,
-#root {
+body{
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	overflow-x: hidden; /* Evita el desbordamiento horizontal */
+	overflow-x: hidden
 }
 
-/* Contenedor principal */
 .app-container {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Navbar y Footer */
+
 Navbar {
 	flex-shrink: 0;
 }
@@ -24,8 +20,13 @@ Footer {
 	flex-shrink: 0;
 }
 
-/* Contenido principal */
+
 .main-content {
 	flex-grow: 1;
-	display: flex; /* Asegura que el contenido interno ocupe todo el espacio */
+	display: flex;
+	margin-top: 1rem;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)), 
+                      url("./assets/bg_home.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
 }
