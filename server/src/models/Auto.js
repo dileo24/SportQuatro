@@ -39,7 +39,11 @@ module.exports = sequelize => {
         allowNull: false,
       },
       precio: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      destacar: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
       img: {

@@ -20,6 +20,7 @@ async function fnAutos() {
       transmision: auto.transmision,
       combustible: auto.combustible,
       precio: auto.precio,
+      destacar: auto.destacar,
       img: auto.img,
     });
 

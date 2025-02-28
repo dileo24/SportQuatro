@@ -1,8 +1,9 @@
 const { Auto, Categoria } = require("../../db");
 
-const allAutos = async (req, res, next) => {
+const getAutosDestacados = async (req, res, next) => {
   try {
-    const allAutos = await Auto.findAll({
+    const autosDestacados = await Auto.findAll({
+      where: { destacar: true },
       include: [
         {
           model: Categoria,
@@ -12,16 +13,14 @@ const allAutos = async (req, res, next) => {
       ],
       order: [["precio", "ASC"]],
     });
-    
+
     res.status(200).json({
       status: 200,
-      resp: allAutos,
+      resp: autosDestacados,
     });
-    
   } catch (err) {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
 
-module.exports = allAutos;
-
+module.exports = getAutosDestacados;
