@@ -1,0 +1,14 @@
+.nov-cards-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+
+@media (max-width: 991px) {
+    .nov-cards-container{
+        flex-direction: column;
+        height: 160vh;
+    }    
+}

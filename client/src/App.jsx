@@ -1,5 +1,5 @@
 import Footer from "./components/Footer/Footer";
-import Home from "./components/Home/Home";
+import Home from "./views/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import "./App.css";
 import "bootstrap/dist/js/bootstrap.min.js";
