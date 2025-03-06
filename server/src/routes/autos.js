@@ -4,10 +4,13 @@ const createAuto = require("../middlewares/autos/createAuto");
 const deleteAuto = require("../middlewares/autos/deleteAuto");
 const updateAuto = require("../middlewares/autos/updateAuto");
 const getAutosDestacados = require("../middlewares/autos/getAutosDestacados");
+const getAutoById = require("../middlewares/autos/getAutoByID");
 
 const router = Router();
 
 router.get("/", allAutos);
+
+router.get("/:id", getAutoById);
 
 router.get("/destacados", getAutosDestacados);
 
