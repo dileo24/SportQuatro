@@ -10,9 +10,9 @@ const router = Router();
 
 router.get("/", allAutos);
 
-router.get("/:id", getAutoById);
-
 router.get("/destacados", getAutosDestacados);
+
+router.get("/:id", getAutoById);
 
 router.post("/", createAuto);
 

@@ -1,13 +1,15 @@
 import React from "react";
 import "./Navbar.css";
+import { Link } from "react-router-dom";
+import imgLogo from "../../assets/logo_sinFondo_blanco.png";
 
 export default function Navbar() {
 	return (
 		<nav className="navbar navbar-expand-lg bg-dark bg-gradient fixed-top">
 			<div className="container-fluid">
-				<a className="navbar-brand" href="#">
-					<img src="src/assets/logo_sinFondo_blanco.png" alt="logo" width="150" />
-				</a>
+				<Link to={`/`} className="navbar-brand">
+					<img src={imgLogo} alt="logo" width="150" />
+				</Link>
 				<button
 					className="navbar-toggler"
 					type="button"

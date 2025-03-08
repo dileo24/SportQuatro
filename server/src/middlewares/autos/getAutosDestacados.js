@@ -19,7 +19,7 @@ const getAutosDestacados = async (req, res, next) => {
       resp: autosDestacados,
     });
   } catch (err) {
-    res.status(500).json({ error: "Error interno del servidor" });
+    res.status(500).json({ err });
   }
 };
 

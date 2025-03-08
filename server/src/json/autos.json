@@ -9,7 +9,7 @@
     "combustible": "Nafta",
     "precio": "10.500.000",
     "destacar": false,
-    "img": ["img_1739928491469.jpeg"],
+    "img": ["img_1.jpg"],
     "id_categ": ["3"]
   },
   {
@@ -22,7 +22,7 @@
     "combustible": "Nafta",
     "precio": "23.400.000",
     "destacar": false,
-    "img": ["img_1739928491469.jpeg"],
+    "img": ["img_2.jpg"],
     "id_categ": ["4"]
   },
   {
@@ -35,7 +35,7 @@
     "combustible": "Nafta",
     "precio": "25.000.000",
     "destacar": true,
-    "img": ["img_1739928491469.jpeg"],
+    "img": ["img_3.jpg"],
     "id_categ": ["6", "3"]
   },
   {
@@ -48,7 +48,7 @@
     "combustible": "Diésel",
     "precio": "52.900.000",
     "destacar": false,
-    "img": ["img_1739928491469.jpeg"],
+    "img": ["img_4.jpg"],
     "id_categ": ["2"]
   },
   {
@@ -58,10 +58,10 @@
     "anio": "2018",
     "km": "102.000",
     "transmision": "Automática",
-    "combustible": "Nafta",
+    "combustible": "Nafta/GNC",
     "precio": "23.450.000",
     "destacar": true,
-    "img": ["img_1739928491469.jpeg"],
+    "img": ["img_5.jpg"],
     "id_categ": ["1", "3"]
   },
   {
@@ -74,7 +74,7 @@
     "combustible": "Nafta",
     "precio": "8.000.000",
     "destacar": false,
-    "img": ["img_1739928491469.jpeg"],
+    "img": ["img_6.jpg"],
     "id_categ": ["6", "7"]
   },
   {
@@ -84,10 +84,10 @@
     "anio": "2025",
     "km": "0",
     "transmision": "Manual",
-    "combustible": "Nafta/GNC",
+    "combustible": "Nafta",
     "precio": "8.000.000",
     "destacar": true,
-    "img": ["img_1739928491469.jpeg"],
+    "img": ["img_7.jpeg"],
     "id_categ": ["5", "6"]
   }
 ]

@@ -1,5 +1,6 @@
 import React from "react";
 import "./Card.css";
+import { Link } from "react-router-dom";
 
 export default function Card({ auto }) {
 	const imageUrl = `http://localhost:3001/files/${auto.img[0]}`;
@@ -14,9 +15,9 @@ export default function Card({ auto }) {
 					<p>${auto.precio}</p>
 					<p>{auto.km} km</p>
 				</div>
-				<a href="#" className="btn btn-primary">
+				<Link to={`/detalle/${auto.id}`} className="btn btn-primary">
 					Ver más
-				</a>
+				</Link>
 			</div>
 		</div>
 	);

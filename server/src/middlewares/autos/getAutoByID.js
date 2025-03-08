@@ -22,7 +22,7 @@ const getAutoById = async (req, res) => {
       resp: autos,
     });
   } catch (err) {
-    res.status(500).json({ error: "Error interno del servidor" });
+    res.status(500).json({ error: err });
   }
 };
 
