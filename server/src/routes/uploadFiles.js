@@ -21,8 +21,11 @@ const fileFilter = (req, file, callback) => {
 };
 
 const helperImg = (filePath, fileName, size = 300) => {
-  const outputFilePath = path.join(__dirname, `../optimize/${fileName}`);
-  return sharp(filePath).resize(size).toFile(outputFilePath);
+  const outputFilePath = path.join(__dirname, `../optimize/${fileName}.webp`); // Guardar en formato WebP
+  return sharp(filePath)
+    .resize(size)
+    .toFormat("webp") // Convertir a WebP
+    .toFile(outputFilePath);
 };
 
 const storage = multer.diskStorage({
@@ -34,19 +37,28 @@ const storage = multer.diskStorage({
     if (file.mimetype.startsWith("image/")) {
       prefix = "img";
     }
-    const ext = file.originalname.split(".").pop();
-    callback(null, `${prefix}_${Date.now()}.${ext}`);
+    callback(null, `${prefix}_${Date.now()}.webp`);
   },
 });
 
-const upload = multer({ dest: "uploads" }); //cargar nombre de carpeta destino
+const upload = multer({ dest: "uploads" });
 
 const uploadFile = multer({ storage, fileFilter });
 
 router.post("/", uploadFile.single("file"), async (req, res) => {
-  const fileName = req.file.filename;
-  res.status(200).json({ status: 200, resp: true, fileName });
+  try {
+    const fileName = req.file.filename;
+    const filePath = req.file.path;
+
+    await helperImg(filePath, fileName);
+
+    res.status(200).json({ status: 200, resp: true, fileName: `${fileName}` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 500, resp: "Error al procesar la imagen.", error: error.message });
+  }
 });
+
 
 router.use("/", express.static(path.join(__dirname, "../../uploads")));
 
