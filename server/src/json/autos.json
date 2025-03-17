@@ -94,7 +94,7 @@
     "combustible": "Nafta",
     "precio": "8.000.000",
     "destacar": true,
-    "img": ["img_7.jpeg"],
+    "img": ["img_7.webp"],
     "id_categ": ["5", "6"]
   }
 ]

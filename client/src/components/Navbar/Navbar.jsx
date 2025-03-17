@@ -5,7 +5,7 @@ import imgLogo from "../../assets/logo_sinFondo_blanco.png";
 
 export default function Navbar() {
 	return (
-		<nav className="navbar navbar-expand-lg bg-dark bg-gradient fixed-top">
+		<nav className="navbar navbar-expand-lg fixed-top">
 			<div className="container-fluid">
 				<Link to={`/`} className="navbar-brand">
 					<img src={imgLogo} alt="logo" width="150" />

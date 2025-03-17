@@ -1,0 +1,49 @@
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+form {
+	background: white;
+	padding: 2rem;
+	border-radius: 8px;
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 400px;
+	height: 18rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.btn {
+	height: 3rem;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.is-invalid {
+	border: 1px solid red;
+	background-color: #ffe6e6;
+}
+
+.invalid-feedback {
+	color: red;
+	font-size: 14px;
+	margin-top: 5px;
+}
+
+@media (max-width: 991px) {
+	.container {
+		padding: 0.5rem;
+		height: auto;
+		margin-top: 5rem;
+	}
+
+	form {
+		padding: 1.5rem;
+		width: 90%;
+	}
+}
