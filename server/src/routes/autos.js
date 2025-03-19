@@ -5,12 +5,15 @@ const deleteAuto = require("../middlewares/autos/deleteAuto");
 const updateAuto = require("../middlewares/autos/updateAuto");
 const getAutosDestacados = require("../middlewares/autos/getAutosDestacados");
 const getAutoById = require("../middlewares/autos/getAutoByID");
+const getAutosByCategoria = require("../middlewares/autos/getAutoByCateg");
 
 const router = Router();
 
 router.get("/", allAutos);
 
 router.get("/destacados", getAutosDestacados);
+
+router.get("/relacionados", getAutosByCategoria);
 
 router.get("/:id", getAutoById);
 
