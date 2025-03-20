@@ -1,19 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { 
-  Container, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Grid, 
-  CircularProgress,
-  Box,
-  Chip,
-  Paper,
-  useTheme,
-  IconButton
-} from "@mui/material";
+import {Container,Card,CardContent,Typography,Grid,CircularProgress,Box,Paper,useTheme,IconButton} from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
@@ -27,10 +15,48 @@ export default function Detalle() {
   const [images, setImages] = useState([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const theme = useTheme();
+  const [relacionados, setRelacionados] = useState([]);
+
 
   useEffect(() => {
     fetchAuto();
   }, [id]);
+
+
+  useEffect(() => {
+    if (auto?.categorias?.length) {
+      const categoriasIds = auto.categorias.map(cat => cat.id);
+      fetchRelacionados(categoriasIds, setRelacionados);
+    }
+  }, [auto]);
+
+  const fetchRelacionados = async (idCategorias, setRelacionados) => {
+    try {
+      const categorias = idCategorias.map(String); // Convertir IDs a strings
+      const response = await axios.post(
+        "http://localhost:3001/autos/relacionados",
+        { id_categ: categorias },
+        { headers: { "Content-Type": "application/json" } }
+      );
+  
+      setRelacionados(response.data);
+      console.log("Autos relacionados:", response.data);
+    } catch (error) {
+      console.error("Error al obtener los autos relacionados:", error);
+    }
+  };
+  
+
+const mostrarCategorias = () => {
+  return auto.categorias.map((categoria) => (
+    <div key={categoria.id}>
+      <p>{categoria.categ}</p>
+    </div>
+  ));
+};
+
+
+  console.log(auto)
 
   const fetchAuto = async () => {
     try {
@@ -63,12 +89,11 @@ export default function Detalle() {
         position: 'absolute',
         [direction === 'left' ? 'left' : 'right']: 16,
         top: '50%',
-        // transform: 'translateY(-50%)',
         bgcolor: 'rgba(255, 255, 255, 0.25)',
         boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
-        borderRadius: '50%', // Hace que el botón sea circular
-        width: 40, // Ajusta el tamaño del círculo
-        height: 40, // Ajusta el tamaño del círculo
+        borderRadius: '50%', 
+        width: 40, 
+        height: 40, 
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -118,41 +143,43 @@ export default function Detalle() {
               boxShadow: '0 8px 32px rgba(0,0,0,0.12)'
             }}
           >
-            <Carousel
-              index={selectedImageIndex}
-              onChange={(index) => setSelectedImageIndex(index)}
-              animation="slide"
-              navButtonsAlwaysVisible
-              indicators={false}
-              NavButton={({ onClick, className, style, next, prev }) => (
-                <CustomNavButton
-                  onClick={onClick}
-                  direction={next ? 'right' : 'left'}
-                />
-              )}
-            >
-              {images.map((image, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    height: 500,
-                    position: 'relative',
-                    overflow: 'hidden',
-                    borderRadius: '16px 16px 0 0'
+          <Carousel
+            index={selectedImageIndex}
+            onChange={(index) => setSelectedImageIndex(index)}
+            animation="slide"
+            navButtonsAlwaysVisible
+            indicators={false}
+            interval={5000}
+            NavButton={({ onClick, className, style, next, prev }) => (
+              <CustomNavButton
+                onClick={onClick}
+                direction={next ? 'right' : 'left'}
+              />
+            )}
+          >
+            {images.map((image, index) => (
+              <Box
+                key={index}
+                sx={{
+                  height: 500,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: '16px 16px 0 0'
+                }}
+              >
+                <img
+                  src={image}
+                  alt={`Auto ${index + 1}`}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
                   }}
-                >
-                  <img
-                    src={image}
-                    alt={`Auto ${index + 1}`}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }}
-                  />
-                </Box>
-              ))}
-            </Carousel>
+                />
+              </Box>
+            ))}
+          </Carousel>
+
             
             {/* Thumbnails Gallery */}
             <Box sx={{ 
@@ -233,23 +260,53 @@ export default function Detalle() {
                   background: 'linear-gradient(45deg,rgb(0, 0, 0),rgb(0, 0, 0))',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
-                  color: 'transparent'
+                  color: 'transparent',
+                  mb: 2,
+                  mt:2
+
                 }}
               >
                 {auto.modelo}
               </MotionTypography>
-              
-              <Box sx={{color: '#d21919',fontSize: '1.5rem',fontWeight: 'bold', mb: 1 }}
-              >Marca: {auto.marca}</Box>
+
+
+              <Box sx={{ fontSize: '1.5rem', fontWeight: 'bold', mb:2 }}>
+                ${auto.precio}
+                <h3>Categorías:</h3>
+                {mostrarCategorias()}
+              </Box>
+
                             
 
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <SpecItem icon="🚗" label="Motor" value={auto.motor} />
-                  <SpecItem icon="📊" label="Kilometraje" value={`${auto.km} km`} />
-                  <SpecItem icon="⚙️" label="Transmisión" value={auto.transmision} />
-                  <SpecItem icon="⛽" label="Combustible" value={auto.combustible} />
-                </Grid>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                {[
+                  { icon: "📅", label: "Modelo", value: auto.anio },
+                  { icon: "🚗", label: "Motor", value: auto.motor },
+                  { icon: "📊", label: "Kilometraje", value: `${auto.km} km` },
+                  { icon: "⚙️", label: "Transmisión", value: auto.transmision },
+                  { icon: "⛽", label: "Combustible", value: auto.combustible }
+                ].map((spec, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Paper 
+                      elevation={3} 
+                      sx={{ 
+                        p: 2, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 1.5, 
+                        borderRadius: 2,
+                        background: theme.palette.mode === 'dark' ? '#333' : '#fff',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                      }}
+                    >
+                      <Typography variant="h8" component="span">{spec.icon}</Typography>
+                      <Box>
+                        <Typography variant="body1" fontWeight="bold">{spec.label}</Typography>
+                        <Typography variant="body2" color="text.secondary">{spec.value}</Typography>
+                      </Box>
+                    </Paper>
+                  </Grid>
+                ))}
               </Grid>
             </CardContent>
           </MotionCard>
@@ -264,13 +321,13 @@ export default function Detalle() {
               borderRadius: 4,
               mt: 4,
               background: 'linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.12)'
+              boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+              p: 3
             }}
           >
             <CardContent>
               <Typography 
                 variant="h5" 
-                // color="primary" 
                 gutterBottom
                 sx={{ 
                   fontWeight: 'bold',
@@ -279,47 +336,96 @@ export default function Detalle() {
                   gap: 1
                 }}
               >
-                🛡️ Beneficios y Ubicación
+                🛡️ Beneficios Exclusivos
               </Typography>
               
-              <Grid container spacing={4} sx={{ mt: 2 }}>
-                <Grid item xs={12} md={6}>
-                  <Paper elevation={0} sx={{ p: 3, bgcolor: 'background.default', borderRadius: 2 }}>
-                    <Typography variant="h6" gutterBottom >
-                      Beneficios Exclusivos
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      <Typography variant="body1">
-                        ✨ Entrega inmediata
-                      </Typography>
-                      <Typography variant="body1">
-                        🔄 Recibimos tu usado (Consultar)
-                      </Typography>
-                      <Typography variant="body1">
-                        💰 Financiación DNI (Hasta 50% - 80%)
-                      </Typography>
-                      <Typography variant="body1">
-                        🛡️ Garantía por escrito
-                      </Typography>
-                    </Box>
-                  </Paper>
-                </Grid>
-                
-                <Grid item xs={12} md={6}>
-                  <Paper elevation={0} sx={{ p: 3, bgcolor: 'background.default', borderRadius: 2 }}>
-                    <Typography variant="h6" gutterBottom color="primary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      📍 Ubicación
-                    </Typography>
-                    <Typography variant="body1">
-                      Av. Caraffa 2247 - Av. Caraffa 2378
-                    </Typography>
-                  </Paper>
-                </Grid>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                {[
+                  { icon: "✨", title: "Entrega Inmediata" },
+                  { icon: "🔄", title: "Recibimos tu usado (Consultar)" },
+                  { icon: "💰", title: "Financiación DNI (Hasta 50% - 80%)"},
+                  { icon: "🛡️", title: "Garantía por escrito" }
+                  
+                ].map((beneficio, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Paper 
+                      elevation={3} 
+                      sx={{ 
+                        p: 2, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 2, 
+                        borderRadius: 2,
+                        background: theme.palette.mode === 'dark' ? '#333' : '#fff',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                      }}
+                    >
+                      <Typography variant="h4" component="span">{beneficio.icon}</Typography>
+                      <Box>
+                        <Typography variant="h6" fontWeight="bold">{beneficio.title}</Typography>
+                        <Typography variant="body2" color="text.secondary">{beneficio.description}</Typography>
+                      </Box>
+                    </Paper>
+                  </Grid>
+                ))}
               </Grid>
             </CardContent>
           </MotionCard>
         </Grid>
       </Grid>
+
+      <Grid item xs={12}>
+        <MotionCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          sx={{
+            borderRadius: 4,
+            mt: 4,
+            background: 'linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+            p: 3
+          }}
+        >
+          <CardContent>
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1
+              }}
+            >
+              🚗 Autos Relacionados
+            </Typography>
+
+            <Grid container spacing={2}>
+              {relacionados.map((autoRelacionado, index) => (
+                <Grid item xs={12} sm={6} key={index}>
+                  <Card sx={{ borderRadius: 2, boxShadow: 3 }}>
+                    <img
+                      src={`http://localhost:3001/files/${autoRelacionado.img[0]}`}
+                      alt={autoRelacionado.modelo}
+                      style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                    />
+                    <CardContent>
+                      <Typography variant="h6" fontWeight="bold">
+                        {autoRelacionado.modelo}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        ${autoRelacionado.precio}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </CardContent>
+        </MotionCard>
+      </Grid>
+
     </Container>
   );
 }
