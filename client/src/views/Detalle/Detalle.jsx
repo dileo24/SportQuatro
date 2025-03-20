@@ -39,8 +39,7 @@ export default function Detalle() {
         { headers: { "Content-Type": "application/json" } }
       );
   
-      setRelacionados(response.data);
-      console.log("Autos relacionados:", response.data);
+      setRelacionados(response.data.resp);
     } catch (error) {
       console.error("Error al obtener los autos relacionados:", error);
     }
@@ -54,9 +53,6 @@ const mostrarCategorias = () => {
     </div>
   ));
 };
-
-
-  console.log(auto)
 
   const fetchAuto = async () => {
     try {
@@ -402,7 +398,7 @@ const mostrarCategorias = () => {
             </Typography>
 
             <Grid container spacing={2}>
-              {relacionados.map((autoRelacionado, index) => (
+              {relacionados && relacionados.map((autoRelacionado, index) => (
                 <Grid item xs={12} sm={6} key={index}>
                   <Card sx={{ borderRadius: 2, boxShadow: 3 }}>
                     <img

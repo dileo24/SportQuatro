@@ -13,7 +13,7 @@ router.get("/", allAutos);
 
 router.get("/destacados", getAutosDestacados);
 
-router.get("/relacionados", getAutosByCategoria);
+router.post("/relacionados", getAutosByCategoria);
 
 router.get("/:id", getAutoById);
 
