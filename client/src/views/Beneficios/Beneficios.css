@@ -1,0 +1,105 @@
+.facilidades-container {
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+	height: 60vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 0.5rem;
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)),
+		url("../../assets/hero_beneficios.jpeg");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.texto {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 2vw;
+}
+
+.texto1 {
+	color: rgba(255, 0, 0, 0.925);
+	font-size: 7vw;
+	text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.329);
+	margin-bottom: 1vw;
+}
+
+.texto2 {
+	color: rgb(228, 228, 228);
+	font-size: 1.6vw;
+	text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.329);
+}
+
+.text-container {
+	padding: 3rem 10rem;
+}
+
+.text1 {
+	padding-right: 30rem;
+	font-weight: bolder;
+	color: rgba(223, 0, 0, 0.925);
+	font-size: 1.75vw;
+	border-bottom: 2px solid rgb(209, 2, 2);
+}
+
+.text2 {
+	color: rgb(71, 71, 71);
+	font-size: 1.5vw;
+	font-weight: bold;
+	border-bottom: 2px solid rgb(209, 2, 2);
+}
+
+.nov-container {
+	padding: 0 5rem;
+}
+.texto3 {
+	font-size: 1.3vw;
+	text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.329);
+	color: black;
+	margin: -1rem 0 3rem 0;
+}
+
+@media (max-width: 991px) {
+	.texto1 {
+		font-size: 11vw !important;
+		font-weight: bolder;
+	}
+
+	.texto2 {
+		font-size: 5vw;
+	}
+
+	.nov-container {
+		padding: 0 2rem;
+	}
+
+	.texto3 {
+		font-size: 5vw;
+		text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.329);
+		color: black;
+		margin-bottom: 3rem;
+	}
+
+    .text-container {
+        padding: 1rem 3rem
+    }
+
+    .text1 {
+        padding: 0;
+        font-size: 5vw;
+    }
+    
+    .text2 {
+        font-size: 5vw;
+    }
+    
+    .text2final {
+        font-size: 5vw;
+    }
+}

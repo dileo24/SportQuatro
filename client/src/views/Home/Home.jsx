@@ -1,7 +1,7 @@
 import React from "react";
 import "./Home.css";
-import imgHero from "../../assets/imgHero.jpg";
 import Novedades from "../../components/Novedades/Novedades";
+import { NavLink } from "react-router-dom";
 
 export default function Home() {
 	return (
@@ -21,7 +21,7 @@ export default function Home() {
 				</div>
 			</div>
 			<div className="button-container">
-				<button>VER CATÁLOGO</button>
+				<NavLink className="NavLink" to={`/catalogo`}>VER CATÁLOGO</NavLink>
 			</div>
 
 			<div className="nov-container">

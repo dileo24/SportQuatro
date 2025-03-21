@@ -11,6 +11,7 @@ import PruebaContext from "./views/PruebaContext";
 import Catalogo from "./views/Catalogo/Catalogo";
 import Beneficios from "./views/Beneficios/Beneficios";
 import About from "./views/About/About";
+import Wpp from "./components/Wpp/Wpp";
 
 function App() {
 	return (
@@ -27,6 +28,7 @@ function App() {
 					<Route path="/pruebacontext" element={<PruebaContext />} />
 				</Routes>
 			</main>
+			<Wpp />
 			<Footer />
 		</div>
 	);
