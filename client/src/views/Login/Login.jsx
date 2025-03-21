@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import { loginUser } from "../../services/user.service";
 import "./Login.css";
 
 export default function Login() {
@@ -18,19 +18,15 @@ export default function Login() {
 		setErrors({});
 
 		try {
-			const response = await axios.post(
-				`http://localhost:3001/admin/login`,
-				form
-			);
+			const data = await loginUser(form);
 
-			if (response.data.status === 200 && response.data.resp === true) {
+			if (data.status === 200 && data.resp === true) {
 				login();
-				console.log("Inicio de sesión exitoso");
 			}
 		} catch (error) {
-			if (error.response && error.response.data.errors) {
+			if (error.errors) {
 				const apiErrors = {};
-				error.response.data.errors.forEach((err) => {
+				error.errors.forEach((err) => {
 					apiErrors[err.input] = err.resp;
 				});
 				setErrors(apiErrors);
