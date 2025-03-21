@@ -6,8 +6,11 @@ import Detalle from "./views/Detalle/Detalle";
 import "./App.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Login from "./views/LogIn/Login";
+import Login from "./views/Login/Login";
 import PruebaContext from "./views/PruebaContext";
+import Catalogo from "./views/Catalogo/Catalogo";
+import Beneficios from "./views/Beneficios/Beneficios";
+import About from "./views/About/About";
 
 function App() {
 	return (
@@ -17,6 +20,9 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/loginAdminP" element={<Login />} />
+					<Route path="/catalogo" element={<Catalogo />} />
+					<Route path="/beneficios" element={<Beneficios />} />
+					<Route path="/about" element={<About />} />
 					<Route path="/detalle/:id" element={<Detalle />} />
 					<Route path="/pruebacontext" element={<PruebaContext />} />
 				</Routes>

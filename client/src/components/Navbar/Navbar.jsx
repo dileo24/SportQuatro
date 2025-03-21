@@ -24,30 +24,36 @@ export default function Navbar() {
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav mb-2 mb-lg-0">
 						<li className="nav-item me-2">
-							<a className="nav-link active" aria-current="page" href="#">
+							<Link to={`/`} className="nav-link active" aria-current="page">
 								Inicio
-							</a>
+							</Link>
 						</li>
 						<li className="nav-item me-2">
-							<a className="nav-link active" aria-current="page" href="#">
+							<Link
+								to={`/catalogo`}
+								className="nav-link active"
+								aria-current="page"
+							>
 								Vehículos
-							</a>
+							</Link>
 						</li>
 						<li className="nav-item me-2">
-							<a className="nav-link" href="#">
+							<Link
+								to={`/about`}
+								className="nav-link"
+								aria-current="page"
+							>
 								Sobre la agencia
-							</a>
+							</Link>
 						</li>
 						<li className="nav-item me-2">
-							<a className="nav-link" href="#">
+							<Link
+								to={`/beneficios`}
+								className="nav-link"
+								aria-current="page"
+							>
 								Beneficios y servicios
-							</a>
-						</li>
-
-						<li className="nav-item">
-							<a className="nav-link" href="#">
-								Contacto
-							</a>
+							</Link>
 						</li>
 					</ul>
 				</div>
