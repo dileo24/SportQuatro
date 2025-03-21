@@ -5,6 +5,7 @@ import {Container,Card,CardContent,Typography,Grid,CircularProgress,Box,Paper,us
 import Carousel from "react-material-ui-carousel";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import CarruselRelacionados from "../../components/Autos_Relacionados/CarruselRelacionados";
 
 const MotionCard = motion(Card);
 const MotionTypography = motion(Typography);
@@ -15,64 +16,46 @@ export default function Detalle() {
   const [images, setImages] = useState([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const theme = useTheme();
-  const [relacionados, setRelacionados] = useState([]);
+  const [categorias, setCategorias] = useState([]);
 
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Desplaza la página al inicio
     fetchAuto();
   }, [id]);
 
 
-  useEffect(() => {
-    if (auto?.categorias?.length) {
-      const categoriasIds = auto.categorias.map(cat => cat.id);
-      fetchRelacionados(categoriasIds, setRelacionados);
-    }
-  }, [auto]);
 
-  const fetchRelacionados = async (idCategorias, setRelacionados) => {
-    try {
-      const categorias = idCategorias.map(String); // Convertir IDs a strings
-      const response = await axios.post(
-        "http://localhost:3001/autos/relacionados",
-        { id_categ: categorias },
-        { headers: { "Content-Type": "application/json" } }
-      );
-  
-      setRelacionados(response.data.resp);
-    } catch (error) {
-      console.error("Error al obtener los autos relacionados:", error);
-    }
-  };
-  
+const fetchAuto = async () => {
+  try {
+    const response = await axios.get(`http://localhost:3001/autos/${id}`);
+    if (response.data.status === 200) {
+      const autoData = response.data.resp;
+      setAuto(autoData);
+      setCategorias(autoData.categorias.map((cat) => cat.id));
 
-const mostrarCategorias = () => {
-  return auto.categorias.map((categoria) => (
-    <div key={categoria.id}>
-      <p>{categoria.categ}</p>
-    </div>
-  ));
-};
-
-  const fetchAuto = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3001/autos/${id}`);
-      if (response.data.status === 200) {
-        const autoData = response.data.resp;
-        setAuto(autoData);
-
-        const loadedImages = autoData.img && autoData.img.length > 0
-          ? autoData.img.map(img => `http://localhost:3001/files/${img}`)
+      const loadedImages =
+        autoData.img && autoData.img.length > 0
+          ? autoData.img.map((img) => `http://localhost:3001/files/${img}`)
           : ["/placeholder.jpg"];
 
-        setImages(loadedImages);
-      } else {
-        console.error("Error al obtener los datos del auto:", response.data.resp);
-      }
-    } catch (error) {
-      console.error("Error al obtener los datos del auto:", error);
+      setImages(loadedImages);
+    } else {
+      console.error("Error al obtener los datos del auto:", response.data.resp);
     }
-  };
+  } catch (error) {
+    console.error("Error al obtener los datos del auto:", error);
+  }
+};
+
+if (!auto)
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <CircularProgress size={60} thickness={4} />
+    </Box>
+  );
+
+
 
   const handleThumbnailClick = (index) => {
     setSelectedImageIndex(index);
@@ -104,13 +87,6 @@ const mostrarCategorias = () => {
   );
   
   
-
-  if (!auto) return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-      <CircularProgress size={60} thickness={4} />
-    </Box>
-  );
-
   const SpecItem = ({ icon, label, value }) => (
     <Box display="flex" alignItems="center" gap={1} mb={2}>
       <Typography variant="body1" component="span" sx={{ color: theme.palette.primary.main }}>
@@ -264,14 +240,9 @@ const mostrarCategorias = () => {
               >
                 {auto.modelo}
               </MotionTypography>
-
-
               <Box sx={{ fontSize: '1.5rem', fontWeight: 'bold', mb:2 }}>
                 ${auto.precio}
-                <h3>Categorías:</h3>
-                {mostrarCategorias()}
               </Box>
-
                             
 
               <Grid container spacing={2} sx={{ mt: 2 }}>
@@ -370,57 +341,9 @@ const mostrarCategorias = () => {
         </Grid>
       </Grid>
 
-      <Grid item xs={12}>
-        <MotionCard
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          sx={{
-            borderRadius: 4,
-            mt: 4,
-            background: 'linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-            p: 3
-          }}
-        >
-          <CardContent>
-            <Typography
-              variant="h5"
-              gutterBottom
-              sx={{
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1
-              }}
-            >
-              🚗 Autos Relacionados
-            </Typography>
-
-            <Grid container spacing={2}>
-              {relacionados && relacionados.map((autoRelacionado, index) => (
-                <Grid item xs={12} sm={6} key={index}>
-                  <Card sx={{ borderRadius: 2, boxShadow: 3 }}>
-                    <img
-                      src={`http://localhost:3001/files/${autoRelacionado.img[0]}`}
-                      alt={autoRelacionado.modelo}
-                      style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
-                    />
-                    <CardContent>
-                      <Typography variant="h6" fontWeight="bold">
-                        {autoRelacionado.modelo}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        ${autoRelacionado.precio}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </CardContent>
-        </MotionCard>
-      </Grid>
+        <Grid item xs={12}>
+          <CarruselRelacionados categorias={categorias} />
+        </Grid>
 
     </Container>
   );
