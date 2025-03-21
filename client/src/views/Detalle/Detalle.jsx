@@ -5,7 +5,7 @@ import {Container,Card,CardContent,Typography,Grid,CircularProgress,Box,Paper,us
 import Carousel from "react-material-ui-carousel";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import CarruselRelacionados from "../../components/Autos_Relacionados/CarruselRelacionados";
+import CardsRelacionados from "../../components/Cards_Relacionados/CardsRelacionados";
 
 const MotionCard = motion(Card);
 const MotionTypography = motion(Typography);
@@ -342,7 +342,7 @@ if (!auto)
       </Grid>
 
         <Grid item xs={12}>
-          <CarruselRelacionados categorias={categorias} />
+          <CardsRelacionados categorias={categorias} />
         </Grid>
 
     </Container>
