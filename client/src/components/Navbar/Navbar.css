@@ -9,7 +9,7 @@ nav {
 }
 
 nav a {
-	color: rgb(223, 223, 223) !important;
+	color: bd0101 !important;
 	font-size: 17px !important;
 	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.329);
 	transition: transform 0.5s ease-in-out, color 0.2s ease-in-out;

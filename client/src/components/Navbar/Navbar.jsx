@@ -38,20 +38,12 @@ export default function Navbar() {
 							</Link>
 						</li>
 						<li className="nav-item me-2">
-							<Link
-								to={`/about`}
-								className="nav-link"
-								aria-current="page"
-							>
+							<Link to={`/about`} className="nav-link" aria-current="page">
 								Sobre la agencia
 							</Link>
 						</li>
 						<li className="nav-item me-2">
-							<Link
-								to={`/beneficios`}
-								className="nav-link"
-								aria-current="page"
-							>
+							<Link to={`/beneficios`} className="nav-link" aria-current="page">
 								Beneficios y servicios
 							</Link>
 						</li>

@@ -12,7 +12,10 @@ export default function Card({ auto }) {
 			<div className="card-body">
 				<h5 className="card-title">{auto.modelo}</h5>
 				<div className="card-text">
-					<p>${auto.precio}</p>
+					<p>
+						{auto.moneda === "AR$" ? "$" : "U$D"}
+						{auto.precio}
+					</p>
 					<p>{auto.km} km</p>
 				</div>
 				<Link to={`/detalle/${auto.id}`} className="btn btn-primary">

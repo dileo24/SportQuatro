@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { loginUser } from "../../services/user.service";
 import "./Login.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 	let [form, setForm] = useState({ email: "", pass: "" });
 	let [errors, setErrors] = useState({});
 	const { login } = useAuth();
+	const navigate = useNavigate();
 
 	const handleChange = (e) => {
 		setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,6 +24,7 @@ export default function Login() {
 
 			if (data.status === 200 && data.resp === true) {
 				login();
+				navigate("/");
 			}
 		} catch (error) {
 			if (error.errors) {
