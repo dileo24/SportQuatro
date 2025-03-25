@@ -16,7 +16,11 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClearIcon from "@mui/icons-material/Clear";
-import { tiposCombustible, tiposTransmision } from "../../data/filters";
+import {
+	tiposCombustible,
+	tiposTransmision,
+	ordenamientos,
+} from "../../data/filters";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useFiltros } from "../../context/FiltrosContext";
@@ -27,12 +31,6 @@ const Filtros = () => {
 	const currentYear = new Date().getFullYear();
 	const years = Array.from({ length: currentYear - 2004 }, (_, i) => 2005 + i);
 	const { filtros, setFiltros } = useFiltros();
-
-	const ordenamientos = [
-		{ value: "", label: "Sin orden" },
-		{ value: "precio-asc", label: "Precio: Menor a Mayor" },
-		{ value: "precio-desc", label: "Precio: Mayor a Menor" },
-	];
 
 	const [labelShrink, setLabelShrink] = useState({
 		anioDesde: false,

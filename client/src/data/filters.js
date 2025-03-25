@@ -10,3 +10,9 @@ export const tiposTransmision = [
 	{ value: "Manual", label: "Manual" },
 	{ value: "Automática", label: "Automática" },
 ];
+
+export const ordenamientos = [
+	{ value: "", label: "Sin orden" },
+	{ value: "precio-asc", label: "Precio: Menor a Mayor" },
+	{ value: "precio-desc", label: "Precio: Mayor a Menor" },
+];

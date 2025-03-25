@@ -3,7 +3,6 @@ import { createContext, useState, useEffect, useContext } from "react";
 const FiltrosContext = createContext();
 
 export const FiltrosProvider = ({ children }) => {
-	// Cargar filtros desde localStorage al iniciar
 	const cargarFiltrosIniciales = () => {
 		if (typeof window !== "undefined") {
 			const guardados = localStorage.getItem("filtrosCatalogo");

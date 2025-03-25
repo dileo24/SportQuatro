@@ -61,17 +61,17 @@ export default function Catalogo() {
 					auto.categorias.some((cat) => cat.categ === filtros.categoria))
 			);
 		});
-		if (filtros.ordenamiento) {
+		if (filtros.ordenamiento === "precio-asc") {
 			autosFiltrados = [...autosFiltrados].sort((a, b) => {
 				const precioA = parseInt(a.precio.replace(/\./g, ""));
 				const precioB = parseInt(b.precio.replace(/\./g, ""));
-
-				if (filtros.ordenamiento === "precio-asc") {
-					return precioA - precioB;
-				} else if (filtros.ordenamiento === "precio-desc") {
-					return precioB - precioA;
-				}
-				return 0;
+				return precioA - precioB;
+			});
+		} else if (filtros.ordenamiento === "precio-desc") {
+			autosFiltrados = [...autosFiltrados].sort((a, b) => {
+				const precioA = parseInt(a.precio.replace(/\./g, ""));
+				const precioB = parseInt(b.precio.replace(/\./g, ""));
+				return precioB - precioA;
 			});
 		}
 		setFilteredAutos(autosFiltrados);
