@@ -3,13 +3,16 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { FiltrosProvider } from "./context/FiltrosContext.jsx";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
-		<AuthProvider>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
-		</AuthProvider>
+		<BrowserRouter>
+			<AuthProvider>
+				<FiltrosProvider>
+					<App />
+				</FiltrosProvider>
+			</AuthProvider>
+		</BrowserRouter>
 	</StrictMode>
 );
