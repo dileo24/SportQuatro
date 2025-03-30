@@ -19,6 +19,7 @@ async function fnAutos() {
       km: auto.km,
       transmision: auto.transmision,
       combustible: auto.combustible,
+      moneda: auto.moneda,
       precio: auto.precio,
       destacar: auto.destacar,
       img: auto.img,
@@ -31,7 +32,6 @@ async function fnAutos() {
     await newAuto.addCategorias(categorias);
   }
 }
-
 
 async function fnAdmin() {
   const admin = await Admin.create({

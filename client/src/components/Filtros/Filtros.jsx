@@ -20,6 +20,7 @@ import {
 	tiposCombustible,
 	tiposTransmision,
 	ordenamientos,
+	categoria,
 } from "../../data/filters";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -37,6 +38,7 @@ const Filtros = () => {
 		anioHasta: false,
 		transmision: false,
 		combustible: false,
+		categoria: false,
 	});
 
 	const [tempValues, setTempValues] = useState({
@@ -120,6 +122,7 @@ const Filtros = () => {
 			anioHasta: false,
 			transmision: false,
 			combustible: false,
+			categoria: false,
 		});
 	};
 
@@ -218,6 +221,7 @@ const Filtros = () => {
 				{renderTextFieldWithClear("precioHasta", "Precio Hasta")}
 			</Box>
 
+			{renderSelect("categoria", "Categoria", categoria)}
 			{renderSelect("transmision", "Transmisión", tiposTransmision)}
 			{renderSelect("combustible", "Combustible", tiposCombustible)}
 

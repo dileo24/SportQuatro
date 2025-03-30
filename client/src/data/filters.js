@@ -1,3 +1,13 @@
+export const categoria = [
+	{ value: "SUV", label: "SUV" },
+	{ value: "Pick Up", label: "Pick Up" },
+	{ value: "5 Puertas", label: "5 Puertas" },
+	{ value: "4 Puertas", label: "4 Puertas" },
+	{ value: "Utilitario", label: "Utilitario" },
+	{ value: "0km", label: "0km" },
+	{ value: "Moto", label: "Moto" },
+];
+
 export const tiposCombustible = [
 	{ value: "", label: "Todos" },
 	{ value: "Nafta", label: "Nafta" },

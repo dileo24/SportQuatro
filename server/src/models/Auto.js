@@ -38,6 +38,10 @@ module.exports = sequelize => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      moneda: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       precio: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -47,8 +51,9 @@ module.exports = sequelize => {
         allowNull: false,
       },
       img: {
-        type:  DataTypes.JSON,
-        allowNull: false, defaultValue: [],
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
       },
     },
     {
