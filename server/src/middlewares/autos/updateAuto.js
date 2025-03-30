@@ -33,7 +33,7 @@ const updateAuto = async (req, res) => {
     await AutoFinded.update(auto);
 
     return res.status(200).json({
-      status: "200",
+      status: 200, //Estaba como un string
       resp: `El auto ${auto.modelo || AutoFinded.modelo} se ha actualizado exitosamente.`,
     });
 
