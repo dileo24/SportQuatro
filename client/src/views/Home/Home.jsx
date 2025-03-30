@@ -2,6 +2,7 @@ import React from "react";
 import "./Home.css";
 import Novedades from "../../components/Novedades/Novedades";
 import { NavLink } from "react-router-dom";
+import { Box, Container, Typography } from "@mui/material";
 
 export default function Home() {
 	return (
@@ -21,15 +22,31 @@ export default function Home() {
 				</div>
 			</div>
 			<div className="button-container">
-				<NavLink className="NavLink" to={`/catalogo`}>VER CATÁLOGO</NavLink>
+				<NavLink className="NavLink" to={`/catalogo`}>
+					VER CATÁLOGO
+				</NavLink>
 			</div>
 
-			<div className="nov-container">
-				<p className="texto1">Novedades</p>
-				<p className="texto3">¡Últimos ingresos!</p>
-
-				<Novedades />
-			</div>
+			<Box sx={{ py: 6, backgroundColor: "#f5f5f5" }}>
+				<Container maxWidth="lg">
+					<Typography
+						variant="h4"
+						align="center"
+						sx={{
+							fontWeight: "bold",
+							mb: 2,
+							color: "rgba(255, 0, 0, 0.925)",
+							textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
+						}}
+					>
+						Novedades
+					</Typography>
+					<Typography variant="h6" align="center" sx={{ mb: 4 }}>
+						¡Ingresos destactados!
+					</Typography>
+					<Novedades />
+				</Container>
+			</Box>
 		</div>
 	);
 }

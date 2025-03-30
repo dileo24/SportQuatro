@@ -9,9 +9,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./views/Login/Login";
 import PruebaContext from "./views/PruebaContext";
 import Catalogo from "./views/Catalogo/Catalogo";
-import Beneficios from "./views/Beneficios/Beneficios";
-import About from "./views/About/About";
+import Nosotros from "./views/Nosotros/Nosotros";
 import Wpp from "./components/Wpp/Wpp";
+import Contacto from "./views/Contacto/Contacto";
 
 function App() {
 	return (
@@ -22,8 +22,8 @@ function App() {
 					<Route path="/" element={<Home />} />
 					<Route path="/loginAdminP" element={<Login />} />
 					<Route path="/catalogo" element={<Catalogo />} />
-					<Route path="/beneficios" element={<Beneficios />} />
-					<Route path="/about" element={<About />} />
+					<Route path="/nosotros" element={<Nosotros />} />
+					<Route path="/contacto" element={<Contacto />} />
 					<Route path="/detalle/:id" element={<Detalle />} />
 					<Route path="/pruebacontext" element={<PruebaContext />} />
 				</Routes>

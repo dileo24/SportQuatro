@@ -165,34 +165,37 @@ const Filtros = () => {
 		setLabelShrink((prev) => ({ ...prev, [name]: !!value }));
 	};
 
-	const renderSelect = (name, label, options) => (
-		<FormControl fullWidth>
-			<InputLabel
-				id={`${name}-label`}
-				shrink={labelShrink[name] || !!filtros[name]}
-			>
-				{label}
-			</InputLabel>
-			<Select
-				labelId={`${name}-label`}
-				name={name}
-				value={filtros[name]}
-				onChange={handleChange}
-				onFocus={() => handleFocus(name)}
-				onBlur={() => handleBlur(name, filtros[name])}
-				label={label}
-				MenuProps={{
-					disableScrollLock: true,
-				}}
-			>
-				{options.map((option) => (
-					<MenuItem key={option.value} value={option.value}>
-						{option.label}
-					</MenuItem>
-				))}
-			</Select>
-		</FormControl>
-	);
+	const renderSelect = (name, label, options) => {
+		const value = filtros[name] === undefined ? "" : filtros[name];
+		return (
+			<FormControl fullWidth>
+				<InputLabel
+					id={`${name}-label`}
+					shrink={labelShrink[name] || !!filtros[name]}
+				>
+					{label}
+				</InputLabel>
+				<Select
+					labelId={`${name}-label`}
+					name={name}
+					value={filtros[name] || ""}
+					onChange={handleChange}
+					onFocus={() => handleFocus(name)}
+					onBlur={() => handleBlur(name, filtros[name])}
+					label={label}
+					MenuProps={{
+						disableScrollLock: true,
+					}}
+				>
+					{options.map((option) => (
+						<MenuItem key={option.value} value={option.value}>
+							{option.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+		);
+	};
 
 	const renderFilters = () => (
 		<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>

@@ -47,24 +47,24 @@ export default function Navbar() {
 						</li>
 						<li className="nav-item me-2">
 							<NavLink
-								to={`/about`}
+								to={`/nosotros`}
 								className={({ isActive }) =>
 									isActive ? "nav-link active" : "nav-link"
 								}
 								aria-current="page"
 							>
-								Sobre la agencia
+								Nosotros
 							</NavLink>
 						</li>
 						<li className="nav-item me-2">
 							<NavLink
-								to={`/beneficios`}
+								to={`/contacto`}
 								className={({ isActive }) =>
 									isActive ? "nav-link active" : "nav-link"
 								}
 								aria-current="page"
 							>
-								Beneficios y servicios
+								Contacto
 							</NavLink>
 						</li>
 					</ul>
