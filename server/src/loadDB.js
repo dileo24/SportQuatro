@@ -22,6 +22,8 @@ async function fnAutos() {
       moneda: auto.moneda,
       precio: auto.precio,
       destacar: auto.destacar,
+      oferta: auto.oferta,
+      precio_oferta: auto.precio_oferta,
       img: auto.img,
     });
 

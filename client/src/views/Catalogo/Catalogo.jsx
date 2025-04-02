@@ -18,6 +18,9 @@ export default function Catalogo() {
 
 	useEffect(() => {
 		fetchAutos();
+	}, []);
+
+	useEffect(() => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	}, [currentPage]);
 
@@ -75,7 +78,6 @@ export default function Catalogo() {
 			});
 		}
 		setFilteredAutos(autosFiltrados);
-		setCurrentPage(1);
 	};
 
 	const totalPages = Math.ceil(filteredAutos.length / itemsPerPage);

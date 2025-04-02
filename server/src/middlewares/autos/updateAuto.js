@@ -18,12 +18,16 @@ const updateAuto = async (req, res) => {
           where: { id: auto.id_categ },
         });
         if (categorias.length !== auto.id_categ.length) {
-          return res.status(404).json({ status: "404", resp: "Algunas categorías no fueron encontradas." });
+          return res
+            .status(404)
+            .json({ status: "404", resp: "Algunas categorías no fueron encontradas." });
         }
       } else {
         categorias = await Categoria.findByPk(auto.id_categ);
         if (!categorias) {
-          return res.status(404).json({ status: "404", resp: `Categoría con id ${auto.id_categ} no encontrada.` });
+          return res
+            .status(404)
+            .json({ status: "404", resp: `Categoría con id ${auto.id_categ} no encontrada.` });
         }
       }
 
@@ -33,10 +37,9 @@ const updateAuto = async (req, res) => {
     await AutoFinded.update(auto);
 
     return res.status(200).json({
-      status: 200, //Estaba como un string
+      status: 200,
       resp: `El auto ${auto.modelo || AutoFinded.modelo} se ha actualizado exitosamente.`,
     });
-
   } catch (error) {
     return res.status(500).json({ status: "500", resp: error.message });
   }

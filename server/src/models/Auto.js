@@ -50,6 +50,14 @@ module.exports = sequelize => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
+      oferta: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      precio_oferta: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       img: {
         type: DataTypes.JSON,
         allowNull: false,

@@ -10,6 +10,8 @@
     "moneda": "AR$",
     "precio": "10.500.000",
     "destacar": true,
+    "oferta": true,
+    "precio_oferta": "9.000.000",
     "img": [
       "img_1.webp",
       "img_1742250511157.webp",
@@ -31,6 +33,8 @@
     "moneda": "AR$",
     "precio": "23.400.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_2.webp"],
     "id_categ": ["4"]
   },
@@ -45,6 +49,8 @@
     "moneda": "AR$",
     "precio": "25.000.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_3.webp"],
     "id_categ": ["6", "3"]
   },
@@ -59,6 +65,8 @@
     "moneda": "AR$",
     "precio": "52.900.000",
     "destacar": false,
+    "oferta": true,
+    "precio_oferta": "49.500.000",
     "img": ["img_4.webp"],
     "id_categ": ["2"]
   },
@@ -73,6 +81,8 @@
     "moneda": "AR$",
     "precio": "23.450.000",
     "destacar": true,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_5.webp"],
     "id_categ": ["1", "3"]
   },
@@ -87,6 +97,8 @@
     "moneda": "AR$",
     "precio": "8.000.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_6.webp"],
     "id_categ": ["6", "7"]
   },
@@ -99,8 +111,10 @@
     "transmision": "Manual",
     "combustible": "Nafta",
     "moneda": "AR$",
-    "precio": "8.000.000",
+    "precio": "24.000.000",
     "destacar": true,
+    "oferta": true,
+    "precio_oferta": "21.500.000",
     "img": ["img_7.webp"],
     "id_categ": ["5", "6"]
   },
@@ -115,6 +129,8 @@
     "moneda": "AR$",
     "precio": "10.500.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_8.webp"],
     "id_categ": ["3"]
   },
@@ -129,6 +145,8 @@
     "moneda": "AR$",
     "precio": "23.400.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_9.webp"],
     "id_categ": ["4"]
   },
@@ -143,6 +161,8 @@
     "moneda": "AR$",
     "precio": "25.000.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_10.webp"],
     "id_categ": ["6", "3"]
   },
@@ -157,6 +177,8 @@
     "moneda": "AR$",
     "precio": "52.900.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_11.webp"],
     "id_categ": ["2"]
   },
@@ -171,6 +193,8 @@
     "moneda": "AR$",
     "precio": "23.450.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_12.webp"],
     "id_categ": ["1", "3"]
   },
@@ -185,6 +209,8 @@
     "moneda": "AR$",
     "precio": "8.000.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_13.webp"],
     "id_categ": ["5", "6"]
   },
@@ -199,6 +225,8 @@
     "moneda": "U$D",
     "precio": "43.900",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_14.webp"],
     "id_categ": ["6"]
   },
@@ -213,6 +241,8 @@
     "moneda": "U$D",
     "precio": "29.900",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_15.webp"],
     "id_categ": ["7"]
   },
@@ -227,6 +257,8 @@
     "moneda": "AR$",
     "precio": "20.700.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_16.webp"],
     "id_categ": ["2"]
   },
@@ -241,6 +273,8 @@
     "moneda": "AR$",
     "precio": "14.030.000",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_17.webp"],
     "id_categ": ["4"]
   },
@@ -255,6 +289,8 @@
     "moneda": "U$D",
     "precio": "13.500",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_19.webp"],
     "id_categ": ["4"]
   },
@@ -269,6 +305,8 @@
     "moneda": "U$D",
     "precio": "18.500",
     "destacar": false,
+    "oferta": false,
+    "precio_oferta": "",
     "img": ["img_20.webp"],
     "id_categ": ["2"]
   }

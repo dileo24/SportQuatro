@@ -20,7 +20,6 @@ export default function Nosotros() {
 					flexDirection: "column",
 					justifyContent: "center",
 					alignItems: "center",
-					color: "white",
 					textAlign: "center",
 					position: "relative",
 					"&::before": {
