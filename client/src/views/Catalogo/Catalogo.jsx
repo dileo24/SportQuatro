@@ -41,6 +41,10 @@ export default function Catalogo() {
 
 	const aplicarFiltros = () => {
 		let autosFiltrados = autos.filter((auto) => {
+			// Precio a considerar (oferta o normal)
+			const precioAuto = auto.oferta ? auto.precio_oferta : auto.precio;
+			const precioNum = parseInt(precioAuto.replace(/\./g, ""));
+
 			return (
 				(filtros.anioDesde === "" ||
 					parseInt(auto.anio) >= parseInt(filtros.anioDesde)) &&
@@ -51,11 +55,9 @@ export default function Catalogo() {
 				(filtros.kmHasta === "" ||
 					parseInt(auto.km.replace(/\./g, "")) <= parseInt(filtros.kmHasta)) &&
 				(filtros.precioDesde === "" ||
-					parseInt(auto.precio.replace(/\./g, "")) >=
-						parseInt(filtros.precioDesde)) &&
+					precioNum >= parseInt(filtros.precioDesde)) &&
 				(filtros.precioHasta === "" ||
-					parseInt(auto.precio.replace(/\./g, "")) <=
-						parseInt(filtros.precioHasta)) &&
+					precioNum <= parseInt(filtros.precioHasta)) &&
 				(filtros.transmision === "" ||
 					auto.transmision === filtros.transmision) &&
 				(filtros.combustible === "" ||
@@ -66,17 +68,26 @@ export default function Catalogo() {
 		});
 		if (filtros.ordenamiento === "precio-asc") {
 			autosFiltrados = [...autosFiltrados].sort((a, b) => {
-				const precioA = parseInt(a.precio.replace(/\./g, ""));
-				const precioB = parseInt(b.precio.replace(/\./g, ""));
+				const precioA = parseInt(
+					(a.oferta ? a.precio_oferta : a.precio).replace(/\./g, "")
+				);
+				const precioB = parseInt(
+					(b.oferta ? b.precio_oferta : b.precio).replace(/\./g, "")
+				);
 				return precioA - precioB;
 			});
 		} else if (filtros.ordenamiento === "precio-desc") {
 			autosFiltrados = [...autosFiltrados].sort((a, b) => {
-				const precioA = parseInt(a.precio.replace(/\./g, ""));
-				const precioB = parseInt(b.precio.replace(/\./g, ""));
+				const precioA = parseInt(
+					(a.oferta ? a.precio_oferta : a.precio).replace(/\./g, "")
+				);
+				const precioB = parseInt(
+					(b.oferta ? b.precio_oferta : b.precio).replace(/\./g, "")
+				);
 				return precioB - precioA;
 			});
 		}
+
 		setFilteredAutos(autosFiltrados);
 	};
 
