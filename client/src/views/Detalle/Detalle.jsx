@@ -863,7 +863,7 @@ export default function Detalle() {
 									{ icon: "🔄", title: "Recibimos tu usado (Consultar)" },
 									{
 										icon: "💰",
-										title: "Financiación solo con DNI (Hasta 50% - 80%)",
+										title: "Financiación solo con DNI (50% - 80%)",
 									},
 									{ icon: "🛡️", title: "Gestoría general" },
 								].map((beneficio, index) => (

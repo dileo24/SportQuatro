@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logoutUser } from "../../services/user.service";
 import {
@@ -23,6 +23,7 @@ import imgLogo from "../../assets/logo_sinFondo_blanco.png";
 export default function Navbar() {
 	const { isAuthenticated, logout } = useAuth();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const isMobile = useMediaQuery("(max-width:600px)");
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -48,10 +49,16 @@ export default function Navbar() {
 	const navItems = [
 		{ label: "Inicio", path: "/" },
 		{ label: "Vehículos", path: "/catalogo" },
+		{ label: "Financiación", path: "/financiacion" },
 		{ label: "Nosotros", path: "/nosotros" },
 		{ label: "Contacto", path: "/contacto" },
 		...(isAuthenticated ? [{ label: "Nuevo auto", path: "/nuevo_auto" }] : []),
 	];
+
+	// Función para verificar si un item está activo
+	const isActive = (path) => {
+		return location.pathname === path;
+	};
 
 	return (
 		<AppBar position="fixed" sx={{ bgcolor: "rgb(29, 29, 29)" }}>
@@ -97,9 +104,22 @@ export default function Navbar() {
 									}}
 									sx={{
 										"&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
+										bgcolor: isActive(item.path)
+											? "rgba(255, 0, 0, 0.2)"
+											: "transparent",
+										borderLeft: isActive(item.path)
+											? "3px solid #d80606"
+											: "none",
 									}}
 								>
-									<ListItemText>{item.label}</ListItemText>
+									<ListItemText
+										primaryTypographyProps={{
+											fontWeight: isActive(item.path) ? "bold" : "normal",
+											color: isActive(item.path) ? "#d80606" : "inherit",
+										}}
+									>
+										{item.label}
+									</ListItemText>
 								</MenuItem>
 							))}
 							{isAuthenticated && (
@@ -135,6 +155,12 @@ export default function Navbar() {
 										transform: "scale(1.05)",
 										color: "white",
 									},
+									fontWeight: isActive(item.path) ? "bold" : "normal",
+									color: isActive(item.path) ? "#d80606" : "inherit",
+									borderBottom: isActive(item.path)
+										? "2px solid #d80606"
+										: "none",
+									borderRadius: 0,
 								}}
 							>
 								{item.label}

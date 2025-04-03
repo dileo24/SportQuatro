@@ -58,10 +58,10 @@ export default function Nosotros() {
 					<Grid item xs={12} md={6}>
 						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
 							Desde el año 2010 nos encontramos ubicados en la localidad de
-							Córdoba capital calle avenida Caraffa 2247. Tenemos más de 20 años
+							Córdoba capital calle Avenida Caraffa 2247. Tenemos más de 20 años
 							de trayectoria y experiencia en el rubro. Luego de mucho esfuerzo
 							y dedicación en el año 2022 abrimos nuestras puertas a un segundo
-							local, en avenida Caraffa 2378.
+							local, en Avenida Caraffa 2378.
 						</Typography>
 						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
 							En Sportquatro sabemos la importancia que es comprar un vehículo
@@ -104,10 +104,10 @@ export default function Nosotros() {
 					</Grid>
 					<Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
 						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
-							Ofrecemos servicio de gestoría propia y seguros en varias
-							compañías, para que te lleves tu nuevo vehículo sin preocupaciones
-							y listo para utilizarlo. Para nosotros la opinión de nuestros
-							clientes es muy importante para así seguir mejorando en un futuro.
+							Ofrecemos servicio de gestoría general para que te lleves tu nuevo
+							vehículo sin preocupaciones y listo para utilizarlo. Para nosotros
+							la opinión de nuestros clientes es muy importante para así seguir
+							mejorando en un futuro.
 						</Typography>
 					</Grid>
 				</Grid>
@@ -147,19 +147,7 @@ export default function Nosotros() {
 								textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
 							}}
 						>
-							Facilidades
-						</Typography>
-
-						<Typography
-							variant="h5"
-							component="p"
-							align="center"
-							sx={{
-								mb: 4,
-								fontStyle: "italic",
-							}}
-						>
-							No solo vendemos autos...
+							Consignaciones
 						</Typography>
 
 						<Divider sx={{ mb: 6 }} />
@@ -195,24 +183,23 @@ export default function Nosotros() {
 										paragraph
 										sx={{ fontSize: "1.1rem" }}
 									>
-										Poseemos financiación en varias entidades bancarias y
-										ofrecemos cuotas fijas.
+										¡Vende tu auto sin preocupaciones con nosotros!
 									</Typography>
 
-									<Box component="ul" sx={{ pl: 3, mb: 3 }}>
+									<Box component="ul" sx={{ pl: 3, mb: 3, mt: 2 }}>
 										<Typography
 											component="li"
 											paragraph
 											sx={{ fontSize: "1.1rem" }}
 										>
-											Planes de 12, 24, 36, 48 y hasta 60 cuotas.
+											Trasferencia inmediata al momento de la venta.
 										</Typography>
 										<Typography
 											component="li"
 											paragraph
 											sx={{ fontSize: "1.1rem" }}
 										>
-											Transferencia inmediata al momento de la venta.
+											Venta asegurada plazo 60 días.
 										</Typography>
 										<Typography
 											component="li"
@@ -226,7 +213,7 @@ export default function Nosotros() {
 											paragraph
 											sx={{ fontSize: "1.1rem" }}
 										>
-											Tomamos tu usado como parte de pago.
+											Alistaje de detalles por cuenta del titular.
 										</Typography>
 										<Typography
 											component="li"
@@ -240,13 +227,9 @@ export default function Nosotros() {
 											paragraph
 											sx={{ fontSize: "1.1rem" }}
 										>
-											Venta asegurada plazo 60 días.
+											Publicamos su auto en nuestras redes oficiales.
 										</Typography>
 									</Box>
-
-									<Typography variant="body1" sx={{ fontStyle: "italic" }}>
-										Te ayudamos a conseguir el auto de tus sueños.
-									</Typography>
 								</Box>
 							</Grid>
 						</Grid>
