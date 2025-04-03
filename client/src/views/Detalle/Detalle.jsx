@@ -67,6 +67,7 @@ export default function Detalle() {
 						: ["/placeholder.jpg"];
 
 				setImages(loadedImages);
+				setSelectedImageIndex(0); // Restablecer el índice de la imagen para que te muestre la primera
 			} else {
 				console.error(
 					"Error al obtener los datos del auto:",
@@ -320,9 +321,33 @@ export default function Detalle() {
 										fontWeight: "bold",
 										mb: 2,
 										textAlign: "center",
+										display: "flex",
+										flexDirection: "column",
+										alignItems: "center",
 									}}
 								>
-									{moneda} {auto.precio}
+									{auto.oferta && (
+										<Box
+											component="span"
+											sx={{
+												color: "red",
+												fontSize: "1.5rem",
+												fontWeight: "bold",
+											}}
+										>
+											{moneda} {auto.precio_oferta}
+										</Box>
+									)}
+									<Box
+										component="span"
+										sx={{
+											color: auto.oferta ? "grey.600" : "inherit",
+											textDecoration: auto.oferta ? "line-through" : "none",
+											opacity: auto.oferta ? 0.7 : 1,
+										}}
+									>
+										{moneda} {auto.precio}
+									</Box>
 								</Box>
 							)}
 
