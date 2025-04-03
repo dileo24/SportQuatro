@@ -1,11 +1,23 @@
 import React from "react";
-import { NavLink } from "react-router-dom"; // Importa NavLink
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import imgLogo from "../../assets/logo_sinFondo_blanco.png";
 import { useAuth } from "../../context/AuthContext";
+import { logoutUser } from "../../services/user.service";
 
 export default function Navbar() {
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, logout } = useAuth();
+	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		try {
+			await logoutUser();
+			logout();
+			navigate("/");
+		} catch (error) {
+			console.error("Error al cerrar sesión:", error);
+		}
+	};
 
 	return (
 		<nav className="navbar navbar-expand-lg fixed-top">
@@ -71,17 +83,24 @@ export default function Navbar() {
 							</NavLink>
 						</li>
 						{isAuthenticated && (
-							<li className="nav-item me-2">
-								<NavLink
-									to={`/nuevo_auto`}
-									className={({ isActive }) =>
-										isActive ? "nav-link active" : "nav-link"
-									}
-									aria-current="page"
-								>
-									Nuevo auto
-								</NavLink>
-							</li>
+							<>
+								<li className="nav-item me-2">
+									<NavLink
+										to={`/nuevo_auto`}
+										className={({ isActive }) =>
+											isActive ? "nav-link active" : "nav-link"
+										}
+										aria-current="page"
+									>
+										Nuevo auto
+									</NavLink>
+								</li>
+								<li className="nav-item me-2">
+									<button onClick={handleLogout} className="nav-link">
+										Cerrar sesión
+									</button>
+								</li>
+							</>
 						)}
 					</ul>
 				</div>

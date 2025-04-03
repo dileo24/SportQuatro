@@ -38,6 +38,15 @@ nav a.active:hover {
 	color: #ed0404 !important;
 }
 
+.navbar button {
+	color: white;
+}
+
+.navbar button:hover {
+	transform: scale(1.05);
+	color: white;
+}
+
 @media (max-width: 991px) {
 	.container-fluid {
 		padding: 0 !important;

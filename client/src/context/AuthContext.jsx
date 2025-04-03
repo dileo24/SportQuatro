@@ -6,6 +6,7 @@ export function AuthProvider({ children }) {
 	const [isAuthenticated, setIsAuthenticated] = useState(
 		localStorage.getItem("isAuthenticated") === "true"
 	);
+	const [pendingEmail, setPendingEmail] = useState(null);
 
 	const login = () => {
 		setIsAuthenticated(true);
@@ -15,10 +16,19 @@ export function AuthProvider({ children }) {
 	const logout = () => {
 		setIsAuthenticated(false);
 		localStorage.removeItem("isAuthenticated");
+		setPendingEmail(null);
 	};
 
 	return (
-		<AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+		<AuthContext.Provider
+			value={{
+				isAuthenticated,
+				pendingEmail,
+				login,
+				logout,
+				setPendingEmail,
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
