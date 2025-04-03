@@ -72,8 +72,10 @@ export default function NuevoAuto() {
 		const { name, value, type, checked } = e.target;
 
 		if (name === "precio" || name === "precio_oferta" || name === "km") {
-			const numericValue = value.replace(/[^0-9]/g, "");
+			const cleanValue = value.replace(/[^0-9.]/g, "");
+			const numericValue = cleanValue.replace(/\./g, "");
 			const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
 			setFormData((prev) => ({
 				...prev,
 				[name]: formattedValue,
@@ -84,8 +86,6 @@ export default function NuevoAuto() {
 				[name]: type === "checkbox" ? checked : value,
 			}));
 		}
-
-		// Limpiar error cuando el usuario comienza a editar
 		if (submitError) setSubmitError(null);
 	};
 
@@ -143,8 +143,6 @@ export default function NuevoAuto() {
 			// 1. Crear el auto sin imágenes
 			const autoResponse = await axios.post("http://localhost:3001/autos", {
 				...formData,
-				precio: formData.precio.replace(/\./g, ""),
-				precio_oferta: formData.precio_oferta?.replace(/\./g, "") || null,
 				img: [],
 			});
 
@@ -175,12 +173,10 @@ export default function NuevoAuto() {
 				throw new Error("No se pudo subir ninguna imagen");
 			}
 
-			// 3. Actualizar auto con las imágenes
 			await axios.put(`http://localhost:3001/autos/${autoId}`, {
 				img: fileNamesArray,
 			});
 
-			// Redirigir al detalle del auto
 			navigate(`/detalle/${autoId}`);
 		} catch (error) {
 			console.error("Error en el proceso:", error);
