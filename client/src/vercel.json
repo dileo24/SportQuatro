@@ -1,8 +1,32 @@
 {
-	"rewrites": [
+	"routes": [
 		{
-			"source": "/(.*)",
-			"destination": "/index.html"
+			"src": "/loginAdminP",
+			"dest": "/index.html"
+		},
+		{
+			"src": "/catalogo",
+			"dest": "/index.html"
+		},
+		{
+			"src": "/nosotros",
+			"dest": "/index.html"
+		},
+		{
+			"src": "/contacto",
+			"dest": "/index.html"
+		},
+		{
+			"src": "/nuevo_auto",
+			"dest": "/index.html"
+		},
+		{
+			"src": "/detalle/:id",
+			"dest": "/index.html"
+		},
+		{
+			"src": "/(.*)",
+			"dest": "/index.html"
 		}
 	]
 }
