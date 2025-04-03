@@ -4,29 +4,42 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const routes = require("./routes/index.js");
 const cors = require("cors");
-const session = require("express-session"); // Añade esta línea
+const session = require("express-session");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 require("dotenv").config();
 
-require("./db.js");
+const { conn } = require("./db.js");
 
 const server = express();
-
 server.name = "API";
 
+const sessionStore = new SequelizeStore({
+  db: conn,
+  tableName: "sessions",
+  checkExpirationInterval: 15 * 60 * 1000,
+  expiration: 24 * 60 * 60 * 1000,
+});
+
+// Configuración de sesión
 server.use(
   session({
     secret: process.env.SESSION_SECRET,
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
     rolling: true,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // true en producción (HTTPS)
+      secure: process.env.NODE_ENV === "production", // HTTPS en producción
       httpOnly: true,
-      maxAge: 1000 * 60 * 30, // 30 minutos de vida de la sesión
+      maxAge: 1000 * 60 * 30, // 30 minutos
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
   }),
 );
+
+if (process.env.NODE_ENV !== "production") {
+  sessionStore.sync();
+}
 
 server.disable("etag");
 

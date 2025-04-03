@@ -4,15 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
-/* const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sportquatro`, {
-  logging: false,
-  native: false,
-  define: {
-    timestamps: false,
-  },
-}); */
-
-//deploy
 const sequelize = new Sequelize(
   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
   {
@@ -31,7 +22,6 @@ const sequelize = new Sequelize(
 );
 
 const basename = path.basename(__filename);
-
 const modelDefiners = [];
 
 fs.readdirSync(path.join(__dirname, "/models"))
@@ -41,8 +31,9 @@ fs.readdirSync(path.join(__dirname, "/models"))
   });
 
 modelDefiners.forEach(model => model(sequelize));
-let entries = Object.entries(sequelize.models);
-let capsEntries = entries.map(entry => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
+
+const entries = Object.entries(sequelize.models);
+const capsEntries = entries.map(entry => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
 const { Auto, Categoria } = sequelize.models;
@@ -52,6 +43,7 @@ Categoria.belongsToMany(Auto, {
   foreignKey: "categoriaId",
   as: "autos",
 });
+
 Auto.belongsToMany(Categoria, {
   through: "Auto_Categoria",
   foreignKey: "autoId",

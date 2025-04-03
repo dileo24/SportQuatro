@@ -861,8 +861,11 @@ export default function Detalle() {
 								{[
 									{ icon: "✨", title: "Entrega Inmediata" },
 									{ icon: "🔄", title: "Recibimos tu usado (Consultar)" },
-									{ icon: "💰", title: "Financiación DNI (Hasta 50% - 80%)" },
-									{ icon: "🛡️", title: "Garantía por escrito" },
+									{
+										icon: "💰",
+										title: "Financiación solo con DNI (Hasta 50% - 80%)",
+									},
+									{ icon: "🛡️", title: "Gestoría general" },
 								].map((beneficio, index) => (
 									<Grid item xs={12} sm={6} key={index}>
 										<Paper
