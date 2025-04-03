@@ -15,7 +15,6 @@ module.exports = sequelize => {
       },
       modelo: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
       },
       motor: {
@@ -60,7 +59,7 @@ module.exports = sequelize => {
       },
       img: {
         type: DataTypes.JSON,
-        allowNull: false,
+        allowNull: true,
         defaultValue: [],
       },
     },

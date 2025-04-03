@@ -2,8 +2,11 @@ import React from "react";
 import { NavLink } from "react-router-dom"; // Importa NavLink
 import "./Navbar.css";
 import imgLogo from "../../assets/logo_sinFondo_blanco.png";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
+	const { isAuthenticated } = useAuth();
+
 	return (
 		<nav className="navbar navbar-expand-lg fixed-top">
 			<div className="container-fluid">
@@ -67,6 +70,19 @@ export default function Navbar() {
 								Contacto
 							</NavLink>
 						</li>
+						{isAuthenticated && (
+							<li className="nav-item me-2">
+								<NavLink
+									to={`/nuevo_auto`}
+									className={({ isActive }) =>
+										isActive ? "nav-link active" : "nav-link"
+									}
+									aria-current="page"
+								>
+									Nuevo auto
+								</NavLink>
+							</li>
+						)}
 					</ul>
 				</div>
 			</div>

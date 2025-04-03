@@ -32,7 +32,7 @@
     "combustible": "Nafta",
     "moneda": "AR$",
     "precio": "23.400.000",
-    "destacar": false,
+    "destacar": true,
     "oferta": false,
     "precio_oferta": "",
     "img": ["img_2.webp"],

@@ -1,15 +1,17 @@
-.nov-cards-container{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0 2rem;
-    margin-top: 2rem;
+.nov-cards-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+	gap: 1.5rem;
+	padding: 0 1rem;
+	margin-top: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+	justify-content: center;
 }
 
-
 @media (max-width: 991px) {
-    .nov-cards-container{
-        flex-direction: column;
-        height: 160vh;
-    }    
+	.nov-cards-container {
+		grid-template-columns: minmax(300px, 400px);
+		justify-content: center;
+	}
 }

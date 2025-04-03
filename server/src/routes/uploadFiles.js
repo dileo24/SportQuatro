@@ -55,10 +55,11 @@ router.post("/", uploadFile.single("file"), async (req, res) => {
     res.status(200).json({ status: 200, resp: true, fileName: `${fileName}` });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: 500, resp: "Error al procesar la imagen.", error: error.message });
+    res
+      .status(500)
+      .json({ status: 500, resp: "Error al procesar la imagen.", error: error.message });
   }
 });
-
 
 router.use("/", express.static(path.join(__dirname, "../../uploads")));
 

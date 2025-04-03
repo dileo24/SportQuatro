@@ -12,6 +12,7 @@ import Catalogo from "./views/Catalogo/Catalogo";
 import Nosotros from "./views/Nosotros/Nosotros";
 import Wpp from "./components/Wpp/Wpp";
 import Contacto from "./views/Contacto/Contacto";
+import NuevoAuto from "./views/NuevoAuto/NuevoAuto";
 
 function App() {
 	return (
@@ -24,6 +25,7 @@ function App() {
 					<Route path="/catalogo" element={<Catalogo />} />
 					<Route path="/nosotros" element={<Nosotros />} />
 					<Route path="/contacto" element={<Contacto />} />
+					<Route path="/nuevo_auto" element={<NuevoAuto />} />
 					<Route path="/detalle/:id" element={<Detalle />} />
 					<Route path="/pruebacontext" element={<PruebaContext />} />
 				</Routes>

@@ -5,7 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMedal } from "@fortawesome/free-solid-svg-icons/faMedal";
 
 export default function Card({ auto }) {
-	const imageUrl = `http://localhost:3001/files/${auto.img[0]}`;
+	const API_URL = import.meta.env.VITE_API_URL;
+	const imageUrl = `${API_URL}/files/${auto.img[0]}`;
 
 	return (
 		<Link

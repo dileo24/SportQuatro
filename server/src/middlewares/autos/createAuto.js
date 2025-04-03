@@ -15,8 +15,8 @@ const createAuto = async (req, res, next) => {
     res.status(200).json({
       status: "200",
       resp: `El auto ${newAuto.modelo} se ha creado exitosamente.`,
+      id: newAuto.id,
     });
-
   } catch (err) {
     res.status(404).json({ status: "404", resp: err.message });
   }

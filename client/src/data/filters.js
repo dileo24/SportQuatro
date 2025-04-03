@@ -8,6 +8,16 @@ export const categoria = [
 	{ value: "Moto", label: "Moto" },
 ];
 
+export const categoriaToCreate = [
+	{ value: "1", label: "SUV" },
+	{ value: "2", label: "Pick Up" },
+	{ value: "3", label: "5 Puertas" },
+	{ value: "4", label: "4 Puertas" },
+	{ value: "5", label: "Utilitario" },
+	{ value: "6", label: "0km" },
+	{ value: "7", label: "Moto" },
+];
+
 export const tiposCombustible = [
 	{ value: "", label: "Todos" },
 	{ value: "Nafta", label: "Nafta" },
