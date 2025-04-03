@@ -13,6 +13,12 @@ import {
 	useTheme,
 	TextField,
 	Button,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	FormControlLabel,
+	Checkbox,
 } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { motion } from "framer-motion";
@@ -21,6 +27,11 @@ import { useAuth } from "../../context/AuthContext";
 import CustomNavButton from "../../components/CustomNavButton/CustomNavButton";
 import SpecItem from "../../components/SpecItem/SpectItem";
 import ImagenUploader from "../../components/ImagenUploader/ImagenUploader";
+import {
+	tiposCombustible,
+	tiposTransmision,
+	categoriaToCreate,
+} from "../../data/filters";
 
 const MotionCard = motion(Card);
 const MotionTypography = motion(Typography);
@@ -29,7 +40,6 @@ export default function Detalle() {
 	const { id } = useParams();
 	const [auto, setAuto] = useState(null);
 	const [images, setImages] = useState([]);
-	console.log("images: ", images);
 	const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 	const theme = useTheme();
 	const [categorias, setCategorias] = useState([]);
@@ -37,7 +47,8 @@ export default function Detalle() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedAuto, setEditedAuto] = useState({});
 	const [focusedField, setFocusedField] = useState(null);
-	const [moneda, setMoneda] = useState("AR$");
+	const [moneda, setMoneda] = useState("");
+	const [years, setYears] = useState([]);
 
 	const yearRef = useRef(null);
 	const motorRef = useRef(null);
@@ -50,6 +61,13 @@ export default function Detalle() {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		fetchAuto();
+
+		const currentYear = new Date().getFullYear();
+		const yearsArray = [];
+		for (let i = currentYear; i >= currentYear - 25; i--) {
+			yearsArray.push(i);
+		}
+		setYears(yearsArray);
 	}, [id]);
 
 	const fetchAuto = async () => {
@@ -58,6 +76,7 @@ export default function Detalle() {
 			if (response.data.status === 200) {
 				const autoData = response.data.resp;
 				setAuto(autoData);
+				setMoneda(autoData.moneda);
 				setEditedAuto(autoData);
 				setCategorias(autoData.categorias.map((cat) => cat.id));
 
@@ -67,15 +86,73 @@ export default function Detalle() {
 						: ["/placeholder.jpg"];
 
 				setImages(loadedImages);
-				setSelectedImageIndex(0); // Restablecer el índice de la imagen para que te muestre la primera
-			} else {
-				console.error(
-					"Error al obtener los datos del auto:",
-					response.data.resp
-				);
+				setSelectedImageIndex(0);
 			}
 		} catch (error) {
 			console.error("Error al obtener los datos del auto:", error);
+		}
+	};
+
+	const handleThumbnailClick = (index) => {
+		setSelectedImageIndex(index);
+	};
+
+	const handleEdit = () => {
+		setIsEditing(true);
+	};
+
+	const handleChange = (e, key) => {
+		const { name, value, type, checked } = e.target;
+
+		if (name === "precio" || name === "precio_oferta" || name === "km") {
+			const cleanValue = value.replace(/[^0-9.]/g, "");
+			const numericValue = cleanValue.replace(/\./g, "");
+			const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+			setEditedAuto((prev) => ({
+				...prev,
+				[name]: formattedValue,
+			}));
+		} else {
+			setEditedAuto((prev) => ({
+				...prev,
+				[name]: type === "checkbox" ? checked : value,
+			}));
+		}
+		setFocusedField(key || name);
+	};
+
+	const handleCategoryChange = (event) => {
+		const { value } = event.target;
+		const selectedCategories =
+			typeof value === "string" ? value.split(",") : value;
+
+		setEditedAuto((prev) => ({
+			...prev,
+			categorias: selectedCategories.map((id) => ({
+				id: Number(id),
+				categ: categoriaToCreate.find((cat) => cat.value === id)?.label || "",
+			})),
+		}));
+	};
+
+	const handleSave = async () => {
+		try {
+			const payload = {
+				...editedAuto,
+				moneda: moneda,
+			};
+
+			const response = await axios.put(
+				`http://localhost:3001/autos/${id}`,
+				payload
+			);
+			if (response.data.status === 200) {
+				setAuto(payload);
+				setIsEditing(false);
+			}
+		} catch (error) {
+			console.error("Error al guardar los cambios:", error);
 		}
 	};
 
@@ -91,39 +168,12 @@ export default function Detalle() {
 			</Box>
 		);
 
-	const handleThumbnailClick = (index) => {
-		setSelectedImageIndex(index);
-	};
-
-	const handleEdit = () => {
-		setIsEditing(true);
-	};
-
-	const handleChange = (e, key) => {
-		setEditedAuto((prev) => ({
-			...prev,
-			[key]: e.target.value,
-		}));
-		setFocusedField(key);
-	};
-
-	const handleSave = async () => {
-		try {
-			const response = await axios.put(
-				`http://localhost:3001/autos/${id}`,
-				editedAuto
-			);
-			if (response.data.status === 200) {
-				setAuto(editedAuto);
-				setIsEditing(false);
-				console.log("Cambios guardados exitosamente:", response.data.resp);
-			} else {
-				console.error("Error al guardar los cambios:", response.data.resp);
-			}
-		} catch (error) {
-			console.error("Error al guardar los cambios:", error);
-		}
-	};
+	const filteredCombustible = tiposCombustible.filter(
+		(opt) => opt.value !== ""
+	);
+	const filteredTransmision = tiposTransmision.filter(
+		(opt) => opt.value !== ""
+	);
 
 	return (
 		<Container maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
@@ -176,7 +226,6 @@ export default function Detalle() {
 							))}
 						</Carousel>
 
-						{/* Thumbnails Gallery */}
 						<Box
 							sx={{
 								p: 2,
@@ -259,61 +308,77 @@ export default function Detalle() {
 								<TextField
 									inputRef={modeloRef}
 									label="Modelo"
+									name="modelo"
 									value={editedAuto.modelo}
-									onChange={(e) =>
-										setEditedAuto({ ...editedAuto, modelo: e.target.value })
-									}
+									onChange={(e) => handleChange(e, "modelo")}
 									fullWidth
 									margin="normal"
 								/>
 							) : (
 								<MotionTypography
-									variant="h3"
+									variant="h4"
 									gutterBottom
-									initial={{ opacity: 0 }}
-									animate={{ opacity: 1 }}
-									transition={{ delay: 0.4 }}
-									sx={{
-										fontWeight: "bold",
-										background:
-											"linear-gradient(45deg,rgb(0, 0, 0),rgb(0, 0, 0))",
-										backgroundClip: "text",
-										WebkitBackgroundClip: "text",
-										color: "transparent",
-										mb: 2,
-										mt: 2,
-										textAlign: "center",
-									}}
+									sx={{ fontWeight: "bold", mb: 2, mt: 2, textAlign: "center" }}
 								>
 									{auto.modelo}
 								</MotionTypography>
 							)}
 
 							{isEditing ? (
-								<Box display="flex" alignItems="center">
-									<TextField
-										inputRef={precioRef}
-										label="Precio"
-										value={editedAuto.precio}
-										onChange={(e) =>
-											setEditedAuto({ ...editedAuto, precio: e.target.value })
+								<>
+									<Box display="flex" alignItems="center">
+										<TextField
+											inputRef={precioRef}
+											label="Precio"
+											name="precio"
+											value={editedAuto.precio}
+											onChange={(e) => handleChange(e, "precio")}
+											fullWidth
+											margin="normal"
+										/>
+										<Select
+											value={moneda}
+											onChange={(e) => setMoneda(e.target.value)}
+											sx={{ ml: 1, minWidth: 80 }}
+										>
+											<MenuItem value="AR$">AR$</MenuItem>
+											<MenuItem value="U$D">U$D</MenuItem>
+										</Select>
+									</Box>
+
+									<FormControlLabel
+										control={
+											<Checkbox
+												checked={editedAuto.destacar || false}
+												onChange={(e) => handleChange(e, "destacar")}
+												name="destacar"
+											/>
 										}
-										fullWidth
-										margin="normal"
+										label="Destacar"
 									/>
-									<select
-										value={moneda}
-										onChange={(e) => setMoneda(e.target.value)}
-										style={{
-											marginLeft: "8px",
-											padding: "8px",
-											borderRadius: "4px",
-										}}
-									>
-										<option value="AR$">AR$</option>
-										<option value="U$D">U$D</option>
-									</select>
-								</Box>
+
+									<FormControlLabel
+										control={
+											<Checkbox
+												checked={editedAuto.oferta || false}
+												onChange={(e) => handleChange(e, "oferta")}
+												name="oferta"
+											/>
+										}
+										label="En oferta"
+									/>
+
+									{editedAuto.oferta && (
+										<TextField
+											label="Precio de oferta"
+											name="precio_oferta"
+											value={editedAuto.precio_oferta || ""}
+											onChange={(e) => handleChange(e, "precio_oferta")}
+											fullWidth
+											margin="normal"
+										/>
+									)}
+								</>
 							) : (
 								<Box
 									sx={{
@@ -333,9 +398,10 @@ export default function Detalle() {
 												color: "red",
 												fontSize: "1.5rem",
 												fontWeight: "bold",
+												mb: 1,
 											}}
 										>
-											{moneda} {auto.precio_oferta}
+											{auto.moneda} {auto.precio_oferta}
 										</Box>
 									)}
 									<Box
@@ -346,82 +412,189 @@ export default function Detalle() {
 											opacity: auto.oferta ? 0.7 : 1,
 										}}
 									>
-										{moneda} {auto.precio}
+										{auto.moneda} {auto.precio}
 									</Box>
 								</Box>
 							)}
 
 							<Grid container spacing={2} sx={{ mt: 2 }}>
-								{[
-									{
-										icon: "📅",
-										label: "Modelo",
-										value: editedAuto.anio,
-										key: "anio",
-										ref: yearRef,
-										isFocused: isEditing && focusedField === "anio",
-									},
-									{
-										icon: "🚗",
-										label: "Motor",
-										value: editedAuto.motor,
-										key: "motor",
-										ref: motorRef,
-										isFocused: isEditing && focusedField === "motor",
-									},
-									{
-										icon: "📊",
-										label: "Kilometraje",
-										value: `${editedAuto.km}`,
-										key: "km",
-										ref: kmRef,
-										isFocused: isEditing && focusedField === "km",
-									},
-									{
-										icon: "⚙️",
-										label: "Transmisión",
-										value: editedAuto.transmision,
-										key: "transmision",
-										ref: transmisionRef,
-										isFocused: isEditing && focusedField === "transmision",
-									},
-									{
-										icon: "⛽",
-										label: "Combustible",
-										value: editedAuto.combustible,
-										key: "combustible",
-										ref: combustibleRef,
-										isFocused: isEditing && focusedField === "combustible",
-									},
-								].map((spec) => (
-									<Grid item xs={12} sm={6} key={spec.key}>
-										<Paper
-											elevation={3}
-											sx={{
-												p: 2,
-												display: "flex",
-												flexDirection: "column",
-												alignItems: "center",
-												gap: 1.5,
-												borderRadius: 2,
-												background:
-													theme.palette.mode === "dark" ? "#333" : "#fff",
-												boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-											}}
-										>
-											<SpecItem
-												icon={spec.icon}
-												label={spec.label}
-												value={spec.value}
-												isEditing={isEditing}
-												onChange={handleChange}
-												fieldKey={spec.key}
-												inputRef={spec.ref}
-												isFocused={spec.isFocused}
+								{isEditing ? (
+									<Grid item xs={6}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											<FormControl fullWidth>
+												<InputLabel>Año</InputLabel>
+												<Select
+													inputRef={yearRef}
+													name="anio"
+													value={editedAuto.anio}
+													onChange={(e) => handleChange(e, "anio")}
+													label="Año"
+												>
+													{years.map((year) => (
+														<MenuItem key={year} value={year}>
+															{year}
+														</MenuItem>
+													))}
+												</Select>
+											</FormControl>
+										</Paper>
+									</Grid>
+								) : (
+									<Grid item xs={4}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											<SpecItem icon="📅" label="Modelo" value={auto.anio} />
+										</Paper>
+									</Grid>
+								)}
+								<Grid item xs={4}>
+									<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+										{isEditing ? (
+											<TextField
+												inputRef={motorRef}
+												label="Motor"
+												name="motor"
+												value={editedAuto.motor}
+												onChange={(e) => handleChange(e, "motor")}
+												fullWidth
+											/>
+										) : (
+											<SpecItem icon="🚗" label="Motor" value={auto.motor} />
+										)}
+									</Paper>
+								</Grid>
+								{isEditing ? (
+									<Grid item xs={6}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											<TextField
+												inputRef={kmRef}
+												label="Km"
+												name="km"
+												value={editedAuto.km}
+												onChange={(e) => handleChange(e, "km")}
+												fullWidth
 											/>
 										</Paper>
 									</Grid>
-								))}
+								) : (
+									<Grid item xs={4}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											<SpecItem icon="📊" label="Km" value={auto.km} />
+										</Paper>
+									</Grid>
+								)}
+
+								<Grid item xs={6}>
+									<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+										{isEditing ? (
+											<FormControl fullWidth>
+												<InputLabel>Transmisión</InputLabel>
+												<Select
+													inputRef={transmisionRef}
+													name="transmision"
+													value={editedAuto.transmision}
+													onChange={(e) => handleChange(e, "transmision")}
+													label="Transmisión"
+												>
+													{filteredTransmision.map((option) => (
+														<MenuItem key={option.value} value={option.value}>
+															{option.label}
+														</MenuItem>
+													))}
+												</Select>
+											</FormControl>
+										) : (
+											<SpecItem
+												icon="⚙️"
+												label="Transmisión"
+												value={auto.transmision}
+											/>
+										)}
+									</Paper>
+								</Grid>
+
+								{isEditing ? (
+									<Grid item xs={12}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											<FormControl fullWidth>
+												<InputLabel>Combustible</InputLabel>
+												<Select
+													inputRef={combustibleRef}
+													name="combustible"
+													value={editedAuto.combustible}
+													onChange={(e) => handleChange(e, "combustible")}
+													label="Combustible"
+												>
+													{filteredCombustible.map((option) => (
+														<MenuItem key={option.value} value={option.value}>
+															{option.label}
+														</MenuItem>
+													))}
+												</Select>
+											</FormControl>
+										</Paper>
+									</Grid>
+								) : (
+									<Grid item xs={6}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											<SpecItem
+												icon="⛽"
+												label="Combustible"
+												value={auto.combustible}
+											/>
+										</Paper>
+									</Grid>
+								)}
+
+								<Grid item xs={12}>
+									<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+										{isEditing ? (
+											<FormControl fullWidth>
+												<InputLabel>Categoría/s</InputLabel>
+												<Select
+													multiple
+													name="categorias"
+													value={
+														editedAuto.categorias?.map((cat) =>
+															cat.id.toString()
+														) || []
+													}
+													onChange={handleCategoryChange}
+													label="Categoría/s"
+													renderValue={(selected) =>
+														selected
+															.map((id) => {
+																const cat = categoriaToCreate.find(
+																	(c) => c.value === id
+																);
+																return cat?.label || id;
+															})
+															.join(", ")
+													}
+												>
+													{categoriaToCreate.map((option) => (
+														<MenuItem key={option.value} value={option.value}>
+															<Checkbox
+																checked={editedAuto.categorias?.some(
+																	(c) => c.id.toString() === option.value
+																)}
+															/>
+															{option.label}
+														</MenuItem>
+													))}
+												</Select>
+											</FormControl>
+										) : (
+											<SpecItem
+												icon="🏷️"
+												label="Categoría/s"
+												value={
+													auto.categorias?.map((cat) => cat.categ).join(", ") ||
+													"Sin categoría"
+												}
+											/>
+										)}
+									</Paper>
+								</Grid>
 							</Grid>
 
 							{isAuthenticated && (

@@ -7,7 +7,6 @@ import "./App.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./views/Login/Login";
-import PruebaContext from "./views/PruebaContext";
 import Catalogo from "./views/Catalogo/Catalogo";
 import Nosotros from "./views/Nosotros/Nosotros";
 import Wpp from "./components/Wpp/Wpp";
@@ -27,7 +26,6 @@ function App() {
 					<Route path="/contacto" element={<Contacto />} />
 					<Route path="/nuevo_auto" element={<NuevoAuto />} />
 					<Route path="/detalle/:id" element={<Detalle />} />
-					<Route path="/pruebacontext" element={<PruebaContext />} />
 				</Routes>
 			</main>
 			<Wpp />
