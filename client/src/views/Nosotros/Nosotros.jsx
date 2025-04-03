@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Novedades from "../../components/Novedades/Novedades";
 import { Box, Typography, Grid, Container, Divider } from "@mui/material";
 import heroNosotros from "../../assets/hero_nosotros.jpeg";
@@ -8,6 +8,9 @@ import img3Nosotros from "../../assets/img3_nosotros.jpeg";
 import img4Nosotros from "../../assets/img4_nosotros.jpg";
 
 export default function Nosotros() {
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}, []);
 	return (
 		<Box sx={{ overflowX: "hidden" }}>
 			<Box

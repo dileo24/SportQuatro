@@ -82,6 +82,46 @@ router.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
+router.delete("/:fileName", async (req, res) => {
+  try {
+    const { fileName } = req.params;
+
+    // Validar que el fileName no esté vacío y sea seguro
+    if (!fileName || fileName.includes("..") || fileName.includes("/")) {
+      return res.status(400).json({
+        status: 400,
+        resp: "Nombre de archivo no válido",
+      });
+    }
+
+    const filePath = path.join(uploadDir, fileName);
+
+    // Verificar si el archivo existe
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        status: 404,
+        resp: "Archivo no encontrado",
+      });
+    }
+
+    // Eliminar el archivo
+    await fs.promises.unlink(filePath);
+
+    res.status(200).json({
+      status: 200,
+      resp: true,
+      message: "Imagen eliminada exitosamente",
+    });
+  } catch (error) {
+    console.error("Error al eliminar imagen:", error);
+    res.status(500).json({
+      status: 500,
+      resp: "Error al eliminar la imagen",
+      error: process.env.NODE_ENV === "development" ? error.message : null,
+    });
+  }
+});
+
 router.use(
   "/",
   express.static(uploadDir, {

@@ -28,6 +28,11 @@ import {
 	categoriaToCreate,
 } from "../../data/filters";
 import { useAuth } from "../../context/AuthContext";
+import {
+	postAuto,
+	postImagen,
+	updateImgInAuto,
+} from "../../services/autos.service";
 
 const MotionCard = motion(Card);
 const MAX_IMAGES = 10;
@@ -66,6 +71,9 @@ export default function NuevoAuto() {
 			yearsArray.push(i);
 		}
 		setYears(yearsArray);
+	}, []);
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	}, []);
 
 	const handleChange = (e) => {
@@ -140,26 +148,17 @@ export default function NuevoAuto() {
 		}
 
 		try {
-			// 1. Crear el auto sin imágenes
-			const autoResponse = await axios.post("http://localhost:3001/autos", {
-				...formData,
-				img: [],
-			});
+			const autoResponse = await postAuto(formData);
 
 			const autoId = autoResponse.data.id;
 
-			// 2. Subir imágenes
 			const fileNamesArray = [];
 			for (const [index, image] of images.entries()) {
 				try {
 					const formDataImg = new FormData();
 					formDataImg.append("file", image);
 
-					const uploadResponse = await axios.post(
-						"http://localhost:3001/files",
-						formDataImg,
-						{ headers: { "Content-Type": "multipart/form-data" } }
-					);
+					const uploadResponse = await postImagen(formDataImg);
 
 					if (uploadResponse.data.fileName) {
 						fileNamesArray.push(uploadResponse.data.fileName);
@@ -173,9 +172,7 @@ export default function NuevoAuto() {
 				throw new Error("No se pudo subir ninguna imagen");
 			}
 
-			await axios.put(`http://localhost:3001/autos/${autoId}`, {
-				img: fileNamesArray,
-			});
+			await updateImgInAuto(autoId, fileNamesArray);
 
 			navigate(`/detalle/${autoId}`);
 		} catch (error) {

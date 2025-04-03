@@ -21,8 +21,10 @@ export default function Catalogo() {
 	}, []);
 
 	useEffect(() => {
-		window.scrollTo({ top: 0, behavior: "smooth" });
-	}, [currentPage]);
+		if (filteredAutos.length > 0) {
+			window.scrollTo({ top: 0, behavior: "smooth" });
+		}
+	}, [filteredAutos, currentPage]);
 
 	useEffect(() => {
 		aplicarFiltros();
@@ -101,7 +103,7 @@ export default function Catalogo() {
 	return (
 		<Box
 			sx={{
-				mt: isMobile ? "30px" : "70px",
+				mt: "70px",
 				padding: isMobile ? "10px" : "20px",
 				minHeight: "80vh",
 				backgroundColor: "#f8f9fa",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
 	Container,
@@ -19,36 +19,57 @@ import {
 	MenuItem,
 	FormControlLabel,
 	Checkbox,
+	IconButton,
+	Alert,
+	List,
+	ListItem,
+	ListItemText,
+	Divider,
+	Chip,
+	Avatar,
+	Badge,
 } from "@mui/material";
+import { Close, AddPhotoAlternate } from "@mui/icons-material";
+import SpecItem from "../../components/SpecItem/SpectItem";
 import Carousel from "react-material-ui-carousel";
 import { motion } from "framer-motion";
 import CardsRelacionados from "../../components/Cards_Relacionados/CardsRelacionados";
 import { useAuth } from "../../context/AuthContext";
 import CustomNavButton from "../../components/CustomNavButton/CustomNavButton";
-import SpecItem from "../../components/SpecItem/SpectItem";
-import ImagenUploader from "../../components/ImagenUploader/ImagenUploader";
 import {
 	tiposCombustible,
 	tiposTransmision,
 	categoriaToCreate,
 } from "../../data/filters";
+import {
+	deleteAuto,
+	getAutoById,
+	postImagen,
+	updateAuto,
+	updateImgInAuto,
+} from "../../services/autos.service";
 
 const MotionCard = motion(Card);
 const MotionTypography = motion(Typography);
+const MAX_IMAGES = 10;
 
 export default function Detalle() {
+	const navigate = useNavigate();
 	const { id } = useParams();
 	const [auto, setAuto] = useState(null);
 	const [images, setImages] = useState([]);
 	const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+	const [imageError, setImageError] = useState("");
+	const [isUploading, setIsUploading] = useState(false);
 	const theme = useTheme();
 	const [categorias, setCategorias] = useState([]);
 	const { isAuthenticated } = useAuth();
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedAuto, setEditedAuto] = useState({});
-	const [focusedField, setFocusedField] = useState(null);
-	const [moneda, setMoneda] = useState("");
+	const [moneda, setMoneda] = useState("AR$");
 	const [years, setYears] = useState([]);
+	const [submitError, setSubmitError] = useState(null);
+	const fileInputRef = useRef(null);
 
 	const yearRef = useRef(null);
 	const motorRef = useRef(null);
@@ -72,7 +93,7 @@ export default function Detalle() {
 
 	const fetchAuto = async () => {
 		try {
-			const response = await axios.get(`http://localhost:3001/autos/${id}`);
+			const response = await getAutoById(id);
 			if (response.data.status === 200) {
 				const autoData = response.data.resp;
 				setAuto(autoData);
@@ -82,7 +103,9 @@ export default function Detalle() {
 
 				const loadedImages =
 					autoData.img && autoData.img.length > 0
-						? autoData.img.map((img) => `http://localhost:3001/files/${img}`)
+						? autoData.img.map(
+								(img) => `${import.meta.env.VITE_API_URL}/files/${img}`
+						  )
 						: ["/placeholder.jpg"];
 
 				setImages(loadedImages);
@@ -143,16 +166,114 @@ export default function Detalle() {
 				moneda: moneda,
 			};
 
-			const response = await axios.put(
-				`http://localhost:3001/autos/${id}`,
-				payload
-			);
+			const response = await updateAuto(id, payload);
 			if (response.data.status === 200) {
 				setAuto(payload);
 				setIsEditing(false);
 			}
 		} catch (error) {
 			console.error("Error al guardar los cambios:", error);
+		}
+	};
+
+	const handleImageUploadClick = () => {
+		fileInputRef.current.click();
+	};
+
+	const handleImageUpload = async (e) => {
+		const files = Array.from(e.target.files);
+		setImageError("");
+
+		if (images.length + files.length > MAX_IMAGES) {
+			setImageError(
+				`Solo se pueden subir ${MAX_IMAGES} imágenes. Ya hay ${images.length} cargada y estás intentando agregar ${files.length} más.`
+			);
+			return;
+		}
+
+		try {
+			setIsUploading(true);
+
+			let currentImages = [...auto.img];
+			let newImageUrls = [...images];
+
+			const uploadPromises = files.map((file) => {
+				const formData = new FormData();
+				formData.append("file", file);
+				return postImagen(formData);
+			});
+
+			const responses = await Promise.all(uploadPromises);
+
+			responses.forEach((response) => {
+				if (response.data.fileName) {
+					currentImages.push(response.data.fileName);
+					newImageUrls.push(
+						`${import.meta.env.VITE_API_URL}/files/${response.data.fileName}`
+					);
+				}
+			});
+
+			await updateImgInAuto(id, currentImages);
+
+			setAuto((prev) => ({ ...prev, img: currentImages }));
+			setImages(newImageUrls);
+		} catch (error) {
+			console.error("Error al subir imágenes:", error);
+			setImageError("Error al subir las imágenes. Intente nuevamente.");
+			setTimeout(() => {
+				setImageError("");
+			}, 3000);
+		} finally {
+			setIsUploading(false);
+			e.target.value = "";
+		}
+	};
+
+	const handleRemoveImage = async (index) => {
+		const imageToRemove = auto.img[index];
+
+		try {
+			// Primero eliminar la imagen del servidor
+			await axios.delete(
+				`${import.meta.env.VITE_API_URL}/files/${imageToRemove}`
+			);
+
+			// Luego actualizar el estado local
+			const newImageArray = auto.img.filter((_, i) => i !== index);
+			await updateImgInAuto(id, newImageArray);
+
+			setAuto((prev) => ({
+				...prev,
+				img: newImageArray,
+			}));
+
+			setImages((prev) => prev.filter((_, i) => i !== index));
+
+			if (selectedImageIndex === index) {
+				setSelectedImageIndex(0);
+			}
+		} catch (error) {
+			console.error("Error al eliminar la imagen:", error);
+			setImageError("Error al eliminar la imagen. Intente nuevamente.");
+			setTimeout(() => {
+				setImageError("");
+			}, 3000);
+		}
+	};
+
+	const handleDeleteAuto = async (id) => {
+		try {
+			const response = await deleteAuto(id);
+			if (response.data.status === "200") {
+				navigate("/catalogo");
+			}
+		} catch (error) {
+			console.error("Error al eliminar el auto: ", error);
+			setImageError("Error al eliminar el auto. Intente nuevamente.");
+			setTimeout(() => {
+				setImageError("");
+			}, 3000);
 		}
 	};
 
@@ -176,17 +297,17 @@ export default function Detalle() {
 	);
 
 	return (
-		<Container maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
-			<Grid container spacing={2}>
-				<Grid item xs={6} md={8}>
+		<Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
+			<Grid container spacing={3}>
+				<Grid item xs={12} md={8}>
 					<MotionCard
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.5 }}
 						sx={{
-							borderRadius: 4,
-							background: "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
-							boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+							borderRadius: 2,
+							background: "#fff",
+							boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
 						}}
 					>
 						<Carousel
@@ -207,10 +328,10 @@ export default function Detalle() {
 								<Box
 									key={index}
 									sx={{
-										height: 500,
+										height: 525,
 										position: "relative",
 										overflow: "hidden",
-										borderRadius: "16px 16px 0 0",
+										borderRadius: "8px 8px 0 0",
 									}}
 								>
 									<img
@@ -232,16 +353,16 @@ export default function Detalle() {
 								display: "flex",
 								gap: 1,
 								overflowX: "auto",
+								alignItems: "center",
 								"&::-webkit-scrollbar": {
-									height: 8,
+									height: 6,
 								},
 								"&::-webkit-scrollbar-track": {
 									backgroundColor: "#f1f1f1",
-									borderRadius: 4,
 								},
 								"&::-webkit-scrollbar-thumb": {
 									backgroundColor: "#888",
-									borderRadius: 4,
+									borderRadius: 3,
 									"&:hover": {
 										backgroundColor: "#555",
 									},
@@ -253,23 +374,45 @@ export default function Detalle() {
 									key={index}
 									onClick={() => handleThumbnailClick(index)}
 									sx={{
-										width: 100,
-										height: 70,
+										width: 80,
+										height: 60,
 										flexShrink: 0,
 										cursor: "pointer",
 										position: "relative",
-										borderRadius: 2,
+										borderRadius: 1,
 										overflow: "hidden",
 										border:
 											index === selectedImageIndex
-												? "3px solid #d21919"
-												: "3px solid transparent",
+												? "2px solid #d21919"
+												: "2px solid #ddd",
 										transition: "all 0.2s ease-in-out",
 										"&:hover": {
 											transform: "scale(1.05)",
 										},
 									}}
 								>
+									{isAuthenticated && isEditing && (
+										<IconButton
+											size="small"
+											sx={{
+												position: "absolute",
+												top: 2,
+												right: 2,
+												backgroundColor: "rgba(0, 0, 0, 0.5)",
+												color: "white",
+												"&:hover": {
+													backgroundColor: "rgba(0, 0, 0, 0.7)",
+												},
+												padding: 0.5,
+											}}
+											onClick={(e) => {
+												e.stopPropagation();
+												handleRemoveImage(index);
+											}}
+										>
+											<Close fontSize="small" />
+										</IconButton>
+									)}
 									<img
 										src={image}
 										alt={`Thumbnail ${index + 1}`}
@@ -281,17 +424,54 @@ export default function Detalle() {
 									/>
 								</Box>
 							))}
+
+							{isAuthenticated && isEditing && images.length < MAX_IMAGES && (
+								<Box
+									sx={{
+										width: 80,
+										height: 60,
+										flexShrink: 0,
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "center",
+										border: "2px dashed #ddd",
+										borderRadius: 1,
+										cursor: "pointer",
+										"&:hover": {
+											borderColor: "#1976d2",
+										},
+									}}
+									onClick={handleImageUploadClick}
+								>
+									<input
+										type="file"
+										ref={fileInputRef}
+										onChange={handleImageUpload}
+										accept="image/*"
+										multiple
+										style={{ display: "none" }}
+										disabled={isUploading}
+									/>
+									{isUploading ? (
+										<CircularProgress size={24} />
+									) : (
+										<AddPhotoAlternate color="action" />
+									)}
+								</Box>
+							)}
 						</Box>
 
-						{isAuthenticated && (
-							<Box display="flex" justifyContent="center" mt={2}>
-								<ImagenUploader onImageUpload={setImages} autoId={id} />
+						{imageError && (
+							<Box sx={{ px: 2, pb: 2 }}>
+								<Alert severity="error" sx={{ mb: 1 }}>
+									{imageError}
+								</Alert>
 							</Box>
 						)}
 					</MotionCard>
 				</Grid>
 
-				<Grid item xs={6} md={4}>
+				<Grid item xs={12} md={4}>
 					<MotionCard
 						initial={{ opacity: 0, x: 20 }}
 						animate={{ opacity: 1, x: 0 }}
@@ -601,7 +781,7 @@ export default function Detalle() {
 								<Box>
 									{isEditing ? (
 										<Grid container spacing={2} sx={{ mt: 2 }}>
-											<Grid item xs={6}>
+											<Grid item xs={4}>
 												<Button
 													variant="contained"
 													color="primary"
@@ -611,7 +791,18 @@ export default function Detalle() {
 													Guardar
 												</Button>
 											</Grid>
-											<Grid item xs={6}>
+
+											<Grid item xs={4}>
+												<Button
+													variant="contained"
+													color="error"
+													fullWidth
+													onClick={() => handleDeleteAuto(auto.id)}
+												>
+													Eliminar
+												</Button>
+											</Grid>
+											<Grid item xs={4}>
 												<Button
 													variant="outlined"
 													color="secondary"

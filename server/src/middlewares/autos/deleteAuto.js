@@ -18,7 +18,6 @@ const deleteAuto = async (req, res) => {
       status: "200",
       resp: `El auto con ID ${id} ha sido eliminado correctamente.`,
     });
-
   } catch (err) {
     return res.status(500).json({ status: "500", resp: err.message });
   }

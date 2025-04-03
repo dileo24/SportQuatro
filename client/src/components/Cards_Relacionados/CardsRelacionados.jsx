@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Box, CircularProgress, Grid } from "@mui/material";
+import {
+	Typography,
+	Box,
+	CircularProgress,
+	Grid,
+	useMediaQuery,
+} from "@mui/material";
 import Carousel from "react-material-ui-carousel";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { getAutosRelacionados } from "../../services/autos.service";
 
 export default function CardsRelacionados({ categorias }) {
 	const [relacionados, setRelacionados] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const isMobile = useMediaQuery("(max-width:600px)");
 
 	useEffect(() => {
 		if (categorias && categorias.length > 0) {
@@ -16,12 +23,8 @@ export default function CardsRelacionados({ categorias }) {
 
 	const fetchRelacionados = async (idCategorias) => {
 		try {
-			const response = await axios.post(
-				"http://localhost:3001/autos/relacionados",
-				{ id_categ: idCategorias.map(String) },
-				{ headers: { "Content-Type": "application/json" } }
-			);
-			setRelacionados(response.data.resp);
+			const response = await getAutosRelacionados(idCategorias);
+			setRelacionados(response);
 		} catch (error) {
 			console.error("Error al obtener autos relacionados:", error);
 		} finally {
@@ -46,11 +49,11 @@ export default function CardsRelacionados({ categorias }) {
 		return null;
 	}
 
-	// 🔹 Agrupar en filas de 4 autos
-	const grupos = [];
-	for (let i = 0; i < relacionados.length; i += 4) {
-		grupos.push(relacionados.slice(i, i + 4));
-	}
+	const grupos = isMobile
+		? relacionados.map((auto) => [auto])
+		: Array.from({ length: Math.ceil(relacionados.length / 4) }, (_, i) =>
+				relacionados.slice(i * 4, i * 4 + 4)
+		  );
 
 	return (
 		<Box sx={{ mt: 4, p: 2, width: "100%" }}>
@@ -68,7 +71,7 @@ export default function CardsRelacionados({ categorias }) {
 					<Grid container spacing={2} key={idx} justifyContent="center">
 						{grupo.map((auto, index) => {
 							const imagenAuto = auto.img?.length
-								? `http://localhost:3001/files/${auto.img[0]}`
+								? `${import.meta.env.VITE_API_URL}/files/${auto.img[0]}`
 								: "/placeholder.jpg";
 
 							return (

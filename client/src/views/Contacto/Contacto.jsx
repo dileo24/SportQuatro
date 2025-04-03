@@ -44,6 +44,9 @@ export default function Contacto() {
 			}
 		};
 	}, []);
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}, []);
 
 	return (
 		<Box sx={{ overflowX: "hidden" }}>

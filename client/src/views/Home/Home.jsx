@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Home.css";
 import Novedades from "../../components/Novedades/Novedades";
 import { NavLink } from "react-router-dom";
 import { Box, Container, Typography } from "@mui/material";
 
 export default function Home() {
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}, []);
+
 	return (
 		<div className="home-container">
 			<div className="hero-container">

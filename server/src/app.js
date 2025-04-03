@@ -30,7 +30,6 @@ server.use(
 
 server.disable("etag");
 
-// Middleware para agregar encabezado Cache-Control
 server.use((req, res, next) => {
   res.setHeader("Cache-Control", "no-store");
   next();
@@ -41,24 +40,14 @@ server.use(bodyParser.json({ limit: "50mb" }));
 server.use(cookieParser());
 server.use(morgan("dev"));
 
-// Configuración CORS actualizada para soportar sesiones
 server.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000", // Reemplaza con tu URL frontend
-    credentials: true, // Permite enviar cookies
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   }),
 );
-
-// Elimina este middleware ya que CORS ahora está configurado arriba
-// server.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*"); // Cambia * por tu URL frontend
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-//   next();
-// });
 
 server.use("/", routes);
 
