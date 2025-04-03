@@ -72,6 +72,7 @@ export default function Detalle() {
             : ["/placeholder.jpg"];
 
         setImages(loadedImages);
+        setSelectedImageIndex(0); // Restablecer el índice de la imagen para que te muestre la primera
       } else {
         console.error("Error al obtener los datos del auto:", response.data.resp);
       }
