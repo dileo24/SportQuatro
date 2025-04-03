@@ -11,15 +11,18 @@ Container,
   Box,
   Paper,
   useTheme,
-  IconButton,
   TextField,
   Button
 } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import CardsRelacionados from "../../components/Cards_Relacionados/CardsRelacionados";
 import { useAuth } from "../../context/AuthContext";
+import CustomNavButton from "../../components/CustomNavButton/CustomNavButton";
+import SpecItem from "../../components/SpecItem/SpectItem";
+import ImagenUploader from "../../components/ImagenUploader/ImagenUploader";
+
+
 
 const MotionCard = motion(Card);
 const MotionTypography = motion(Typography);
@@ -28,6 +31,7 @@ export default function Detalle() {
   const { id } = useParams();
   const [auto, setAuto] = useState(null);
   const [images, setImages] = useState([]);
+  console.log("images: ", images);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const theme = useTheme();
   const [categorias, setCategorias] = useState([]);
@@ -36,6 +40,7 @@ export default function Detalle() {
   const [editedAuto, setEditedAuto] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [moneda, setMoneda] = useState('AR$'); 
+
  
 
   
@@ -86,76 +91,8 @@ export default function Detalle() {
     setSelectedImageIndex(index);
   };
 
-  const CustomNavButton = ({ direction, onClick }) => (
-    <IconButton
-      onClick={onClick}
-      sx={{
-        position: 'absolute',
-        [direction === 'left' ? 'left' : 'right']: 16,
-        top: '50%',
-        bgcolor: 'rgba(255, 255, 255, 0.25)',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
-        borderRadius: '50%',
-        width: 40,
-        height: 40,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        '&:hover': {
-          bgcolor: 'white',
-        },
-        zIndex: 2,
-      }}
-    >
-      {direction === 'left' ? <ChevronLeft /> : <ChevronRight />}
-    </IconButton>
-  );
 
-  const SpecItem = ({ 
-    icon, 
-    label, 
-    value, 
-    isEditing, 
-    onChange, 
-    fieldKey,
-    inputRef,
-    isFocused 
-  }) => {
-    useEffect(() => {
-      if (isEditing && isFocused && inputRef && inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, [isEditing, isFocused, inputRef]);
-  
-    return (
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1} mb={2}>
-        <Box display="flex" alignItems="center" gap={1}>
-          <Typography variant="body1" component="span" sx={{ color: theme.palette.primary.main }}>
-            {icon}
-          </Typography>
-          <Typography variant="body1" component="span" fontWeight="medium">
-            {label}:
-          </Typography>
-        </Box>
-        {isEditing ? (
-          <TextField
-            inputRef={inputRef}
-            value={value}
-            onChange={(e) => onChange(e, fieldKey)}
-            fullWidth
-            size="small"
-            sx={{ textAlign: 'center' }}
-          />
-        ) : (
-          <Typography variant="body1" component="span" color="text.secondary" textAlign="center">
-            {value}
-          </Typography>
-        )}
-      </Box>
-    );
-  };
-
-  const handleEdit = () => {
+ const handleEdit = () => {
     setIsEditing(true);
   };
 
@@ -182,6 +119,7 @@ export default function Detalle() {
       console.error("Error al guardar los cambios:", error);
     }
   };
+ 
 
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
@@ -232,7 +170,8 @@ export default function Detalle() {
                   />
                 </Box>
               ))}
-            </Carousel>
+            </Carousel> 
+
 
             {/* Thumbnails Gallery */}
             <Box sx={{
@@ -286,8 +225,18 @@ export default function Detalle() {
                 </Box>
               ))}
             </Box>
+
+
+            {isAuthenticated && (
+                <Box display="flex" justifyContent="center" mt={2}>
+                  <ImagenUploader onImageUpload={setImages} autoId={id} />
+                </Box>
+              )}
+
+
           </MotionCard>
         </Grid>
+      
 
         <Grid item xs={6} md={4}>
           <MotionCard
@@ -363,7 +312,7 @@ export default function Detalle() {
               {[
                   { 
                     icon: "📅", 
-                    label: "Año", 
+                    label: "Modelo", 
                     value: editedAuto.anio, 
                     key: 'anio',
                     ref: yearRef,
