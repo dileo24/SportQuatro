@@ -31,7 +31,7 @@ const sessionStore = new SequelizeStore({
   }
 })();
 
-// Configuración de sesión - Modifica esta parte
+// Configuración de sesión (actualizada)
 server.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -44,31 +44,34 @@ server.use(
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      // Elimina la propiedad domain para Vercel
+      // domain: process.env.NODE_ENV === "production" ? ".tudominio.com" : undefined // (opcional)
     },
-  })
+  }),
 );
 
-// Configuración CORS - Actualízala así:
+// Configuración CORS (regex mejorado)
+const allowedOrigins = [process.env.FRONTEND_URL, /https:\/\/sport-quatro(-.*)?\.vercel\.app$/];
+
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = [
-      process.env.FRONTEND_URL,
-      'https://sport-quatro.vercel.app',
-      'https://sport-quatro-*.vercel.app' // Permite todos los subdominios de Vercel
-    ];
-    
-    if (!origin || process.env.NODE_ENV !== 'production' || allowedOrigins.some(allowed => origin.match(new RegExp(allowed.replace('*', '.*')))) {
+    if (
+      !origin ||
+      process.env.NODE_ENV !== "production" ||
+      allowedOrigins.some(allowed => {
+        if (typeof allowed === "string") return origin === allowed;
+        return allowed.test(origin);
+      })
+    ) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
-  exposedHeaders: ['set-cookie'],
-  optionsSuccessStatus: 200
+  methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  exposedHeaders: ["set-cookie"],
+  optionsSuccessStatus: 200,
 };
 
 // Configuración de seguridad y middlewares
