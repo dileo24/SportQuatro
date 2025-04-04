@@ -14,9 +14,15 @@ export const loginUser = async (formData) => {
 
 export const verifyCode = async (codigo) => {
 	try {
-		const response = await axios.post(`${API_URL}/verify-code`, {
-			codigo,
-		});
+		const response = await axios.post(
+			`${API_URL}/verify-code`,
+			{
+				codigo,
+			},
+			{
+				withCredentials: true,
+			}
+		);
 		return response.data;
 	} catch (error) {
 		throw error.response

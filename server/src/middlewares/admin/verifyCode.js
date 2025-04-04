@@ -1,6 +1,10 @@
 const verifyCode = async (req, res) => {
   try {
     const { codigo } = req.body;
+    // En verifyCode.js, al inicio de la función
+    console.log("Session ID:", req.sessionID);
+    console.log("Session data:", req.session);
+    console.log("Cookies:", req.headers.cookie);
 
     if (!req.session.codigoVerificacion) {
       return res.status(400).json({

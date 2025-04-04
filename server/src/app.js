@@ -31,26 +31,45 @@ const sessionStore = new SequelizeStore({
   }
 })();
 
-// Configuración de sesión
+// Configuración de sesión - Modifica esta parte
 server.use(
   session({
     secret: process.env.SESSION_SECRET,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    proxy: true, // Importante para producción detrás de proxy
+    proxy: true,
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 1 día
+      maxAge: 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      domain:
-        process.env.NODE_ENV === "production"
-          ? new URL(process.env.FRONTEND_URL).hostname.replace("www.", "")
-          : undefined,
+      // Elimina la propiedad domain para Vercel
     },
-  }),
+  })
 );
+
+// Configuración CORS - Actualízala así:
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      process.env.FRONTEND_URL,
+      'https://sport-quatro.vercel.app',
+      'https://sport-quatro-*.vercel.app' // Permite todos los subdominios de Vercel
+    ];
+    
+    if (!origin || process.env.NODE_ENV !== 'production' || allowedOrigins.some(allowed => origin.match(new RegExp(allowed.replace('*', '.*')))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+  exposedHeaders: ['set-cookie'],
+  optionsSuccessStatus: 200
+};
 
 // Configuración de seguridad y middlewares
 server.disable("etag");
@@ -68,24 +87,6 @@ server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 server.use(bodyParser.json({ limit: "50mb" }));
 server.use(cookieParser());
 server.use(morgan("dev"));
-
-// Configuración CORS
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || process.env.NODE_ENV !== "production" || origin === process.env.FRONTEND_URL) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
-  exposedHeaders: ["set-cookie"],
-  optionsSuccessStatus: 200,
-};
-
-server.use(cors(corsOptions));
 
 // Rutas
 server.use("/", routes);
