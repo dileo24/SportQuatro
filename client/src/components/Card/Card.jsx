@@ -24,7 +24,9 @@ export default function Card({ auto }) {
 				<img src={imageUrl} className="card-img-top" alt={auto.modelo} />
 
 				<div className="card-body">
-					<h5 className="card-title">{auto.modelo}</h5>
+					<h5 className="card-title">
+						{auto.modelo} ({auto.anio})
+					</h5>
 					<div className="card-text">
 						{auto.oferta ? (
 							<div className="precio-container">
@@ -43,7 +45,9 @@ export default function Card({ auto }) {
 								{auto.precio}
 							</p>
 						)}
-						<p>{auto.km} km</p>
+						<div>
+							<p>{auto.km} km</p>
+						</div>
 					</div>
 					<div className="btn btn-primary verMas">Ver más</div>
 				</div>

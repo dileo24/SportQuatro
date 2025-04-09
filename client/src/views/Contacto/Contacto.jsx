@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Room } from "@mui/icons-material";
 import { Container, Grid, Typography, Paper, Box } from "@mui/material";
 import { paperStyles, socialLinks, linkStyles } from "../../data/info";
-import heroContacto from "../../assets/hero_contacto.jpg";
+import heroContacto from "../../assets/hero_contacto.jpeg";
 import Novedades from "../../components/Novedades/Novedades";
 
 export default function Contacto() {

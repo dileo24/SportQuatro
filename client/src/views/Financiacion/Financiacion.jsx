@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Novedades from "../../components/Novedades/Novedades";
 import { Box, Typography, Grid, Container, Divider } from "@mui/material";
-import heroNosotros from "../../assets/hero_nosotros.jpeg";
+import heroFinanciacion from "../../assets/hero_financiacion.jpg";
 import img1Nosotros from "../../assets/img1_nosotros.jpg";
 import img2Finan from "../../assets/img2_finan.jpg";
 import img3Nosotros from "../../assets/img3_nosotros.jpeg";
@@ -20,7 +20,7 @@ export default function Financiacion() {
 		<Box sx={{ overflowX: "hidden" }}>
 			<Box
 				sx={{
-					backgroundImage: `url(${heroNosotros})`,
+					backgroundImage: `url(${heroFinanciacion})`,
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 					height: "60vh",

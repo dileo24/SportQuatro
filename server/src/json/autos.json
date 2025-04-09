@@ -52,7 +52,7 @@
     "oferta": false,
     "precio_oferta": "",
     "img": ["img_3.webp"],
-    "id_categ": ["6", "3"]
+    "id_categ": ["3"]
   },
   {
     "marca": "Toyota",
@@ -100,7 +100,7 @@
     "oferta": false,
     "precio_oferta": "",
     "img": ["img_6.webp"],
-    "id_categ": ["6", "7"]
+    "id_categ": ["7", "8"]
   },
   {
     "marca": "Fiat",
@@ -116,7 +116,7 @@
     "oferta": true,
     "precio_oferta": "21.500.000",
     "img": ["img_7.webp"],
-    "id_categ": ["5", "6"]
+    "id_categ": ["6", "7"]
   },
   {
     "marca": "Ford",
@@ -164,7 +164,7 @@
     "oferta": false,
     "precio_oferta": "",
     "img": ["img_10.webp"],
-    "id_categ": ["6", "3"]
+    "id_categ": ["3"]
   },
   {
     "marca": "Toyota",
@@ -212,7 +212,7 @@
     "oferta": false,
     "precio_oferta": "",
     "img": ["img_13.webp"],
-    "id_categ": ["5", "6"]
+    "id_categ": ["6", "7"]
   },
   {
     "marca": "Mini Cooper",
@@ -228,7 +228,7 @@
     "oferta": false,
     "precio_oferta": "",
     "img": ["img_14.webp"],
-    "id_categ": ["6"]
+    "id_categ": ["7"]
   },
   {
     "marca": "BMW",

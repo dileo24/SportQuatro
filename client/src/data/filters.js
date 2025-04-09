@@ -3,6 +3,7 @@ export const categoria = [
 	{ value: "Pick Up", label: "Pick Up" },
 	{ value: "5 Puertas", label: "5 Puertas" },
 	{ value: "4 Puertas", label: "4 Puertas" },
+	{ value: "3 Puertas", label: "3 Puertas" },
 	{ value: "Utilitario", label: "Utilitario" },
 	{ value: "0km", label: "0km" },
 	{ value: "Moto", label: "Moto" },
@@ -13,9 +14,10 @@ export const categoriaToCreate = [
 	{ value: "2", label: "Pick Up" },
 	{ value: "3", label: "5 Puertas" },
 	{ value: "4", label: "4 Puertas" },
-	{ value: "5", label: "Utilitario" },
-	{ value: "6", label: "0km" },
-	{ value: "7", label: "Moto" },
+	{ value: "5", label: "3 Puertas" },
+	{ value: "6", label: "Utilitario" },
+	{ value: "7", label: "0km" },
+	{ value: "8", label: "Moto" },
 ];
 
 export const tiposCombustible = [

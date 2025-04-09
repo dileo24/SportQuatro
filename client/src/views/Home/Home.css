@@ -8,7 +8,7 @@
 	justify-content: center;
 	margin-top: 0.5rem;
 	background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)),
-		url("../../assets/bg_home.jpg");
+		url("../../assets/bg_home.jpeg");
 	background-size: cover;
 	background-repeat: no-repeat;
 }

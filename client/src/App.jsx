@@ -13,6 +13,7 @@ import Wpp from "./components/Wpp/Wpp";
 import Contacto from "./views/Contacto/Contacto";
 import NuevoAuto from "./views/NuevoAuto/NuevoAuto";
 import Financiacion from "./views/Financiacion/Financiacion";
+import CompramosTuAuto from "./views/CompramosTuAuto/Compramos";
 
 function App() {
 	return (
@@ -25,6 +26,7 @@ function App() {
 					<Route path="/catalogo" element={<Catalogo />} />
 					<Route path="/nosotros" element={<Nosotros />} />
 					<Route path="/financiacion" element={<Financiacion />} />
+					<Route path="/compramos" element={<CompramosTuAuto />} />
 					<Route path="/contacto" element={<Contacto />} />
 					<Route path="/nuevo_auto" element={<NuevoAuto />} />
 					<Route path="/detalle/:id" element={<Detalle />} />
