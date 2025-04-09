@@ -126,9 +126,9 @@ export default function Contacto() {
 								Horario
 							</Typography>
 							<Typography variant="body1" paragraph>
-								Lunes a viernes de 9:00 a 13:00 y de 16:30 a 20:00
+								Lunes a viernes de 9:30 a 13:00 y de 16:00 a 20:00
 							</Typography>
-							<Typography variant="body1">Sábados de 9:00 a 13:00</Typography>
+							<Typography variant="body1">Sábados de 9:30 a 13:00</Typography>
 						</Paper>
 					</Grid>
 

@@ -1,16 +1,129 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import {
+	Box,
+	Typography,
+	Grid,
+	Container,
+	Divider,
+	IconButton,
+} from "@mui/material";
+import Close from "@mui/icons-material/Close";
 import Novedades from "../../components/Novedades/Novedades";
-import { Box, Typography, Grid, Container, Divider } from "@mui/material";
-import heroNosotros from "../../assets/hero_nosotros.jpeg";
 import img1Nosotros from "../../assets/img1_nosotros.jpg";
 import img2Nosotros from "../../assets/img2_nosotros.jpeg";
+import heroNosotros from "../../assets/hero_nosotros.jpeg";
 import img3Nosotros from "../../assets/img3_nosotros.jpeg";
 import img4Nosotros from "../../assets/img4_nosotros.jpg";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Nosotros() {
+	const [carouselImages, setCarouselImages] = useState([]);
+	const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+	const { isAuthenticated } = useAuth();
+
 	useEffect(() => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
+		fetchCarouselImages();
 	}, []);
+
+	useEffect(() => {
+		if (carouselImages.length <= 1) return; // No necesitamos el intervalo si hay 0 o 1 imagen
+
+		const interval = setInterval(() => {
+			setSelectedImageIndex((prevIndex) =>
+				prevIndex === carouselImages.length - 1 ? 0 : prevIndex + 1
+			);
+		}, 3000);
+
+		return () => clearInterval(interval);
+	}, [carouselImages.length]); // Solo dependemos de la longitud del array
+
+	const fetchCarouselImages = async () => {
+		try {
+			console.log("hola");
+
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/files/carousel`
+			);
+			const data = await response.json();
+			if (data.resp) {
+				setCarouselImages(data.files);
+			}
+		} catch (error) {
+			console.error("Error fetching carousel images:", error);
+		}
+	};
+
+	const handleImageUpload = async (e) => {
+		const files = e.target.files;
+		if (!files || files.length === 0) return;
+
+		const formData = new FormData();
+		for (let i = 0; i < files.length; i++) {
+			formData.append("files", files[i]);
+		}
+
+		try {
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/files/carousel`,
+				{
+					method: "POST",
+					body: formData,
+				}
+			);
+			const data = await response.json();
+
+			if (data.resp) {
+				await fetchCarouselImages(); // Esperamos a que se actualicen las imágenes
+				// Si es la primera imagen que se sube, la mostramos inmediatamente
+				if (carouselImages.length === 0) {
+					setSelectedImageIndex(0);
+				}
+			} else {
+				alert(data.message || "Error al cargar imágenes");
+			}
+		} catch (error) {
+			console.error("Error uploading images:", error);
+			alert("Error al cargar imágenes");
+		}
+	};
+
+	const handleRemoveImage = async (fileName) => {
+		try {
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/files/carousel/${encodeURIComponent(
+					fileName
+				)}`,
+				{
+					method: "DELETE",
+				}
+			);
+			const data = await response.json();
+
+			if (data.resp) {
+				await fetchCarouselImages(); // Esperamos a que se actualicen las imágenes
+				// Ajustamos el índice seleccionado si es necesario
+				setSelectedImageIndex((prevIndex) => {
+					if (prevIndex >= carouselImages.length - 1) {
+						return carouselImages.length - 2 >= 0
+							? carouselImages.length - 2
+							: 0;
+					}
+					return prevIndex;
+				});
+			} else {
+				alert(data.message || "Error al eliminar imagen");
+			}
+		} catch (error) {
+			console.error("Error deleting image:", error);
+			alert("Error al eliminar imagen");
+		}
+	};
+
+	const handleThumbnailClick = (index) => {
+		setSelectedImageIndex(index);
+	};
+
 	return (
 		<Box sx={{ overflowX: "hidden" }}>
 			<Box
@@ -120,17 +233,154 @@ export default function Nosotros() {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<Box
-							component="img"
-							src={img3Nosotros}
-							alt="Equipo SportQuatro"
 							sx={{
 								width: "100%",
+								height: 400,
 								borderRadius: 2,
 								boxShadow: 3,
-								maxHeight: "400px",
-								objectFit: "cover",
+								overflow: "hidden",
+								position: "relative",
 							}}
-						/>
+						>
+							{carouselImages.length > 0 ? (
+								<img
+									src={carouselImages[selectedImageIndex].url}
+									alt={`Consignación ${selectedImageIndex + 1}`}
+									style={{
+										width: "100%",
+										height: "100%",
+										objectFit: "cover",
+										transition: "opacity 0.5s ease-in-out",
+									}}
+								/>
+							) : (
+								<Box
+									sx={{
+										width: "100%",
+										height: "100%",
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "center",
+										backgroundColor: "#eee",
+									}}
+								>
+									<Typography variant="body1">
+										No hay imágenes cargadas
+									</Typography>
+								</Box>
+							)}
+						</Box>
+
+						{/* Miniaturas */}
+						{isAuthenticated && (
+							<>
+								<Box
+									sx={{
+										display: "flex",
+										gap: 2,
+										mt: 2,
+										overflowX: "auto",
+										py: 1,
+									}}
+								>
+									{carouselImages.map((image, index) => (
+										<Box
+											key={image.name}
+											onClick={() => handleThumbnailClick(index)}
+											sx={{
+												width: 80,
+												height: 60,
+												flexShrink: 0,
+												cursor: "pointer",
+												position: "relative",
+												borderRadius: 1,
+												overflow: "hidden",
+												border:
+													index === selectedImageIndex
+														? "2px solid #d21919"
+														: "2px solid #ddd",
+												transition: "all 0.2s ease-in-out",
+												"&:hover": {
+													transform: "scale(1.05)",
+												},
+											}}
+										>
+											<IconButton
+												size="small"
+												sx={{
+													position: "absolute",
+													top: 2,
+													right: 2,
+													backgroundColor: "rgba(0, 0, 0, 0.5)",
+													color: "white",
+													"&:hover": {
+														backgroundColor: "rgba(0, 0, 0, 0.7)",
+													},
+													padding: 0.5,
+												}}
+												onClick={(e) => {
+													e.stopPropagation();
+													handleRemoveImage(image.name);
+												}}
+											>
+												<Close fontSize="small" />
+											</IconButton>
+
+											<img
+												src={image.url}
+												alt={`Thumbnail ${index + 1}`}
+												style={{
+													width: "100%",
+													height: "100%",
+													objectFit: "cover",
+												}}
+											/>
+										</Box>
+									))}
+								</Box>
+
+								{/* Input para cargar imágenes */}
+								<Box sx={{ mt: 2 }}>
+									<input
+										accept="image/*"
+										id="upload-images"
+										type="file"
+										multiple
+										onChange={handleImageUpload}
+										style={{ display: "none" }}
+										disabled={carouselImages.length >= 10}
+									/>
+									<label htmlFor="upload-images">
+										<Box
+											sx={{
+												display: "inline-flex",
+												alignItems: "center",
+												justifyContent: "center",
+												padding: "8px 16px",
+												backgroundColor:
+													carouselImages.length >= 10 ? "#ccc" : "#d21919",
+												color: "white",
+												borderRadius: 1,
+												cursor:
+													carouselImages.length >= 10
+														? "not-allowed"
+														: "pointer",
+												"&:hover": {
+													backgroundColor:
+														carouselImages.length >= 10 ? "#ccc" : "#b31515",
+												},
+											}}
+										>
+											<Typography variant="body2">
+												{carouselImages.length >= 10
+													? "Máximo de imágenes alcanzado (10/10)"
+													: `Cargar imágenes (${carouselImages.length}/10)`}
+											</Typography>
+										</Box>
+									</label>
+								</Box>
+							</>
+						)}
 					</Grid>
 				</Grid>
 

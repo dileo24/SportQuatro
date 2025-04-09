@@ -7,10 +7,10 @@
 	align-items: center;
 	justify-content: center;
 	margin-top: 0.5rem;
-    background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)), 
-                      url("../../assets/bg_home.jpeg");
-    background-size: cover;
-    background-repeat: no-repeat;
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)),
+		url("../../assets/bg_home.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 
 .containerPrincipal {
@@ -70,7 +70,7 @@
 	animation: rotar 2s linear infinite;
 }
 
-.nov-container{
+.nov-container {
 	padding: 0 5rem;
 }
 
@@ -114,18 +114,17 @@
 	border-radius: 2.5px;
 	color: #d8d8d8;
 	padding: 0.6rem 0.9rem;
-    transition: transform 0.2s ease-in-out;
+	transition: transform 0.2s ease-in-out;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 .NavLink:hover {
-    transform: scale(1.05);
+	transform: scale(1.05);
 	border: none !important;
-
 }
 
-.texto3{
+.texto3 {
 	font-size: 1.3vw;
 	text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.329);
 	color: black;
@@ -146,15 +145,15 @@
 		font-size: 5vw;
 	}
 
-	.NavLink{
+	.NavLink {
 		width: auto;
 	}
 
-	.nov-container{
+	.nov-container {
 		padding: 0 2rem;
 	}
 
-	.texto3{
+	.texto3 {
 		font-size: 5vw;
 		text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.329);
 		color: black;

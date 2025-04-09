@@ -3,7 +3,7 @@ import Novedades from "../../components/Novedades/Novedades";
 import { Box, Typography, Grid, Container, Divider } from "@mui/material";
 import heroNosotros from "../../assets/hero_nosotros.jpeg";
 import img1Nosotros from "../../assets/img1_nosotros.jpg";
-import img2Nosotros from "../../assets/img2_nosotros.jpeg";
+import img2Finan from "../../assets/img2_finan.jpg";
 import img3Nosotros from "../../assets/img3_nosotros.jpeg";
 import hsbcLogo from "../../assets/hsbc_logo.png";
 import colLogo from "../../assets/col_logo.png";
@@ -122,7 +122,7 @@ export default function Financiacion() {
 					<Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
 						<Box
 							component="img"
-							src={img2Nosotros}
+							src={img2Finan}
 							alt="Opciones de crédito"
 							sx={{
 								width: "100%",
@@ -179,7 +179,7 @@ export default function Financiacion() {
 								textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
 							}}
 						>
-							Trabajamos con los mejores bancos
+							Trabajamos con los bancos de tu confianza
 						</Typography>
 
 						<Grid
