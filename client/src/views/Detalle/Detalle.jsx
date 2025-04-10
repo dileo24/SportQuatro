@@ -49,6 +49,11 @@ import {
 	updateImgInAuto,
 } from "../../services/autos.service";
 
+
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import DraggableImage from "../../components/DraggableImage/DraggableImage"; // Ajusta la ruta según tu estructura de archivos
+
 const MotionCard = motion(Card);
 const MotionTypography = motion(Typography);
 const MAX_IMAGES = 10;
@@ -161,20 +166,32 @@ export default function Detalle() {
 
 	const handleSave = async () => {
 		try {
-			const payload = {
-				...editedAuto,
-				moneda: moneda,
-			};
-
-			const response = await updateAuto(id, payload);
-			if (response.data.status === 200) {
-				setAuto(payload);
-				setIsEditing(false);
-			}
+		  // Primero actualiza el orden de las imágenes si es necesario
+		  const newImageOrder = images.map(img => 
+			img.replace(`${import.meta.env.VITE_API_URL}/files/`, '')
+		  );
+		  
+		  if (JSON.stringify(newImageOrder) !== JSON.stringify(auto.img)) {
+			await updateImgInAuto(id, newImageOrder);
+		  }
+	  
+		  // Luego actualiza los demás datos del auto
+		  const payload = {
+			...editedAuto,
+			moneda: moneda,
+			img: newImageOrder
+		  };
+	  
+		  const response = await updateAuto(id, payload);
+		  if (response.data.status === 200) {
+			setAuto(payload);
+			setIsEditing(false);
+		  }
 		} catch (error) {
-			console.error("Error al guardar los cambios:", error);
+		  console.error("Error al guardar los cambios:", error);
+		  setSubmitError("Error al guardar los cambios. Intente nuevamente.");
 		}
-	};
+	  };
 
 	const handleImageUploadClick = () => {
 		fileInputRef.current.click();
@@ -296,7 +313,28 @@ export default function Detalle() {
 		(opt) => opt.value !== ""
 	);
 
+	const moveImage = (fromIndex, toIndex) => {
+		const updatedImages = [...images];
+		const [movedImage] = updatedImages.splice(fromIndex, 1);
+		updatedImages.splice(toIndex, 0, movedImage);
+		setImages(updatedImages);
+		
+		// Ajustar el índice seleccionado si es necesario
+		if (selectedImageIndex === fromIndex) {
+		  setSelectedImageIndex(toIndex);
+		} else if (
+		  (fromIndex < selectedImageIndex && toIndex >= selectedImageIndex) ||
+		  (fromIndex > selectedImageIndex && toIndex <= selectedImageIndex)
+		) {
+		  setSelectedImageIndex(prev => prev + (fromIndex < toIndex ? -1 : 1));
+		}
+	  };
+
+
+
+
 	return (
+		<DndProvider backend={HTML5Backend}>
 		<Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
 			<Grid container spacing={3}>
 				<Grid item xs={12} md={8}>
@@ -348,6 +386,7 @@ export default function Detalle() {
 						</Carousel>
 
 						<Box
+						
 							sx={{
 								p: 2,
 								display: "flex",
@@ -355,111 +394,69 @@ export default function Detalle() {
 								overflowX: "auto",
 								alignItems: "center",
 								"&::-webkit-scrollbar": {
-									height: 6,
+								height: 6,
 								},
 								"&::-webkit-scrollbar-track": {
-									backgroundColor: "#f1f1f1",
+								backgroundColor: "#f1f1f1",
 								},
 								"&::-webkit-scrollbar-thumb": {
-									backgroundColor: "#888",
-									borderRadius: 3,
-									"&:hover": {
-										backgroundColor: "#555",
-									},
+								backgroundColor: "#888",
+								borderRadius: 3,
+								"&:hover": {
+									backgroundColor: "#555",
+								},
 								},
 							}}
-						>
+							>
 							{images.map((image, index) => (
-								<Box
-									key={index}
-									onClick={() => handleThumbnailClick(index)}
-									sx={{
-										width: 80,
-										height: 60,
-										flexShrink: 0,
-										cursor: "pointer",
-										position: "relative",
-										borderRadius: 1,
-										overflow: "hidden",
-										border:
-											index === selectedImageIndex
-												? "2px solid #d21919"
-												: "2px solid #ddd",
-										transition: "all 0.2s ease-in-out",
-										"&:hover": {
-											transform: "scale(1.05)",
-										},
-									}}
-								>
-									{isAuthenticated && isEditing && (
-										<IconButton
-											size="small"
-											sx={{
-												position: "absolute",
-												top: 2,
-												right: 2,
-												backgroundColor: "rgba(0, 0, 0, 0.5)",
-												color: "white",
-												"&:hover": {
-													backgroundColor: "rgba(0, 0, 0, 0.7)",
-												},
-												padding: 0.5,
-											}}
-											onClick={(e) => {
-												e.stopPropagation();
-												handleRemoveImage(index);
-											}}
-										>
-											<Close fontSize="small" />
-										</IconButton>
-									)}
-									<img
-										src={image}
-										alt={`Thumbnail ${index + 1}`}
-										style={{
-											width: "100%",
-											height: "100%",
-											objectFit: "cover",
-										}}
-									/>
-								</Box>
+								<DraggableImage
+								key={index}
+								image={image}
+								index={index}
+								moveImage={moveImage}
+								onClick={handleThumbnailClick}
+								isSelected={index === selectedImageIndex}
+								onRemove={handleRemoveImage}
+								isEditing={isEditing}
+								isAuthenticated={isAuthenticated}
+								/>
 							))}
 
 							{isAuthenticated && isEditing && images.length < MAX_IMAGES && (
 								<Box
-									sx={{
-										width: 80,
-										height: 60,
-										flexShrink: 0,
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "center",
-										border: "2px dashed #ddd",
-										borderRadius: 1,
-										cursor: "pointer",
-										"&:hover": {
-											borderColor: "#1976d2",
-										},
-									}}
-									onClick={handleImageUploadClick}
+								sx={{
+									width: 80,
+									height: 60,
+									flexShrink: 0,
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									border: "2px dashed #ddd",
+									borderRadius: 1,
+									cursor: "pointer",
+									"&:hover": {
+									borderColor: "#1976d2",
+									},
+								}}
+								onClick={handleImageUploadClick}
 								>
-									<input
-										type="file"
-										ref={fileInputRef}
-										onChange={handleImageUpload}
-										accept="image/*"
-										multiple
-										style={{ display: "none" }}
-										disabled={isUploading}
-									/>
-									{isUploading ? (
-										<CircularProgress size={24} />
-									) : (
-										<AddPhotoAlternate color="action" />
-									)}
+								<input
+									type="file"
+									ref={fileInputRef}
+									onChange={handleImageUpload}
+									accept="image/*"
+									multiple
+									style={{ display: "none" }}
+									disabled={isUploading}
+								/>
+								{isUploading ? (
+									<CircularProgress size={24} />
+								) : (
+									<AddPhotoAlternate color="action" />
+								)}
 								</Box>
 							)}
-						</Box>
+							</Box>
 
 						{imageError && (
 							<Box sx={{ px: 2, pb: 2 }}>
@@ -905,5 +902,6 @@ export default function Detalle() {
 				<CardsRelacionados categorias={categorias} />
 			</Grid>
 		</Container>
+		</DndProvider>
 	);
 }
