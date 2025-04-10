@@ -259,7 +259,7 @@ export default function CompramosTuAuto() {
 											sx={{ py: 1.5 }}
 											disabled={isSubmitting}
 										>
-											{isSubmitting ? "Enviando..." : "Enviar solicitud"}
+											{isSubmitting ? "Cotizando..." : "!Cotizar!"}
 										</Button>
 									</Grid>
 								</Grid>
@@ -285,7 +285,7 @@ export default function CompramosTuAuto() {
 				</Grid>
 			</Container>
 			<Container maxWidth="lg" sx={{ py: 6 }}>
-				<Box sx={{ textAlign: "center", mb: 6 }}>
+				<Box sx={{ textAlign: "center", mb: 6  }}>
 					<Typography
 						variant="h3"
 						component="h2"
@@ -305,13 +305,13 @@ export default function CompramosTuAuto() {
 							lineHeight: 1.6,
 						}}
 					>
-						Ofrecemos transparencia, seguridad y el mejor precio del mercado.
+						Ofrecemos transparencia, seguridad y el mejor precio.
 						Nuestro equipo de expertos evaluará tu vehículo y te hará una oferta
 						justa.
 					</Typography>
 				</Box>
 
-				<Grid container spacing={4}>
+				{/* <Grid container spacing={4}>
 					<Grid item xs={12} md={6}>
 						<Paper
 							elevation={3}
@@ -349,7 +349,7 @@ export default function CompramosTuAuto() {
 						</Paper>
 					</Grid>
 
-					{/* Columna derecha - Proceso de compra */}
+			
 					<Grid item xs={12} md={6}>
 						<Paper
 							elevation={3}
@@ -386,7 +386,7 @@ export default function CompramosTuAuto() {
 							</Box>
 						</Paper>
 					</Grid>
-				</Grid>
+				</Grid> */}
 			</Container>
 
 			{/* FAQ Section */}
@@ -408,7 +408,7 @@ export default function CompramosTuAuto() {
 					<Grid container spacing={4}>
 						<Grid item xs={12} md={6}>
 							<Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
-								¿Cómo determinan el precio de mi auto?
+								¿Cómo determinar el precio?
 							</Typography>
 							<Typography variant="body1" paragraph>
 								Evaluamos el estado general del vehículo, kilometraje, año,
@@ -420,9 +420,9 @@ export default function CompramosTuAuto() {
 								¿Necesito tener toda la documentación?
 							</Typography>
 							<Typography variant="body1" paragraph>
-								Sí, es importante que tengas toda la documentación en regla para
-								agilizar el proceso. Esto incluye título, cédula verde, manuales
-								y facturas de servicio.
+							Si, es importante que cuentes con toda la documentación en regla para agilizar el proceso.
+							En caso de que falte alguna documentación (08, verificación, informe de dominio, libre de deuda)
+							se deja pago y nos encargamos, para agilizar la operación. No recibimos autos prendados, ni planes de ahorro.
 							</Typography>
 						</Grid>
 						<Grid item xs={12} md={6}>
@@ -430,9 +430,8 @@ export default function CompramosTuAuto() {
 								¿Cuánto tiempo tarda el proceso?
 							</Typography>
 							<Typography variant="body1" paragraph>
-								Una vez que recibimos tu solicitud, nos contactamos dentro de
-								las 24 horas. El proceso completo puede tomar entre 2 a 5 días
-								hábiles.
+							Una vez que recibimos tu solicitud, nos contactamos dentro de las 24 horas.
+							Luego pactamos una reunión para realizarle un peritaje a tu vehículo y cerrar la operación.
 							</Typography>
 						</Grid>
 						<Grid item xs={12} md={6}>
