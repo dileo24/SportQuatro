@@ -24,31 +24,40 @@ export default function Card({ auto }) {
 				<img src={imageUrl} className="card-img-top" alt={auto.modelo} />
 
 				<div className="card-body">
-					<h5 className="card-title">
-						{auto.modelo} ({auto.anio})
-					</h5>
-					<div className="card-text">
+					<div className="title-container">
+						<h5 className="card-title">
+							{auto.modelo} ({auto.anio})
+						</h5>
+					</div>
+
+					<div className="price-display">
 						{auto.oferta ? (
-							<div className="precio-container">
-								<p className="fw-bold text-danger">
-									{auto.moneda === "AR$" ? "$" : "U$D"}
-									{auto.precio_oferta}
-								</p>
-								<p className="text-muted text-decoration-line-through">
+							<>
+								<div className="price-row">
+									<span className="offer-price">
+										{auto.moneda === "AR$" ? "$" : "U$D"}
+										{auto.precio_oferta}
+									</span>
+								</div>
+								<div className="price-row">
+									<span className="original-price">
+										{auto.moneda === "AR$" ? "$" : "U$D"}
+										{auto.precio}
+									</span>
+									<span className="mileage">{auto.km} km</span>
+								</div>
+							</>
+						) : (
+							<div className="price-row">
+								<span className="normal-price">
 									{auto.moneda === "AR$" ? "$" : "U$D"}
 									{auto.precio}
-								</p>
+								</span>
+								<span className="mileage">{auto.km} km</span>
 							</div>
-						) : (
-							<p>
-								{auto.moneda === "AR$" ? "$" : "U$D"}
-								{auto.precio}
-							</p>
 						)}
-						<div>
-							<p>{auto.km} km</p>
-						</div>
 					</div>
+
 					<div className="btn btn-primary verMas">Ver más</div>
 				</div>
 			</div>

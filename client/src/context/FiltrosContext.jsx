@@ -18,6 +18,7 @@ export const FiltrosProvider = ({ children }) => {
 						transmision: "",
 						combustible: "",
 						categoria: "",
+						oferta: "",
 						ordenamiento: "",
 				  };
 		}
@@ -31,6 +32,7 @@ export const FiltrosProvider = ({ children }) => {
 			transmision: "",
 			combustible: "",
 			categoria: "",
+			oferta: "",
 			ordenamiento: "",
 		};
 	};

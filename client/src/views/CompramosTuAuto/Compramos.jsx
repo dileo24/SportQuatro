@@ -9,7 +9,7 @@ import {
 	Paper,
 	CardMedia,
 } from "@mui/material";
-import heroNosotros from "../../assets/hero_nosotros.jpeg";
+import heroCompramos from "../../assets/heroCompramos.webp";
 import imgCompramos from "../../assets/img_compramos.jpg";
 
 export default function CompramosTuAuto() {
@@ -94,7 +94,7 @@ export default function CompramosTuAuto() {
 		<Box sx={{ overflowX: "hidden" }}>
 			<Box
 				sx={{
-					backgroundImage: `url(${heroNosotros})`,
+					backgroundImage: `url(${heroCompramos})`,
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 					height: "60vh",
@@ -128,7 +128,7 @@ export default function CompramosTuAuto() {
 						fontSize: { xs: "2rem", md: "3rem" },
 					}}
 				>
-					Vende tu auto con nosotros
+					Vendé tu auto con nosotros
 				</Typography>
 				<Typography
 					variant="h5"
@@ -285,7 +285,7 @@ export default function CompramosTuAuto() {
 				</Grid>
 			</Container>
 			<Container maxWidth="lg" sx={{ py: 6 }}>
-				<Box sx={{ textAlign: "center", mb: 6  }}>
+				<Box sx={{ textAlign: "center", mb: 6 }}>
 					<Typography
 						variant="h3"
 						component="h2"
@@ -305,9 +305,8 @@ export default function CompramosTuAuto() {
 							lineHeight: 1.6,
 						}}
 					>
-						Ofrecemos transparencia, seguridad y el mejor precio.
-						Nuestro equipo de expertos evaluará tu vehículo y te hará una oferta
-						justa.
+						Ofrecemos transparencia, seguridad y el mejor precio. Nuestro equipo
+						de expertos evaluará tu vehículo y te hará una oferta justa.
 					</Typography>
 				</Box>
 
@@ -420,28 +419,21 @@ export default function CompramosTuAuto() {
 								¿Necesito tener toda la documentación?
 							</Typography>
 							<Typography variant="body1" paragraph>
-							Si, es importante que cuentes con toda la documentación en regla para agilizar el proceso.
-							En caso de que falte alguna documentación (08, verificación, informe de dominio, libre de deuda)
-							se deja pago y nos encargamos, para agilizar la operación. No recibimos autos prendados, ni planes de ahorro.
+								Si, es importante que cuentes con toda la documentación en regla
+								para agilizar el proceso. En caso de que falte alguna
+								documentación (08, verificación, informe de dominio, libre de
+								deuda) se deja pago y nos encargamos, para agilizar la
+								operación. No recibimos autos prendados, ni planes de ahorro.
 							</Typography>
 						</Grid>
-						<Grid item xs={12} md={6}>
+						<Grid item xs={12} md={12}>
 							<Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
 								¿Cuánto tiempo tarda el proceso?
 							</Typography>
 							<Typography variant="body1" paragraph>
-							Una vez que recibimos tu solicitud, nos contactamos dentro de las 24 horas.
-							Luego pactamos una reunión para realizarle un peritaje a tu vehículo y cerrar la operación.
-							</Typography>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
-								¿Qué métodos de pago aceptan?
-							</Typography>
-							<Typography variant="body1" paragraph>
-								Ofrecemos transferencia bancaria inmediata, cheque certificado o
-								efectivo, según prefieras y con todas las garantías de
-								seguridad.
+								Una vez que recibimos tu solicitud, nos contactamos dentro de
+								las 24 horas. Luego pactamos una reunión para realizarle un
+								peritaje a tu vehículo y cerrar la operación.
 							</Typography>
 						</Grid>
 					</Grid>

@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import Novedades from "../../components/Novedades/Novedades";
 import { Box, Typography, Grid, Container, Divider } from "@mui/material";
 import heroFinanciacion from "../../assets/hero_financiacion.jpg";
-import img1Nosotros from "../../assets/img1_nosotros.jpg";
+import img1Finan from "../../assets/img1_finan.jpg";
 import img2Finan from "../../assets/img2_finan.jpg";
-import img3Nosotros from "../../assets/img3_nosotros.jpeg";
+import img3Finan from "../../assets/img3_finan.jpg";
 import hsbcLogo from "../../assets/hsbc_logo.png";
 import colLogo from "../../assets/col_logo.png";
 import galLogo from "../../assets/gal_logo.png";
@@ -105,7 +105,7 @@ export default function Financiacion() {
 					<Grid item xs={12} md={6}>
 						<Box
 							component="img"
-							src={img1Nosotros}
+							src={img1Finan}
 							alt="Financiación de autos"
 							sx={{
 								width: "100%",
@@ -283,7 +283,7 @@ export default function Financiacion() {
 							<Grid item xs={12} md={6}>
 								<Box
 									component="img"
-									src={img3Nosotros}
+									src={img3Finan}
 									alt="Simulador de cuotas"
 									sx={{
 										width: "100%",

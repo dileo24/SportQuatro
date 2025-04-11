@@ -3,41 +3,94 @@
 	border-radius: 8px;
 	position: relative;
 	overflow: hidden;
+	transition: transform 0.3s ease;
+}
+
+.title-container {
+	min-height: 3rem;
+	margin-bottom: 0.5rem;
+	display: flex;
+	align-items: center;
 }
 
 .card-title {
 	font-size: 1rem;
 	line-height: 1.2rem;
-	height: 2.4rem;
-	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 	text-overflow: ellipsis;
 	word-break: break-word;
+	overflow: hidden;
+	margin: 0;
+	width: 100%;
 }
 
 .card-body {
-	height: 175px;
+	height: auto;
+	min-height: 175px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	padding: 1rem;
+	gap: 0.8rem;
 }
 
-.card-text {
+.price-display {
+	margin: 0.2rem 0;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	min-height: 3.5rem;
+}
+
+.verMas {
+	margin-top: auto;
+	width: 100%;
+}
+
+.price-row {
 	display: flex;
 	justify-content: space-between;
-	margin-top: auto;
+	align-items: center;
+	margin-bottom: 0.2rem;
+}
+
+.offer-price {
+	font-weight: bold;
+	color: #f00707;
+	font-size: 1.1rem;
+}
+
+.original-price {
+	text-decoration: line-through;
+	color: #666;
+	font-size: 0.9rem;
+}
+
+.normal-price {
+	font-weight: bold;
+	font-size: 1.1rem;
+}
+
+.mileage {
+	color: #666;
+	font-size: 0.9rem;
 }
 
 .btn-primary {
 	margin-top: auto;
+	width: 100%;
+	background-color: #bd0101 !important;
+	border: none !important;
 }
 
 .card-img-top {
 	width: 100%;
 	height: 250px;
 	object-fit: cover;
+	border-bottom: 1px solid #eee;
 }
 
 .oferta-nube {
@@ -50,6 +103,7 @@
 	border-radius: 8px;
 	font-weight: bold;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1;
 }
 
 .oferta-icon {
@@ -66,8 +120,10 @@
 	justify-content: center;
 	font-size: 18px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1;
 }
 
 .verMas:hover {
-	font-weight: bold; /* Negrita con transición suave */
+	font-weight: bold;
+	transform: scale(1.02);
 }

@@ -33,6 +33,12 @@ export const tiposTransmision = [
 	{ value: "Automática", label: "Automática" },
 ];
 
+export const oferta = [
+	{ value: "", label: "Todas" },
+	{ value: true, label: "Sí" },
+	{ value: false, label: "No" },
+];
+
 export const ordenamientos = [
 	{ value: "", label: "Sin orden" },
 	{ value: "precio-asc", label: "Precio: Menor a Mayor" },

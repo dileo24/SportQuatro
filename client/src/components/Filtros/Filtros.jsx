@@ -21,6 +21,7 @@ import {
 	tiposTransmision,
 	ordenamientos,
 	categoria,
+	oferta,
 } from "../../data/filters";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -38,6 +39,7 @@ const Filtros = () => {
 		anioHasta: false,
 		transmision: false,
 		combustible: false,
+		oferta: false,
 		categoria: false,
 	});
 
@@ -109,6 +111,7 @@ const Filtros = () => {
 			precioHasta: "",
 			transmision: "",
 			combustible: "",
+			oferta: "",
 			categoria: "",
 		});
 		setTempValues({
@@ -122,6 +125,7 @@ const Filtros = () => {
 			anioHasta: false,
 			transmision: false,
 			combustible: false,
+			oferta: false,
 			categoria: false,
 		});
 	};
@@ -138,6 +142,7 @@ const Filtros = () => {
 				"anioHasta",
 				"transmision",
 				"combustible",
+				"oferta",
 				"categoria",
 				"ordenamiento",
 			].includes(name)
@@ -162,33 +167,33 @@ const Filtros = () => {
 	};
 
 	const handleBlur = (name, value) => {
-		setLabelShrink((prev) => ({ ...prev, [name]: !!value }));
+		const hasValue = value !== "" && value !== null && value !== undefined;
+		setLabelShrink((prev) => ({ ...prev, [name]: hasValue }));
 	};
 
 	const renderSelect = (name, label, options) => {
 		const value = filtros[name] === undefined ? "" : filtros[name];
+		const hasValue = value !== "" && value !== null && value !== undefined;
+
 		return (
 			<FormControl fullWidth>
-				<InputLabel
-					id={`${name}-label`}
-					shrink={labelShrink[name] || !!filtros[name]}
-				>
+				<InputLabel id={`${name}-label`} shrink={labelShrink[name] || hasValue}>
 					{label}
 				</InputLabel>
 				<Select
 					labelId={`${name}-label`}
 					name={name}
-					value={filtros[name] || ""}
+					value={value}
 					onChange={handleChange}
 					onFocus={() => handleFocus(name)}
-					onBlur={() => handleBlur(name, filtros[name])}
+					onBlur={() => handleBlur(name, value)}
 					label={label}
 					MenuProps={{
 						disableScrollLock: true,
 					}}
 				>
 					{options.map((option) => (
-						<MenuItem key={option.value} value={option.value}>
+						<MenuItem key={String(option.value)} value={option.value}>
 							{option.label}
 						</MenuItem>
 					))}
@@ -216,17 +221,21 @@ const Filtros = () => {
 			</Box>
 
 			<Box sx={{ display: "flex", gap: 1 }}>
-				{renderTextFieldWithClear("kmDesde", "Km Desde")}
-				{renderTextFieldWithClear("kmHasta", "Km Hasta")}
-			</Box>
-			<Box sx={{ display: "flex", gap: 1 }}>
 				{renderTextFieldWithClear("precioDesde", "Precio Desde")}
 				{renderTextFieldWithClear("precioHasta", "Precio Hasta")}
 			</Box>
 
-			{renderSelect("categoria", "Categoria", categoria)}
-			{renderSelect("transmision", "Transmisión", tiposTransmision)}
-			{renderSelect("combustible", "Combustible", tiposCombustible)}
+			<Box sx={{ display: "flex", gap: 1 }}>
+				{renderTextFieldWithClear("kmDesde", "Km Desde")}
+				{renderTextFieldWithClear("kmHasta", "Km Hasta")}
+			</Box>
+
+			<Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
+				{renderSelect("categoria", "Categoria", categoria)}
+				{renderSelect("transmision", "Transmisión", tiposTransmision)}
+				{renderSelect("combustible", "Combustible", tiposCombustible)}
+				{renderSelect("oferta", "En oferta", oferta)}
+			</Box>
 
 			{isMobile && hasActiveFilters && (
 				<Button

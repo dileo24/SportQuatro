@@ -64,6 +64,7 @@ export default function Catalogo() {
 					auto.transmision === filtros.transmision) &&
 				(filtros.combustible === "" ||
 					auto.combustible === filtros.combustible) &&
+				(filtros.oferta === "" || auto.oferta === filtros.oferta) &&
 				(filtros.categoria === "" ||
 					auto.categorias.some((cat) => cat.categ === filtros.categoria))
 			);
