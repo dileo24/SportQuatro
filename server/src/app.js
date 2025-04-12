@@ -13,7 +13,6 @@ const server = express();
 
 server.name = "API";
 
-// Configuración de sesión comentada para implementación futura
 /*
 server.use(
   session({
