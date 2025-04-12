@@ -1,9 +1,10 @@
 const { Admin } = require("../../db");
 const { checkers } = require("../../helpers/checkers");
 const { compare } = require("../../helpers/handleCrypt");
-const nodeMailer = require("nodemailer");
+// const nodeMailer = require("nodemailer");
 require("dotenv").config();
 
+/*
 const transporter = nodeMailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
@@ -13,10 +14,7 @@ const transporter = nodeMailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-
-const generarCodigo = () => {
-  return Math.floor(100000 + Math.random() * 900000);
-};
+*/
 
 const login = async (req, res) => {
   try {
@@ -49,7 +47,8 @@ const login = async (req, res) => {
       });
     }
 
-    const codigo = generarCodigo();
+    /*
+    const codigo = Math.floor(100000 + Math.random() * 900000);
 
     const mail = {
       from: process.env.EMAIL_FROM,
@@ -80,6 +79,17 @@ const login = async (req, res) => {
       status: 200,
       resp: "verification_required",
       message: "Código de verificación enviado al correo",
+    });
+    */
+
+    return res.status(200).json({
+      status: 200,
+      resp: "login_success",
+      message: "Inicio de sesión exitoso",
+      user: {
+        id: user.id,
+        email: user.email,
+      },
     });
   } catch (err) {
     console.error("Error en login:", err);

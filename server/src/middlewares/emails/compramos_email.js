@@ -89,33 +89,7 @@ const sendCarFormEmail = async (req, res, next) => {
       `,
     };
 
-    const clientMailOptions = {
-      from: process.env.ADMIN_EMAIL,
-      to: email,
-      subject: `Recibimos tu solicitud de venta - ${marca} ${modelo}`,
-      html: `
-        <div style="width: 100%; background-color: #f5f5f5; padding: 20px; box-sizing: border-box;">
-          <div style="max-width: 600px; margin: auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: center;">
-            <h2 style="color: #b61717;">¡Gracias por contactarnos, ${nombre}!</h2>
-            <p style="font-size: 16px; color: #333; line-height: 1.6;">
-              Hemos recibido tu solicitud para vender tu ${marca} ${modelo} ${año} y nos pondremos en contacto contigo a la brevedad.
-            </p>
-            <p style="font-size: 16px; color: #333; line-height: 1.6;">
-              Uno de nuestros asesores se comunicará contigo en las próximas 24 horas hábiles al número ${telefono} o al correo electrónico proporcionado.
-            </p>
-            <div style="margin-top: 30px; padding: 15px; background-color: #f9f9f9; border-radius: 4px;">
-              <h3 style="color: #333; margin-top: 0;">Resumen de tu solicitud</h3>
-              <p style="margin: 5px 0;"><strong>Vehículo:</strong> ${marca} ${modelo} ${año}</p>
-              <p style="margin: 5px 0;"><strong>Kilómetros:</strong> ${kilometros} km</p>
-              ${detalles ? `<p style="margin: 5px 0;"><strong>Detalles:</strong> ${detalles}</p>` : ""}
-            </div>
-          </div>
-        </div>
-      `,
-    };
-
     await transporter.sendMail(mailOptions);
-    await transporter.sendMail(clientMailOptions);
 
     if (next) {
       next();

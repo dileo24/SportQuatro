@@ -1,20 +1,14 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import {
-	Box,
-	Typography,
-	Grid,
-	Container,
-	Divider,
-	IconButton,
-} from "@mui/material";
-import Close from "@mui/icons-material/Close";
+import React, { useState, useEffect } from "react";
+import { Box, Typography, Grid, Container, Divider } from "@mui/material";
 import Novedades from "../../components/Novedades/Novedades";
 import img1Nosotros from "../../assets/img1_nosotros.jpg";
 import img2Nosotros from "../../assets/img2_nosotros.jpeg";
 import heroNosotros from "../../assets/hero_nosotros.jpeg";
-import img3Nosotros from "../../assets/img3_nosotros.jpeg";
 import img4Nosotros from "../../assets/img4_nosotros.jpg";
 import { useAuth } from "../../context/AuthContext";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import DraggableImage from "../../components/DraggableImage/DraggableImage";
 
 export default function Nosotros() {
 	const [carouselImages, setCarouselImages] = useState([]);
@@ -27,7 +21,7 @@ export default function Nosotros() {
 	}, []);
 
 	useEffect(() => {
-		if (carouselImages.length <= 1) return; // No necesitamos el intervalo si hay 0 o 1 imagen
+		if (carouselImages.length <= 1) return;
 
 		const interval = setInterval(() => {
 			setSelectedImageIndex((prevIndex) =>
@@ -36,12 +30,10 @@ export default function Nosotros() {
 		}, 3000);
 
 		return () => clearInterval(interval);
-	}, [carouselImages.length]); // Solo dependemos de la longitud del array
+	}, [carouselImages.length]);
 
 	const fetchCarouselImages = async () => {
 		try {
-			console.log("hola");
-
 			const response = await fetch(
 				`${import.meta.env.VITE_API_URL}/files/carousel`
 			);
@@ -74,8 +66,7 @@ export default function Nosotros() {
 			const data = await response.json();
 
 			if (data.resp) {
-				await fetchCarouselImages(); // Esperamos a que se actualicen las imágenes
-				// Si es la primera imagen que se sube, la mostramos inmediatamente
+				await fetchCarouselImages();
 				if (carouselImages.length === 0) {
 					setSelectedImageIndex(0);
 				}
@@ -101,8 +92,7 @@ export default function Nosotros() {
 			const data = await response.json();
 
 			if (data.resp) {
-				await fetchCarouselImages(); // Esperamos a que se actualicen las imágenes
-				// Ajustamos el índice seleccionado si es necesario
+				await fetchCarouselImages();
 				setSelectedImageIndex((prevIndex) => {
 					if (prevIndex >= carouselImages.length - 1) {
 						return carouselImages.length - 2 >= 0
@@ -124,389 +114,366 @@ export default function Nosotros() {
 		setSelectedImageIndex(index);
 	};
 
+	const moveImage = (fromIndex, toIndex) => {
+		const updatedImages = [...carouselImages];
+		const [movedImage] = updatedImages.splice(fromIndex, 1);
+		updatedImages.splice(toIndex, 0, movedImage);
+		setCarouselImages(updatedImages);
+
+		if (selectedImageIndex === fromIndex) {
+			setSelectedImageIndex(toIndex);
+		} else if (
+			(fromIndex < selectedImageIndex && toIndex >= selectedImageIndex) ||
+			(fromIndex > selectedImageIndex && toIndex <= selectedImageIndex)
+		) {
+			setSelectedImageIndex((prev) => prev + (fromIndex < toIndex ? -1 : 1));
+		}
+	};
+
 	return (
-		<Box sx={{ overflowX: "hidden" }}>
-			<Box
-				sx={{
-					backgroundImage: `url(${heroNosotros})`,
-					backgroundSize: "cover",
-					backgroundPosition: "center",
-					height: "60vh",
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "center",
-					alignItems: "center",
-					textAlign: "center",
-					position: "relative",
-					"&::before": {
-						content: '""',
-						position: "absolute",
-						top: 0,
-						left: 0,
-						right: 0,
-						bottom: 0,
-						backgroundColor: "rgba(0,0,0,0.5)",
-					},
-					color: "rgba(255, 0, 0, 0.925)",
-					textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
-				}}
-			>
-				<Typography
-					variant="h3"
-					component="h1"
+		<DndProvider backend={HTML5Backend}>
+			<Box sx={{ overflowX: "hidden" }}>
+				<Box
 					sx={{
+						backgroundImage: `url(${heroNosotros})`,
+						backgroundSize: "cover",
+						backgroundPosition: "center",
+						height: "60vh",
+						display: "flex",
+						flexDirection: "column",
+						justifyContent: "center",
+						alignItems: "center",
+						textAlign: "center",
 						position: "relative",
-						zIndex: 1,
-						fontWeight: "bold",
-						mb: 2,
-						fontSize: { xs: "2rem", md: "3rem" },
+						"&::before": {
+							content: '""',
+							position: "absolute",
+							top: 0,
+							left: 0,
+							right: 0,
+							bottom: 0,
+							backgroundColor: "rgba(0,0,0,0.5)",
+						},
+						color: "rgba(255, 0, 0, 0.925)",
+						textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
 					}}
 				>
-					Un auto para tu calidad de vida.
-				</Typography>
-			</Box>
+					<Typography
+						variant="h3"
+						component="h1"
+						sx={{
+							position: "relative",
+							zIndex: 1,
+							fontWeight: "bold",
+							mb: 2,
+							fontSize: { xs: "2rem", md: "3rem" },
+						}}
+					>
+						Un auto para tu calidad de vida.
+					</Typography>
+				</Box>
 
-			<Container maxWidth="lg" sx={{ py: 6 }}>
-				<Grid container spacing={6} alignItems="center" sx={{ mb: 6 }}>
-					<Grid item xs={12} md={6}>
-						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
-							Desde el año 2010 nos encontramos ubicados en la localidad de
-							Córdoba capital calle Avenida Caraffa 2247. Tenemos más de 20 años
-							de trayectoria y experiencia en el rubro. Luego de mucho esfuerzo
-							y dedicación en el año 2022 abrimos nuestras puertas a un segundo
-							local, en Avenida Caraffa 2378.
-						</Typography>
-						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
-							En Sportquatro sabemos la importancia que es comprar un vehículo
-							usado, por esto tenemos una línea de los mejores vehículos
-							seleccionados para que te puedas llevar la mejor experiencia.
-							Además, contamos con disponibilidad de vehículos 0km de varias
-							marcas.
-						</Typography>
+				<Container maxWidth="lg" sx={{ py: 6 }}>
+					<Grid container spacing={6} alignItems="center" sx={{ mb: 6 }}>
+						<Grid item xs={12} md={6}>
+							<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
+								Desde el año 2010 nos encontramos ubicados en la localidad de
+								Córdoba capital calle Avenida Caraffa 2247. Tenemos más de 20
+								años de trayectoria y experiencia en el rubro. Luego de mucho
+								esfuerzo y dedicación en el año 2022 abrimos nuestras puertas a
+								un segundo local, en Avenida Caraffa 2378.
+							</Typography>
+							<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
+								En Sportquatro sabemos la importancia que es comprar un vehículo
+								usado, por esto tenemos una línea de los mejores vehículos
+								seleccionados para que te puedas llevar la mejor experiencia.
+								Además, contamos con disponibilidad de vehículos 0km de varias
+								marcas.
+							</Typography>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<Box
+								component="img"
+								src={img1Nosotros}
+								alt="Local SportQuatro"
+								sx={{
+									width: "100%",
+									borderRadius: 2,
+									boxShadow: 3,
+									maxHeight: "400px",
+									objectFit: "cover",
+								}}
+							/>
+						</Grid>
 					</Grid>
-					<Grid item xs={12} md={6}>
-						<Box
-							component="img"
-							src={img1Nosotros}
-							alt="Local SportQuatro"
-							sx={{
-								width: "100%",
-								borderRadius: 2,
-								boxShadow: 3,
-								maxHeight: "400px",
-								objectFit: "cover",
-							}}
-						/>
-					</Grid>
-				</Grid>
 
-				<Grid container spacing={6} alignItems="center" sx={{ mb: 6 }}>
-					<Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
-						<Box
-							component="img"
-							src={img2Nosotros}
-							alt="Vehículos SportQuatro"
-							sx={{
-								width: "100%",
-								borderRadius: 2,
-								boxShadow: 3,
-								maxHeight: "400px",
-								objectFit: "cover",
-							}}
-						/>
+					<Grid container spacing={6} alignItems="center" sx={{ mb: 6 }}>
+						<Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
+							<Box
+								component="img"
+								src={img2Nosotros}
+								alt="Vehículos SportQuatro"
+								sx={{
+									width: "100%",
+									borderRadius: 2,
+									boxShadow: 3,
+									maxHeight: "400px",
+									objectFit: "cover",
+								}}
+							/>
+						</Grid>
+						<Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
+							<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
+								Ofrecemos servicio de gestoría general para que te lleves tu
+								nuevo vehículo sin preocupaciones y listo para utilizarlo. Para
+								nosotros la opinión de nuestros clientes es muy importante para
+								así seguir mejorando en un futuro.
+							</Typography>
+						</Grid>
 					</Grid>
-					<Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
-						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
-							Ofrecemos servicio de gestoría general para que te lleves tu nuevo
-							vehículo sin preocupaciones y listo para utilizarlo. Para nosotros
-							la opinión de nuestros clientes es muy importante para así seguir
-							mejorando en un futuro.
-						</Typography>
-					</Grid>
-				</Grid>
 
-				<Grid container spacing={6} alignItems="center" sx={{ mb: 6 }}>
-					<Grid item xs={12} md={6}>
-						<Typography variant="h4" paragraph sx={{ fontWeight: "bold" }}>
-							Pasión por los autos, elegimos lo mejor, tenés lo mejor.
-						</Typography>
-					</Grid>
-					<Grid item xs={12} md={6}>
-						<Box
-							sx={{
-								width: "100%",
-								height: 400,
-								borderRadius: 2,
-								boxShadow: 3,
-								overflow: "hidden",
-								position: "relative",
-							}}
-						>
-							{carouselImages.length > 0 ? (
-								<img
-									src={carouselImages[selectedImageIndex].url}
-									alt={`Consignación ${selectedImageIndex + 1}`}
-									style={{
-										width: "100%",
-										height: "100%",
-										objectFit: "cover",
-										transition: "opacity 0.5s ease-in-out",
-									}}
-								/>
-							) : (
-								<Box
-									sx={{
-										width: "100%",
-										height: "100%",
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "center",
-										backgroundColor: "#eee",
-									}}
-								>
-									<Typography variant="body1">
-										No hay imágenes cargadas
-									</Typography>
-								</Box>
-							)}
-						</Box>
+					<Grid container spacing={6} alignItems="center" sx={{ mb: 6 }}>
+						<Grid item xs={12} md={6}>
+							<Typography variant="h4" paragraph sx={{ fontWeight: "bold" }}>
+								Pasión por los autos, elegimos lo mejor, tenés lo mejor.
+							</Typography>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<Box
+								sx={{
+									width: "100%",
+									height: 400,
+									borderRadius: 2,
+									boxShadow: 3,
+									overflow: "hidden",
+									position: "relative",
+								}}
+							>
+								{carouselImages.length > 0 ? (
+									<img
+										src={carouselImages[selectedImageIndex].url}
+										alt={`Consignación ${selectedImageIndex + 1}`}
+										style={{
+											width: "100%",
+											height: "100%",
+											objectFit: "cover",
+											transition: "opacity 0.5s ease-in-out",
+										}}
+									/>
+								) : (
+									<Box
+										sx={{
+											width: "100%",
+											height: "100%",
+											display: "flex",
+											alignItems: "center",
+											justifyContent: "center",
+											backgroundColor: "#eee",
+										}}
+									>
+										<Typography variant="body1">
+											No hay imágenes cargadas
+										</Typography>
+									</Box>
+								)}
+							</Box>
 
-						{/* Miniaturas */}
-						{isAuthenticated && (
-							<>
-								<Box
-									sx={{
-										display: "flex",
-										gap: 2,
-										mt: 2,
-										overflowX: "auto",
-										py: 1,
-									}}
-								>
-									{carouselImages.map((image, index) => (
-										<Box
-											key={image.name}
-											onClick={() => handleThumbnailClick(index)}
-											sx={{
-												width: 80,
-												height: 60,
-												flexShrink: 0,
-												cursor: "pointer",
-												position: "relative",
-												borderRadius: 1,
-												overflow: "hidden",
-												border:
-													index === selectedImageIndex
-														? "2px solid #d21919"
-														: "2px solid #ddd",
-												transition: "all 0.2s ease-in-out",
-												"&:hover": {
-													transform: "scale(1.05)",
-												},
-											}}
-										>
-											<IconButton
-												size="small"
+							{isAuthenticated && (
+								<>
+									<Box
+										sx={{
+											display: "flex",
+											gap: 2,
+											mt: 2,
+											overflowX: "auto",
+											py: 1,
+										}}
+									>
+										{carouselImages.map((image, index) => (
+											<DraggableImage
+												key={index}
+												image={`${
+													import.meta.env.VITE_API_URL
+												}/files/carousel/${image.name}`}
+												index={index}
+												moveImage={moveImage}
+												onClick={() => handleThumbnailClick(index)}
+												isSelected={index === selectedImageIndex}
+												onRemove={handleRemoveImage}
+												isEditing={true}
+												isAuthenticated={isAuthenticated}
+											/>
+										))}
+									</Box>
+
+									<Box sx={{ mt: 2 }}>
+										<input
+											accept="image/*"
+											id="upload-images"
+											type="file"
+											multiple
+											onChange={handleImageUpload}
+											style={{ display: "none" }}
+											disabled={carouselImages.length >= 10}
+										/>
+										<label htmlFor="upload-images">
+											<Box
 												sx={{
-													position: "absolute",
-													top: 2,
-													right: 2,
-													backgroundColor: "rgba(0, 0, 0, 0.5)",
+													display: "inline-flex",
+													alignItems: "center",
+													justifyContent: "center",
+													padding: "8px 16px",
+													backgroundColor:
+														carouselImages.length >= 10 ? "#ccc" : "#d21919",
 													color: "white",
+													borderRadius: 1,
+													cursor:
+														carouselImages.length >= 10
+															? "not-allowed"
+															: "pointer",
 													"&:hover": {
-														backgroundColor: "rgba(0, 0, 0, 0.7)",
+														backgroundColor:
+															carouselImages.length >= 10 ? "#ccc" : "#b31515",
 													},
-													padding: 0.5,
-												}}
-												onClick={(e) => {
-													e.stopPropagation();
-													handleRemoveImage(image.name);
 												}}
 											>
-												<Close fontSize="small" />
-											</IconButton>
+												<Typography variant="body2">
+													{carouselImages.length >= 10
+														? "Máximo de imágenes alcanzado (10/10)"
+														: `Cargar imágenes (${carouselImages.length}/10)`}
+												</Typography>
+											</Box>
+										</label>
+									</Box>
+								</>
+							)}
+						</Grid>
+					</Grid>
 
-											<img
-												src={image.url}
-												alt={`Thumbnail ${index + 1}`}
-												style={{
-													width: "100%",
-													height: "100%",
-													objectFit: "cover",
-												}}
-											/>
-										</Box>
-									))}
-								</Box>
+					<Box sx={{ py: 8, backgroundColor: "#f9f9f9", mt: 6 }}>
+						<Container maxWidth="lg">
+							<Typography
+								variant="h3"
+								component="h2"
+								align="center"
+								sx={{
+									fontWeight: "bold",
+									mb: 3,
+									color: "rgba(255, 0, 0, 0.925)",
+									textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
+								}}
+							>
+								Consignaciones
+							</Typography>
 
-								{/* Input para cargar imágenes */}
-								<Box sx={{ mt: 2 }}>
-									<input
-										accept="image/*"
-										id="upload-images"
-										type="file"
-										multiple
-										onChange={handleImageUpload}
-										style={{ display: "none" }}
-										disabled={carouselImages.length >= 10}
+							<Divider sx={{ mb: 6 }} />
+
+							<Grid container spacing={4}>
+								<Grid item xs={12} md={6}>
+									<Box
+										component="img"
+										src={img4Nosotros}
+										alt="Local SportQuatro"
+										sx={{
+											width: "100%",
+											borderRadius: 2,
+											boxShadow: 3,
+											maxHeight: "400px",
+											objectFit: "cover",
+										}}
 									/>
-									<label htmlFor="upload-images">
-										<Box
-											sx={{
-												display: "inline-flex",
-												alignItems: "center",
-												justifyContent: "center",
-												padding: "8px 16px",
-												backgroundColor:
-													carouselImages.length >= 10 ? "#ccc" : "#d21919",
-												color: "white",
-												borderRadius: 1,
-												cursor:
-													carouselImages.length >= 10
-														? "not-allowed"
-														: "pointer",
-												"&:hover": {
-													backgroundColor:
-														carouselImages.length >= 10 ? "#ccc" : "#b31515",
-												},
-											}}
+								</Grid>
+
+								<Grid item xs={12} md={6}>
+									<Box
+										sx={{
+											p: 4,
+											backgroundColor: "white",
+											borderRadius: 2,
+											boxShadow: 3,
+											height: "98.5%",
+										}}
+									>
+										<Typography
+											variant="body1"
+											paragraph
+											sx={{ fontSize: "1.1rem" }}
 										>
-											<Typography variant="body2">
-												{carouselImages.length >= 10
-													? "Máximo de imágenes alcanzado (10/10)"
-													: `Cargar imágenes (${carouselImages.length}/10)`}
+											¡Vende tu auto sin preocupaciones con nosotros!
+										</Typography>
+
+										<Box component="ul" sx={{ pl: 3, mb: 3, mt: 2 }}>
+											<Typography
+												component="li"
+												paragraph
+												sx={{ fontSize: "1.1rem" }}
+											>
+												Trasferencia inmediata al momento de la venta.
+											</Typography>
+											<Typography
+												component="li"
+												paragraph
+												sx={{ fontSize: "1.1rem" }}
+											>
+												Venta asegurada plazo 60 días.
+											</Typography>
+											<Typography
+												component="li"
+												paragraph
+												sx={{ fontSize: "1.1rem" }}
+											>
+												Alistaje del vehículo por cuenta de la agencia.
+											</Typography>
+											<Typography
+												component="li"
+												paragraph
+												sx={{ fontSize: "1.1rem" }}
+											>
+												Alistaje de detalles por cuenta del titular.
+											</Typography>
+											<Typography
+												component="li"
+												paragraph
+												sx={{ fontSize: "1.1rem" }}
+											>
+												Te adelantamos el 10% o 20% según la unidad.
+											</Typography>
+											<Typography
+												component="li"
+												paragraph
+												sx={{ fontSize: "1.1rem" }}
+											>
+												Publicamos su auto en nuestras redes oficiales.
 											</Typography>
 										</Box>
-									</label>
-								</Box>
-							</>
-						)}
-					</Grid>
-				</Grid>
+									</Box>
+								</Grid>
+							</Grid>
+						</Container>
+					</Box>
+				</Container>
 
-				<Box sx={{ py: 8, backgroundColor: "#f9f9f9", mt: 6 }}>
+				<Box sx={{ py: 6, backgroundColor: "#f5f5f5" }}>
 					<Container maxWidth="lg">
 						<Typography
-							variant="h3"
-							component="h2"
+							variant="h4"
 							align="center"
 							sx={{
 								fontWeight: "bold",
-								mb: 3,
+								mb: 2,
 								color: "rgba(255, 0, 0, 0.925)",
 								textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
 							}}
 						>
-							Consignaciones
+							Novedades
 						</Typography>
-
-						<Divider sx={{ mb: 6 }} />
-
-						<Grid container spacing={4}>
-							<Grid item xs={12} md={6}>
-								<Box
-									component="img"
-									src={img4Nosotros}
-									alt="Local SportQuatro"
-									sx={{
-										width: "100%",
-										borderRadius: 2,
-										boxShadow: 3,
-										maxHeight: "400px",
-										objectFit: "cover",
-									}}
-								/>
-							</Grid>
-
-							<Grid item xs={12} md={6}>
-								<Box
-									sx={{
-										p: 4,
-										backgroundColor: "white",
-										borderRadius: 2,
-										boxShadow: 3,
-										height: "98.5%",
-									}}
-								>
-									<Typography
-										variant="body1"
-										paragraph
-										sx={{ fontSize: "1.1rem" }}
-									>
-										¡Vende tu auto sin preocupaciones con nosotros!
-									</Typography>
-
-									<Box component="ul" sx={{ pl: 3, mb: 3, mt: 2 }}>
-										<Typography
-											component="li"
-											paragraph
-											sx={{ fontSize: "1.1rem" }}
-										>
-											Trasferencia inmediata al momento de la venta.
-										</Typography>
-										<Typography
-											component="li"
-											paragraph
-											sx={{ fontSize: "1.1rem" }}
-										>
-											Venta asegurada plazo 60 días.
-										</Typography>
-										<Typography
-											component="li"
-											paragraph
-											sx={{ fontSize: "1.1rem" }}
-										>
-											Alistaje del vehículo por cuenta de la agencia.
-										</Typography>
-										<Typography
-											component="li"
-											paragraph
-											sx={{ fontSize: "1.1rem" }}
-										>
-											Alistaje de detalles por cuenta del titular.
-										</Typography>
-										<Typography
-											component="li"
-											paragraph
-											sx={{ fontSize: "1.1rem" }}
-										>
-											Te adelantamos el 10% o 20% según la unidad.
-										</Typography>
-										<Typography
-											component="li"
-											paragraph
-											sx={{ fontSize: "1.1rem" }}
-										>
-											Publicamos su auto en nuestras redes oficiales.
-										</Typography>
-									</Box>
-								</Box>
-							</Grid>
-						</Grid>
+						<Typography variant="h6" align="center" sx={{ mb: 4 }}>
+							¡Ingresos destactados!
+						</Typography>
+						<Novedades />
 					</Container>
 				</Box>
-			</Container>
-
-			<Box sx={{ py: 6, backgroundColor: "#f5f5f5" }}>
-				<Container maxWidth="lg">
-					<Typography
-						variant="h4"
-						align="center"
-						sx={{
-							fontWeight: "bold",
-							mb: 2,
-							color: "rgba(255, 0, 0, 0.925)",
-							textShadow: "3px 3px 3px rgba(0, 0, 0, 0.329)",
-						}}
-					>
-						Novedades
-					</Typography>
-					<Typography variant="h6" align="center" sx={{ mb: 4 }}>
-						¡Ingresos destactados!
-					</Typography>
-					<Novedades />
-				</Container>
 			</Box>
-		</Box>
+		</DndProvider>
 	);
 }

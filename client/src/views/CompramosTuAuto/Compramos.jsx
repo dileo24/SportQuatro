@@ -30,11 +30,36 @@ export default function CompramosTuAuto() {
 	}, []);
 
 	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}));
+		const { name, value, selectionStart } = e.target;
+
+		if (name === "kilometros") {
+			const cursorPos = selectionStart;
+
+			const rawValue = value.replace(/\./g, "");
+
+			if (rawValue === "" || /^\d+$/.test(rawValue)) {
+				const formattedValue = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+				setFormData(
+					(prev) => ({
+						...prev,
+						[name]: formattedValue,
+					}),
+					() => {
+						if (e.target) {
+							const newCursorPos =
+								cursorPos - (value.length - formattedValue.length);
+							e.target.setSelectionRange(newCursorPos, newCursorPos);
+						}
+					}
+				);
+			}
+		} else {
+			setFormData((prev) => ({
+				...prev,
+				[name]: value,
+			}));
+		}
 	};
 
 	const handleSubmit = async (e) => {
@@ -233,7 +258,6 @@ export default function CompramosTuAuto() {
 											fullWidth
 											label="Kilómetros"
 											name="kilometros"
-											type="number"
 											value={formData.kilometros}
 											onChange={handleChange}
 											required
