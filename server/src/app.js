@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const routes = require("./routes/index.js");
 const cors = require("cors");
-const session = require("express-session"); // Añade esta línea
+// const session = require("express-session"); // Comentado para implementación futura
 require("dotenv").config();
 
 require("./db.js");
@@ -13,6 +13,8 @@ const server = express();
 
 server.name = "API";
 
+// Configuración de sesión comentada para implementación futura
+/*
 server.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -27,6 +29,7 @@ server.use(
     },
   }),
 );
+*/
 
 server.disable("etag");
 
@@ -43,7 +46,7 @@ server.use(morgan("dev"));
 server.use(
   cors({
     origin: [process.env.FRONTEND_URL],
-    credentials: true,
+    credentials: true, // Esto podría comentarse también si no se usan sesiones
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   }),
