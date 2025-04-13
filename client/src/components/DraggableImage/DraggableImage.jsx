@@ -14,7 +14,6 @@ const DraggableImage = ({
 	isAuthenticated,
 }) => {
 	const ref = React.useRef(null);
-	console.log(image);
 
 	const [{ isDragging }, drag] = useDrag({
 		type: "IMAGE",

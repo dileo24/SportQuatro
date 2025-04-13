@@ -4,22 +4,27 @@ const multer = require("multer");
 const { Router } = require("express");
 const path = require("path");
 const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
 const os = require("os");
 
 const router = Router();
 
-// Configuración de directorios
-const uploadDir = path.join(__dirname, "../../uploads");
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const uploadDir = path.join(os.tmpdir(), "uploads");
 const carouselDir = path.join(uploadDir, "carousel");
 
-// Crear directorios si no existen
 [uploadDir, carouselDir].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 });
 
-// Configuración de Multer
 const fileFilter = (req, file, cb) => {
   const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
   if (validTypes.includes(file.mimetype)) {
@@ -44,10 +49,9 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-// Procesamiento de imágenes
 const processImage = async buffer => {
   return sharp(buffer)
     .toFormat("webp", {
@@ -58,25 +62,68 @@ const processImage = async buffer => {
     .toBuffer();
 };
 
-// Helpers para URLs
-const getFileUrl = (req, fileName, isCarousel = false) => {
-  const prefix = isCarousel ? "/files/carousel" : "/files";
-  return `${req.protocol}://${req.get("host")}${prefix}/${fileName}`;
+const uploadToCloudinary = (buffer, folder = "general") => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        format: "webp",
+        quality: "auto",
+        fetch_format: "auto",
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        const id = result.public_id.split("/").pop();
+        resolve({
+          ...result,
+          id,
+          folder, // Añadimos la carpeta por si acaso
+        });
+      },
+    );
+
+    streamifier.createReadStream(buffer).pipe(uploadStream);
+  });
+};
+
+const deleteFromCloudinary = async publicId => {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId, {
+      invalidate: true,
+    });
+
+    return {
+      success: result.result === "ok",
+      details: result,
+    };
+  } catch (error) {
+    console.error("Error detallado al eliminar:", {
+      message: error.message,
+      publicId,
+      stack: error.stack,
+    });
+    return {
+      success: false,
+      error,
+    };
+  }
 };
 
 // ========== Endpoints para el Carrusel ========== //
 
-// GET /files/carousel - Listar imágenes del carrusel
+// GET /files/carousel
 router.get("/carousel", async (req, res) => {
   try {
-    const files = fs
-      .readdirSync(carouselDir)
-      .filter(file => file.match(/\.(webp|jpeg|jpg|png)$/i))
-      .map(file => ({
-        name: file,
-        path: `/files/carousel/${file}`,
-        url: getFileUrl(req, file, true),
-      }));
+    const result = await cloudinary.api.resources({
+      type: "upload",
+      prefix: "carousel/",
+      max_results: 10,
+    });
+
+    const files = result.resources.map(file => ({
+      fileName: file.public_id.split("/").pop(),
+      url: file.secure_url,
+    }));
 
     res.status(200).json({
       status: 200,
@@ -95,20 +142,25 @@ router.get("/carousel", async (req, res) => {
   }
 });
 
-// POST /files/carousel - Agregar imágenes al carrusel
+// POST /files/carousel
 router.post("/carousel", upload.array("files", 10), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ status: 400, resp: "Archivos requeridos" });
     }
 
-    const existingFiles = fs.readdirSync(carouselDir);
-    const remainingSlots = Math.max(0, 10 - existingFiles.length);
+    const currentResources = await cloudinary.api.resources({
+      type: "upload",
+      prefix: "carousel/",
+      max_results: 10,
+    });
+
+    const remainingSlots = Math.max(0, 10 - currentResources.resources.length);
 
     if (remainingSlots === 0) {
       return res.status(400).json({
         status: 400,
-        resp: "Ya hay 10 imágenes en el carrusel. Elimina alguna antes de agregar nuevas.",
+        resp: "Límite del carrusel alcanzado (10 imágenes máx.)",
       });
     }
 
@@ -121,14 +173,11 @@ router.post("/carousel", upload.array("files", 10), async (req, res) => {
         await fs.promises.unlink(file.path).catch(console.error);
 
         const webpBuffer = await processImage(buffer);
-        const webpFilename = file.filename.replace(/\.[^/.]+$/, ".webp");
-        const webpPath = path.join(carouselDir, webpFilename);
+        const uploadResult = await uploadToCloudinary(webpBuffer, "carousel");
 
-        await fs.promises.writeFile(webpPath, webpBuffer);
         results.push({
-          name: webpFilename,
-          path: `/files/carousel/${webpFilename}`,
-          url: getFileUrl(req, webpFilename, true),
+          fileName: uploadResult.id, // Solo el ID
+          url: uploadResult.secure_url,
         });
       } catch (error) {
         console.error(`Error procesando ${file.originalname}:`, error);
@@ -158,68 +207,143 @@ router.post("/carousel", upload.array("files", 10), async (req, res) => {
   }
 });
 
-// DELETE /files/carousel/:fileName - Eliminar imagen del carrusel
-router.delete("/carousel/:fileName", async (req, res) => {
+// DELETE /files/carousel/:id
+router.delete("/carousel/:id", async (req, res) => {
   try {
-    const { fileName } = req.params;
+    const { id } = req.params;
+    const publicId = `carousel/${id}`;
 
-    if (!fileName || fileName.includes("..") || fileName.includes("/")) {
-      return res.status(400).json({
-        status: 400,
-        resp: "Nombre de archivo no válido",
+    try {
+      await cloudinary.api.resource(publicId);
+    } catch (error) {
+      console.error("Error al verificar imagen:", {
+        publicId,
+        error: error.message,
       });
-    }
-
-    const filePath = path.join(carouselDir, fileName);
-
-    if (!fs.existsSync(filePath)) {
       return res.status(404).json({
         status: 404,
-        resp: "Archivo no encontrado",
+        resp: "Imagen no encontrada en Cloudinary",
+        details: {
+          id,
+          publicId,
+          suggestion: "Verifique que la imagen exista en el carrusel",
+        },
       });
     }
 
-    await fs.promises.unlink(filePath);
-
-    res.status(200).json({
-      status: 200,
-      resp: true,
-      message: "Imagen eliminada del carrusel exitosamente",
+    const result = await cloudinary.uploader.destroy(publicId, {
+      resource_type: "image",
+      type: "upload",
+      invalidate: true,
     });
+
+    if (result.result !== "ok") {
+      return res.status(500).json({
+        status: 500,
+        resp: "Error al eliminar la imagen",
+        details: {
+          apiResponse: result,
+          nextSteps: [
+            "Verificar permisos de la API Key",
+            "Revisar políticas de retención en Cloudinary",
+          ],
+        },
+      });
+    }
+
+    try {
+      await cloudinary.api.resource(publicId);
+      return res.status(500).json({
+        status: 500,
+        resp: "La imagen no fue eliminada completamente",
+        details: {
+          apiResponse: result,
+          warning: "La imagen sigue existiendo después de eliminación",
+        },
+      });
+    } catch (verifyError) {
+      return res.status(200).json({
+        status: 200,
+        resp: true,
+        id,
+        publicId,
+        details: {
+          deletedAt: new Date().toISOString(),
+          apiResponse: result,
+        },
+        message: "Imagen eliminada exitosamente",
+      });
+    }
   } catch (error) {
-    console.error("Error al eliminar imagen del carrusel:", error);
+    console.error("Error completo:", {
+      error: error.stack,
+      params: req.params,
+    });
+
     res.status(500).json({
       status: 500,
-      resp: "Error al eliminar la imagen del carrusel",
-      error: process.env.NODE_ENV === "development" ? error.message : null,
+      resp: "Error en el proceso de eliminación",
+      error:
+        process.env.NODE_ENV === "development"
+          ? {
+              message: error.message,
+              stack: error.stack,
+              publicId: `carousel/${req.params.id}`,
+            }
+          : null,
     });
   }
 });
 
 // ========== Endpoints generales para uploads ========== //
 
-// POST /files - Subir archivo general
+// GET /files/:clientId
+router.get("/:clientId", async (req, res) => {
+  try {
+    const { clientId } = req.params;
+
+    const resources = await cloudinary.api.resources({
+      type: "upload",
+      prefix: `general/${clientId}`,
+      max_results: 1,
+    });
+
+    if (resources.resources.length === 0) {
+      return res.status(404).send("Imagen no encontrada");
+    }
+
+    res.redirect(resources.resources[0].secure_url);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Error al obtener la imagen");
+  }
+});
+
+// POST /files
 router.post("/", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ status: 400, resp: "Archivo requerido" });
+      return res.status(400).json({
+        status: 400,
+        resp: "Archivo requerido",
+        details: "Debes enviar el archivo en el campo 'file'",
+      });
     }
+
     const buffer = await fs.promises.readFile(req.file.path);
     await fs.promises.unlink(req.file.path).catch(console.error);
 
     const webpBuffer = await processImage(buffer);
-    const webpFilename = req.file.filename.replace(/\.[^/.]+$/, ".webp");
-    const webpPath = path.join(uploadDir, webpFilename);
+    const uploadResult = await uploadToCloudinary(webpBuffer);
 
-    await fs.promises.writeFile(webpPath, webpBuffer);
+    const imageId = uploadResult.public_id.split("/").pop();
 
     res.status(200).json({
       status: 200,
       resp: true,
-      fileName: webpFilename,
-      filePath: `/files/${webpFilename}`,
-      url: getFileUrl(req, webpFilename),
-      message: "Imagen procesada exitosamente",
+      fileName: imageId,
+      url: uploadResult.secure_url,
+      message: "Imagen procesada y subida exitosamente",
     });
   } catch (error) {
     console.error("Error:", error);
@@ -231,66 +355,65 @@ router.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
-// DELETE /files/:fileName - Eliminar archivo general
-router.delete("/:fileName", async (req, res) => {
+// DELETE /files/:id
+router.delete("/:id", async (req, res) => {
   try {
-    const { fileName } = req.params;
+    const { id } = req.params;
 
-    if (!fileName || fileName.includes("..") || fileName.includes("/")) {
+    if (!id) {
       return res.status(400).json({
         status: 400,
-        resp: "Nombre de archivo no válido",
+        resp: "ID de imagen requerido",
       });
     }
 
-    const filePath = path.join(uploadDir, fileName);
+    const publicId = `general/${id}`;
+    const { success, details, error } = await deleteFromCloudinary(publicId);
 
-    if (!fs.existsSync(filePath)) {
+    if (!success) {
+      console.error("Fallo al eliminar:", {
+        publicId,
+        error: details || error,
+      });
+
       return res.status(404).json({
         status: 404,
-        resp: "Archivo no encontrado",
+        resp: "Imagen no encontrada en Cloudinary",
+        details: {
+          id,
+          publicId,
+          apiResponse: details,
+          error: process.env.NODE_ENV === "development" ? error : undefined,
+        },
       });
     }
-
-    await fs.promises.unlink(filePath);
 
     res.status(200).json({
       status: 200,
       resp: true,
+      id: id,
+      publicId: publicId,
+      apiResponse: details,
       message: "Imagen eliminada exitosamente",
     });
   } catch (error) {
-    console.error("Error al eliminar imagen:", error);
+    console.error("Error completo al eliminar imagen:", {
+      error: error.stack,
+      params: req.params,
+    });
+
     res.status(500).json({
       status: 500,
       resp: "Error al eliminar la imagen",
-      error: process.env.NODE_ENV === "development" ? error.message : null,
+      error:
+        process.env.NODE_ENV === "development"
+          ? {
+              message: error.message,
+              stack: error.stack,
+            }
+          : null,
     });
   }
 });
-
-// ========== Servir archivos estáticos ========== //
-
-// Servir archivos del carrusel
-router.use(
-  "/carousel",
-  express.static(carouselDir, {
-    maxAge: "1y",
-    setHeaders: (res, path) => {
-      if (path.endsWith(".webp")) res.type("webp");
-    },
-  }),
-);
-
-// Servir archivos generales
-router.use(
-  "/",
-  express.static(uploadDir, {
-    maxAge: "1y",
-    setHeaders: (res, path) => {
-      if (path.endsWith(".webp")) res.type("webp");
-    },
-  }),
-);
 
 module.exports = router;

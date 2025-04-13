@@ -38,7 +38,6 @@ const deleteAuto = async (req, res) => {
             try {
               await fs.access(filePath);
               await fs.unlink(filePath);
-              console.log(`Imagen eliminada: ${fileName}`);
             } catch (fsError) {
               if (fsError.code === "ENOENT") {
                 console.warn(`Archivo no encontrado: ${fileName}`);

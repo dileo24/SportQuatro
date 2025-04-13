@@ -5,43 +5,35 @@ const FiltrosContext = createContext();
 export const FiltrosProvider = ({ children }) => {
 	const cargarFiltrosIniciales = () => {
 		if (typeof window !== "undefined") {
-			const guardados = localStorage.getItem("filtrosCatalogo");
-			return guardados
-				? JSON.parse(guardados)
-				: {
-						anioDesde: "",
-						anioHasta: "",
-						kmDesde: "",
-						kmHasta: "",
-						precioDesde: "",
-						precioHasta: "",
-						transmision: "",
-						combustible: "",
-						categoria: "",
-						oferta: "",
-						ordenamiento: "",
-				  };
+			try {
+				const guardados = sessionStorage.getItem("filtrosCatalogo");
+				return guardados ? JSON.parse(guardados) : getFiltrosVacios();
+			} catch {
+				return getFiltrosVacios();
+			}
 		}
-		return {
-			anioDesde: "",
-			anioHasta: "",
-			kmDesde: "",
-			kmHasta: "",
-			precioDesde: "",
-			precioHasta: "",
-			transmision: "",
-			combustible: "",
-			categoria: "",
-			oferta: "",
-			ordenamiento: "",
-		};
+		return getFiltrosVacios();
 	};
 
-	const [filtros, _setFiltros] = useState(cargarFiltrosIniciales);
+	const getFiltrosVacios = () => ({
+		anioDesde: "",
+		anioHasta: "",
+		kmDesde: "",
+		kmHasta: "",
+		precioDesde: "",
+		precioHasta: "",
+		transmision: "",
+		combustible: "",
+		categoria: "",
+		oferta: "",
+		ordenamiento: "",
+	});
+
+	const [filtros, _setFiltros] = useState(cargarFiltrosIniciales());
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
-			localStorage.setItem("filtrosCatalogo", JSON.stringify(filtros));
+			sessionStorage.setItem("filtrosCatalogo", JSON.stringify(filtros));
 		}
 	}, [filtros]);
 
