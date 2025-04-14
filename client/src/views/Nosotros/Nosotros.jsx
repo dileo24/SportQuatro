@@ -6,6 +6,7 @@ import {
 	Container,
 	Divider,
 	IconButton,
+	CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import Novedades from "../../components/Novedades/Novedades";
@@ -18,6 +19,7 @@ import { useAuth } from "../../context/AuthContext";
 export default function Nosotros() {
 	const [carouselImages, setCarouselImages] = useState([]);
 	const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+	const [isUploading, setIsUploading] = useState(false);
 	const { isAuthenticated } = useAuth();
 
 	useEffect(() => {
@@ -55,6 +57,7 @@ export default function Nosotros() {
 		const files = e.target.files;
 		if (!files || files.length === 0) return;
 
+		setIsUploading(true);
 		const formData = new FormData();
 		for (let i = 0; i < files.length; i++) {
 			formData.append("files", files[i]);
@@ -81,6 +84,8 @@ export default function Nosotros() {
 		} catch (error) {
 			console.error("Error uploading images:", error);
 			alert("Error al cargar imágenes");
+		} finally {
+			setIsUploading(false);
 		}
 	};
 
@@ -340,7 +345,7 @@ export default function Nosotros() {
 										multiple
 										onChange={handleImageUpload}
 										style={{ display: "none" }}
-										disabled={carouselImages.length >= 10}
+										disabled={carouselImages.length >= 10 || isUploading}
 									/>
 									<label htmlFor="upload-images">
 										<Box
@@ -350,24 +355,42 @@ export default function Nosotros() {
 												justifyContent: "center",
 												padding: "8px 16px",
 												backgroundColor:
-													carouselImages.length >= 10 ? "#ccc" : "#d21919",
+													carouselImages.length >= 10 || isUploading
+														? "#ccc"
+														: "#d21919",
 												color: "white",
 												borderRadius: 1,
 												cursor:
-													carouselImages.length >= 10
+													carouselImages.length >= 10 || isUploading
 														? "not-allowed"
 														: "pointer",
 												"&:hover": {
 													backgroundColor:
-														carouselImages.length >= 10 ? "#ccc" : "#b31515",
+														carouselImages.length >= 10 || isUploading
+															? "#ccc"
+															: "#b31515",
 												},
+												minWidth: 200,
 											}}
 										>
-											<Typography variant="body2">
-												{carouselImages.length >= 10
-													? "Máximo de imágenes alcanzado (10/10)"
-													: `Cargar imágenes (${carouselImages.length}/10)`}
-											</Typography>
+											{isUploading ? (
+												<>
+													<CircularProgress
+														size={20}
+														color="inherit"
+														sx={{ mr: 2 }}
+													/>
+													<Typography variant="body2">
+														Subiendo imágenes...
+													</Typography>
+												</>
+											) : (
+												<Typography variant="body2">
+													{carouselImages.length >= 10
+														? "Máximo de imágenes alcanzado (10/10)"
+														: `Cargar imágenes (${carouselImages.length}/10)`}
+												</Typography>
+											)}
 										</Box>
 									</label>
 								</Box>
