@@ -19,15 +19,7 @@ import {
 	MenuItem,
 	FormControlLabel,
 	Checkbox,
-	IconButton,
 	Alert,
-	List,
-	ListItem,
-	ListItemText,
-	Divider,
-	Chip,
-	Avatar,
-	Badge,
 } from "@mui/material";
 import { Close, AddPhotoAlternate } from "@mui/icons-material";
 import SpecItem from "../../components/SpecItem/SpectItem";
