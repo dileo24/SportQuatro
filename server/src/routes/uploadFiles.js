@@ -49,15 +49,36 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: { 
+    fileSize: 5 * 1024 * 1024, // Reducido a 5MB
+    files: 5 // Máximo de 5 archivos a la vez
+  },
 });
 
-const processImage = async buffer => {
-  return sharp(buffer)
-    .toFormat("webp", {
-      quality: 90,
+const processImage = async (buffer, targetWidth = 1200) => {
+  const pipeline = sharp(buffer);
+  
+  // Obtenemos metadatos para mantener la relación de aspecto
+  const metadata = await pipeline.metadata();
+  
+  // Redimensionamos si es necesario manteniendo la relación de aspecto
+  if (metadata.width > targetWidth) {
+    pipeline.resize({
+      width: targetWidth,
+      height: Math.round(targetWidth * (metadata.height / metadata.width)),
+      fit: 'inside',
+      withoutEnlargement: true
+    });
+  }
+  
+  // Optimización WebP
+  return pipeline
+    .webp({
+      quality: 80, // Reducido de 90 a 80 (sigue siendo buena calidad)
+      alphaQuality: 80,
       lossless: false,
-      effort: 4,
+      smartSubsample: true,
+      effort: 3 // Reducido de 4 a 3 para mejor rendimiento
     })
     .toBuffer();
 };
@@ -68,8 +89,12 @@ const uploadToCloudinary = (buffer, folder = "general") => {
       {
         folder,
         format: "webp",
-        quality: "auto",
+        quality: "auto:good", // Balance entre calidad y tamaño
         fetch_format: "auto",
+        transformation: [
+          { width: 1200, crop: "limit" }, // Limita el ancho máximo
+          { quality: "auto:good" }
+        ]
       },
       (error, result) => {
         if (error) return reject(error);
@@ -77,9 +102,9 @@ const uploadToCloudinary = (buffer, folder = "general") => {
         resolve({
           ...result,
           id,
-          folder, // Añadimos la carpeta por si acaso
+          folder,
         });
-      },
+      }
     );
 
     streamifier.createReadStream(buffer).pipe(uploadStream);
