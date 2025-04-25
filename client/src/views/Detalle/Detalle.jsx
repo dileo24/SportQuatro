@@ -891,7 +891,7 @@ export default function Detalle() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<CardsRelacionados categorias={categorias} />
+				<CardsRelacionados categorias={categorias} idAutoActual={auto.id} />
 			</Grid>
 		</Container>
 		</DndProvider>
