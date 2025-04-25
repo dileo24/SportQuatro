@@ -42,14 +42,6 @@ server.use(bodyParser.json({ limit: "50mb" }));
 server.use(cookieParser());
 server.use(morgan("dev"));
 
-server.use(
-  cors({
-    origin: [process.env.FRONTEND_URL],
-    credentials: true, // Esto podría comentarse también si no se usan sesiones
-    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-  }),
-);
 
 server.use(
   cors({
