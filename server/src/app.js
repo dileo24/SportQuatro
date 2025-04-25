@@ -51,6 +51,23 @@ server.use(
   }),
 );
 
+server.use(
+  cors({
+    origin: function (origin, callback) {
+      const allowedOrigins = process.env.FRONTEND_URLS.split(',');
+      
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+  })
+);
+
 server.use("/", routes);
 
 server.use((err, req, res, next) => {

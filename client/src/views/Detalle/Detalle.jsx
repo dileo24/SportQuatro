@@ -82,7 +82,7 @@ export default function Detalle() {
 
 		const currentYear = new Date().getFullYear();
 		const yearsArray = [];
-		for (let i = currentYear; i >= currentYear - 25; i--) {
+		for (let i = currentYear; i >= 1990; i--) {
 			yearsArray.push(i);
 		}
 		setYears(yearsArray);
