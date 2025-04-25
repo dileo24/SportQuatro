@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { logoutUser } from "../../services/user.service";
 import {
 	AppBar,
 	Toolbar,
@@ -37,7 +36,6 @@ export default function Navbar() {
 
 	const handleLogout = async () => {
 		try {
-			await logoutUser();
 			logout();
 			navigate("/");
 			handleClose();
