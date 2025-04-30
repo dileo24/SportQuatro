@@ -10,7 +10,7 @@ const allAutos = async (req, res, next) => {
           through: { attributes: [] },
         },
       ],
-      order: ["createdAt", "DESC"],
+      order: ["id", "ASC"],
     });
 
     res.status(200).json({
