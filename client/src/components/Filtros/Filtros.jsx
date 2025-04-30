@@ -226,6 +226,7 @@ const Filtros = () => {
 		<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
 			<Box sx={{ display: "flex", gap: 1 }}>
 				{renderSelect("ordenamiento", "Ordenar por", ordenamientos)}
+				{renderSelect("marca", "Marca", marcas)}
 			</Box>
 			<Box sx={{ display: "flex", gap: 1 }}>
 				{renderSelect(
@@ -252,7 +253,6 @@ const Filtros = () => {
 
 			<Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
 				{renderSelect("categoria", "Categoria", categoria)}
-				{renderSelect("marca", "Marca", marcas)}
 				{renderSelect("transmision", "Transmisión", tiposTransmision)}
 				{renderSelect("combustible", "Combustible", tiposCombustible)}
 				{renderSelect("oferta", "En oferta", oferta)}

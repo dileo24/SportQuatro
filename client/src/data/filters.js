@@ -41,6 +41,6 @@ export const oferta = [
 
 export const ordenamientos = [
 	{ value: "", label: "Sin orden" },
-	{ value: "precio-asc", label: "Precio: Menor a Mayor" },
-	{ value: "precio-desc", label: "Precio: Mayor a Menor" },
+	{ value: "precio-asc", label: "Menor a Mayor" },
+	{ value: "precio-desc", label: "Mayor a Menor" },
 ];
