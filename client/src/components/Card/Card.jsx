@@ -13,6 +13,7 @@ export default function Card({ auto }) {
 			to={`/detalle/${auto.id}`}
 			className="card-link"
 			style={{ textDecoration: "none", color: "inherit" }}
+			state={{ fromCatalogo: true }}
 		>
 			<div className="card" style={{ width: "18rem", position: "relative" }}>
 				{auto.oferta && <div className="oferta-nube">¡Oferta!</div>}
@@ -25,6 +26,7 @@ export default function Card({ auto }) {
 
 				<div className="card-body">
 					<div className="title-container">
+						<span className="car-brand">{auto.marca}</span>
 						<h5 className="card-title">
 							{auto.modelo} ({auto.anio})
 						</h5>

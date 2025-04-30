@@ -6,6 +6,8 @@ import { Box, Container, Typography } from "@mui/material";
 
 export default function Home() {
 	useEffect(() => {
+		localStorage.removeItem("catalogoCurrentPage");
+		localStorage.removeItem("catalogoFilters");
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	}, []);
 

@@ -45,6 +45,8 @@ export default function Contacto() {
 		};
 	}, []);
 	useEffect(() => {
+		localStorage.removeItem("catalogoCurrentPage");
+		localStorage.removeItem("catalogoFilters");
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	}, []);
 

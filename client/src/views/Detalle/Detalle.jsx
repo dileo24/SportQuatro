@@ -74,6 +74,7 @@ export default function Detalle() {
 	const transmisionRef = useRef(null);
 	const combustibleRef = useRef(null);
 	const modeloRef = useRef(null);
+	const marcaRef = useRef(null);
 	const precioRef = useRef(null);
 
 	useEffect(() => {
@@ -139,7 +140,6 @@ export default function Detalle() {
 				[name]: type === "checkbox" ? checked : value,
 			}));
 		}
-		setFocusedField(key || name);
 	};
 
 	const handleCategoryChange = (event) => {
@@ -474,7 +474,17 @@ export default function Detalle() {
 					>
 						<CardContent>
 							{isEditing ? (
-								<TextField
+								<>
+									<TextField
+									inputRef={marcaRef}
+									label="Marca"
+									name="marca"
+									value={editedAuto.marca}
+									onChange={(e) => handleChange(e, "marca")}
+									fullWidth
+									margin="normal"
+									/>
+									<TextField
 									inputRef={modeloRef}
 									label="Modelo"
 									name="modelo"
@@ -482,15 +492,18 @@ export default function Detalle() {
 									onChange={(e) => handleChange(e, "modelo")}
 									fullWidth
 									margin="normal"
-								/>
+									/>
+								</>
 							) : (
-								<MotionTypography
-									variant="h4"
+								<>
+									<MotionTypography
+									variant="h5"
 									gutterBottom
 									sx={{ fontWeight: "bold", mb: 2, mt: 2, textAlign: "center" }}
-								>
-									{auto.modelo}
-								</MotionTypography>
+									>
+									{auto.marca} - {auto.modelo}
+									</MotionTypography>
+								</>
 							)}
 
 							{isEditing ? (

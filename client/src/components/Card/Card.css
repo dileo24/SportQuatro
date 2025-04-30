@@ -10,7 +10,14 @@
 	min-height: 3rem;
 	margin-bottom: 0.5rem;
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+}
+.car-brand {
+    display: block;
+    font-size: 0.8rem;
+    color: #777;
+    margin-bottom: 0.2rem;
+    text-align: left;
 }
 
 .card-title {

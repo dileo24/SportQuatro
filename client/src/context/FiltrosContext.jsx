@@ -6,7 +6,7 @@ export const FiltrosProvider = ({ children }) => {
 	const cargarFiltrosIniciales = () => {
 		if (typeof window !== "undefined") {
 			try {
-				const guardados = sessionStorage.getItem("filtrosCatalogo");
+				const guardados = localStorage.getItem("catalogoFilters");
 				return guardados ? JSON.parse(guardados) : getFiltrosVacios();
 			} catch {
 				return getFiltrosVacios();
@@ -25,6 +25,7 @@ export const FiltrosProvider = ({ children }) => {
 		transmision: "",
 		combustible: "",
 		categoria: "",
+		marca: "",
 		oferta: "",
 		ordenamiento: "",
 	});
@@ -33,7 +34,7 @@ export const FiltrosProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
-			sessionStorage.setItem("filtrosCatalogo", JSON.stringify(filtros));
+			localStorage.setItem("catalogoFilters", JSON.stringify(filtros));
 		}
 	}, [filtros]);
 

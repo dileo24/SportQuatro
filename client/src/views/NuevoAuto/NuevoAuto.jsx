@@ -37,7 +37,6 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DraggableImage from "../../components/DraggableImage/DraggableImage";
 
-
 const MotionCard = motion(Card);
 const MAX_IMAGES = 10;
 
@@ -78,6 +77,8 @@ export default function NuevoAuto() {
 		setYears(yearsArray);
 	}, []);
 	useEffect(() => {
+		localStorage.removeItem("catalogoCurrentPage");
+		localStorage.removeItem("catalogoFilters");
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	}, []);
 
@@ -139,7 +140,7 @@ export default function NuevoAuto() {
 		newPreviews.splice(index, 1);
 		setImagePreviews(newPreviews);
 		setImageError("");
-		
+
 		if (selectedImageIndex === index) {
 			setSelectedImageIndex(0);
 		}
@@ -212,23 +213,23 @@ export default function NuevoAuto() {
 		const [movedImage] = updatedImages.splice(fromIndex, 1);
 		updatedImages.splice(toIndex, 0, movedImage);
 		setImages(updatedImages);
-		
+
 		// Mover en imagePreviews
 		const updatedPreviews = [...imagePreviews];
 		const [movedPreview] = updatedPreviews.splice(fromIndex, 1);
 		updatedPreviews.splice(toIndex, 0, movedPreview);
 		setImagePreviews(updatedPreviews);
-		
+
 		// Ajustar el índice seleccionado si es necesario
 		if (selectedImageIndex === fromIndex) {
-		  setSelectedImageIndex(toIndex);
+			setSelectedImageIndex(toIndex);
 		} else if (
-		  (fromIndex < selectedImageIndex && toIndex >= selectedImageIndex) ||
-		  (fromIndex > selectedImageIndex && toIndex <= selectedImageIndex)
+			(fromIndex < selectedImageIndex && toIndex >= selectedImageIndex) ||
+			(fromIndex > selectedImageIndex && toIndex <= selectedImageIndex)
 		) {
-		  setSelectedImageIndex(prev => prev + (fromIndex < toIndex ? -1 : 1));
+			setSelectedImageIndex((prev) => prev + (fromIndex < toIndex ? -1 : 1));
 		}
-	  };
+	};
 
 	return (
 		<>
@@ -253,7 +254,8 @@ export default function NuevoAuto() {
 									height: "100%",
 									boxShadow: "none",
 									padding: "0px",
-									background: "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
+									background:
+										"linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
 								}}
 							>
 								<Grid container spacing={3}>
@@ -470,7 +472,9 @@ export default function NuevoAuto() {
 														multiple
 														onChange={handleImageUpload}
 														hidden
-														disabled={images.length >= MAX_IMAGES || isSubmitting}
+														disabled={
+															images.length >= MAX_IMAGES || isSubmitting
+														}
 													/>
 												</Button>
 												{images.length > 0 && (

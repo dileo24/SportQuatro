@@ -20,6 +20,15 @@ export const getAutos = async () => {
 	}
 };
 
+export const getMarcas = async () => {
+	try {
+		const response = await axios.get(`${API_URL}/marcas`);
+		return response.data;
+	} catch (error) {
+		throw error.response ? error.response.data : error;
+	}
+};
+
 export const getAutoById = async (id) => {
 	try {
 		const response = await axios.get(`${API_URL}/${id}`);

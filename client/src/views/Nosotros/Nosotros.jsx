@@ -25,6 +25,8 @@ export default function Nosotros() {
 	useEffect(() => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 		fetchCarouselImages();
+		localStorage.removeItem("catalogoCurrentPage");
+		localStorage.removeItem("catalogoFilters");
 	}, []);
 
 	useEffect(() => {

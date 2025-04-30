@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Box,
 	TextField,
@@ -26,14 +26,29 @@ import {
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useFiltros } from "../../context/FiltrosContext";
+import { getMarcas } from "../../services/autos.service";
 
 const Filtros = () => {
 	const isMobile = useMediaQuery("(max-width:600px)");
 	const [expanded, setExpanded] = useState(!isMobile);
 	const currentYear = new Date().getFullYear();
 	const years = Array.from({ length: currentYear - 2004 }, (_, i) => 2005 + i);
-	const { filtros, setFiltros } = useFiltros();
+	const [marcas, setMarcas] = useState([]);
 
+	useEffect(() => {
+		const fetchMarcas = async () => {
+			try {
+				const data = await getMarcas();
+				setMarcas(data.map((marca) => ({ value: marca, label: marca })));
+			} catch (error) {
+				console.error("Error cargando marcas:", error);
+			}
+		};
+
+		fetchMarcas();
+	}, []);
+
+	const { filtros, setFiltros } = useFiltros();
 	const [labelShrink, setLabelShrink] = useState({
 		anioDesde: false,
 		anioHasta: false,
@@ -41,6 +56,7 @@ const Filtros = () => {
 		combustible: false,
 		oferta: false,
 		categoria: false,
+		marca: false,
 	});
 
 	const [tempValues, setTempValues] = useState({
@@ -111,8 +127,10 @@ const Filtros = () => {
 			precioHasta: "",
 			transmision: "",
 			combustible: "",
+			marca: "",
 			oferta: "",
 			categoria: "",
+			ordenamiento: "",
 		});
 		setTempValues({
 			kmDesde: "",
@@ -127,6 +145,7 @@ const Filtros = () => {
 			combustible: false,
 			oferta: false,
 			categoria: false,
+			marca: false,
 		});
 	};
 
@@ -144,6 +163,7 @@ const Filtros = () => {
 				"combustible",
 				"oferta",
 				"categoria",
+				"marca",
 				"ordenamiento",
 			].includes(name)
 		) {
@@ -232,6 +252,7 @@ const Filtros = () => {
 
 			<Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
 				{renderSelect("categoria", "Categoria", categoria)}
+				{renderSelect("marca", "Marca", marcas)}
 				{renderSelect("transmision", "Transmisión", tiposTransmision)}
 				{renderSelect("combustible", "Combustible", tiposCombustible)}
 				{renderSelect("oferta", "En oferta", oferta)}

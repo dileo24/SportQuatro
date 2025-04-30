@@ -13,6 +13,8 @@ import svLogo from "../../assets/sv_logo.png";
 
 export default function Financiacion() {
 	useEffect(() => {
+		localStorage.removeItem("catalogoCurrentPage");
+		localStorage.removeItem("catalogoFilters");
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	}, []);
 

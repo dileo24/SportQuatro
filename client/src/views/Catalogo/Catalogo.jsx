@@ -2,48 +2,57 @@ import React, { useEffect, useState } from "react";
 import "./Catalogo.css";
 import Card from "../../components/Card/Card";
 import { getAutos } from "../../services/autos.service";
-import { Typography, Box, useMediaQuery, Grid } from "@mui/material";
+import {
+	Typography,
+	Box,
+	useMediaQuery,
+	Grid,
+	CircularProgress,
+} from "@mui/material";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import Pagination from "../../components/Pagination/Pagination";
 import Filtros from "../../components/Filtros/Filtros";
 import { useFiltros } from "../../context/FiltrosContext";
 
 export default function Catalogo() {
+	const [isLoading, setIsLoading] = useState(true);
 	const [autos, setAutos] = useState([]);
 	const [filteredAutos, setFilteredAutos] = useState([]);
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(() => {
+		const savedPage = localStorage.getItem("catalogoCurrentPage");
+		return savedPage ? parseInt(savedPage) : 1;
+	});
 	const itemsPerPage = 12;
 	const isMobile = useMediaQuery("(max-width:600px)");
 	const { filtros, setFiltros } = useFiltros();
 
 	useEffect(() => {
-		fetchAutos();
+		const fetchData = async () => {
+			try {
+				setIsLoading(true);
+				const data = await getAutos();
+				if (data?.resp) {
+					setAutos(data.resp);
+				}
+			} catch (error) {
+				console.error("Error al obtener autos:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		const savedFilters = localStorage.getItem("catalogoFilters");
+		if (savedFilters) {
+			setFiltros(JSON.parse(savedFilters));
+		}
+
+		fetchData();
 	}, []);
 
 	useEffect(() => {
-		if (filteredAutos.length > 0) {
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		}
-	}, [filteredAutos, currentPage]);
+		if (autos.length === 0) return;
 
-	useEffect(() => {
-		aplicarFiltros();
-	}, [filtros, autos]);
-
-	const fetchAutos = async () => {
-		try {
-			const data = await getAutos();
-			if (data?.resp) {
-				setAutos(data.resp);
-			}
-		} catch (error) {
-			console.error("Error al obtener autos:", error);
-		}
-	};
-
-	const aplicarFiltros = () => {
 		let autosFiltrados = autos.filter((auto) => {
-			// Precio a considerar (oferta o normal)
 			const precioAuto = auto.oferta ? auto.precio_oferta : auto.precio;
 			const precioNum = parseInt(precioAuto.replace(/\./g, ""));
 
@@ -66,11 +75,13 @@ export default function Catalogo() {
 					auto.combustible === filtros.combustible) &&
 				(filtros.oferta === "" || auto.oferta === filtros.oferta) &&
 				(filtros.categoria === "" ||
-					auto.categorias.some((cat) => cat.categ === filtros.categoria))
+					auto.categorias.some((cat) => cat.categ === filtros.categoria)) &&
+				(filtros.marca === "" || auto.marca === filtros.marca)
 			);
 		});
+
 		if (filtros.ordenamiento === "precio-asc") {
-			autosFiltrados = [...autosFiltrados].sort((a, b) => {
+			autosFiltrados.sort((a, b) => {
 				const precioA = parseInt(
 					(a.oferta ? a.precio_oferta : a.precio).replace(/\./g, "")
 				);
@@ -80,7 +91,7 @@ export default function Catalogo() {
 				return precioA - precioB;
 			});
 		} else if (filtros.ordenamiento === "precio-desc") {
-			autosFiltrados = [...autosFiltrados].sort((a, b) => {
+			autosFiltrados.sort((a, b) => {
 				const precioA = parseInt(
 					(a.oferta ? a.precio_oferta : a.precio).replace(/\./g, "")
 				);
@@ -92,7 +103,13 @@ export default function Catalogo() {
 		}
 
 		setFilteredAutos(autosFiltrados);
-	};
+
+		if (autosFiltrados.length > 0) {
+			window.scrollTo({ top: 0, behavior: "smooth" });
+			localStorage.setItem("catalogoCurrentPage", currentPage);
+			localStorage.setItem("catalogoFilters", JSON.stringify(filtros));
+		}
+	}, [autos, filtros, currentPage]);
 
 	const totalPages = Math.ceil(filteredAutos.length / itemsPerPage);
 	const startIndex = (currentPage - 1) * itemsPerPage;
@@ -116,53 +133,68 @@ export default function Catalogo() {
 				</Grid>
 
 				<Grid item xs={12} md={9}>
-					{filteredAutos.length > 0 ? (
+					{isLoading ? (
+						<Box
+							sx={{
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								height: "300px",
+							}}
+						>
+							<CircularProgress size={60} />
+						</Box>
+					) : (
 						<>
-							<Box
-								sx={{
-									display: "grid",
-									gridTemplateColumns: {
-										xs: "repeat(1, 1fr)",
-										sm: "repeat(2, 1fr)",
-										md: "repeat(3, 1fr)",
-									},
-									gap: { xs: "15px", sm: "20px", md: "30px" },
-									justifyItems: "center",
-								}}
-							>
-								{currentAutos.map((auto) => (
+							{filteredAutos.length === 0 ? (
+								<Box sx={{ textAlign: "center", mt: 5 }}>
+									<DirectionsCarIcon sx={{ fontSize: 60, color: "#aaa" }} />
+									<Typography variant="h6" sx={{ mt: 2, color: "#555" }}>
+										No hay vehículos disponibles.
+									</Typography>
+								</Box>
+							) : (
+								<>
 									<Box
-										key={auto.id}
 										sx={{
-											transition: "transform 0.3s, box-shadow 0.3s",
-											"&:hover": {
-												transform: isMobile ? "none" : "scale(1.05)",
-												boxShadow: isMobile
-													? "none"
-													: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+											display: "grid",
+											gridTemplateColumns: {
+												xs: "repeat(1, 1fr)",
+												sm: "repeat(2, 1fr)",
+												md: "repeat(3, 1fr)",
 											},
+											gap: { xs: "15px", sm: "20px", md: "30px" },
+											justifyItems: "center",
 										}}
 									>
-										<Card auto={auto} />
+										{currentAutos.map((auto) => (
+											<Box
+												key={auto.id}
+												sx={{
+													transition: "transform 0.3s, box-shadow 0.3s",
+													"&:hover": {
+														transform: isMobile ? "none" : "scale(1.05)",
+														boxShadow: isMobile
+															? "none"
+															: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+													},
+												}}
+											>
+												<Card auto={auto} />
+											</Box>
+										))}
 									</Box>
-								))}
-							</Box>
 
-							<Box sx={{ mt: 3 }}>
-								<Pagination
-									totalPages={totalPages}
-									currentPage={currentPage}
-									setCurrentPage={setCurrentPage}
-								/>
-							</Box>
+									<Box sx={{ mt: 3 }}>
+										<Pagination
+											totalPages={totalPages}
+											currentPage={currentPage}
+											setCurrentPage={setCurrentPage}
+										/>
+									</Box>
+								</>
+							)}
 						</>
-					) : (
-						<Box sx={{ textAlign: "center", mt: 5 }}>
-							<DirectionsCarIcon sx={{ fontSize: 60, color: "#aaa" }} />
-							<Typography variant="h6" sx={{ mt: 2, color: "#555" }}>
-								No hay autos disponibles con los filtros seleccionados.
-							</Typography>
-						</Box>
 					)}
 				</Grid>
 			</Grid>
