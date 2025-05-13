@@ -161,6 +161,7 @@ export default function NuevoAuto() {
 			const autoResponse = await postAuto(formData);
 
 			const autoId = autoResponse.data.id;
+			const autoModelo = `${autoResponse.data.marca}-${autoResponse.data.modelo}`;
 
 			const fileNamesArray = [];
 			for (const [index, image] of images.entries()) {
@@ -184,7 +185,7 @@ export default function NuevoAuto() {
 
 			await updateImgInAuto(autoId, fileNamesArray);
 
-			navigate(`/detalle/${autoId}`);
+			navigate(`/${autoId}/${autoModelo}`);
 		} catch (error) {
 			console.error("Error en el proceso:", error);
 			setSubmitError(

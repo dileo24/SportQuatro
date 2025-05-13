@@ -29,7 +29,7 @@ function App() {
 					<Route path="/compramos" element={<CompramosTuAuto />} />
 					<Route path="/contacto" element={<Contacto />} />
 					<Route path="/nuevo_auto" element={<NuevoAuto />} />
-					<Route path="/detalle/:id" element={<Detalle />} />
+					<Route path="/:id/:modelo" element={<Detalle />} />
 				</Routes>
 			</main>
 			<Wpp />

@@ -7,15 +7,26 @@ import { faMedal } from "@fortawesome/free-solid-svg-icons/faMedal";
 export default function Card({ auto }) {
 	const API_URL = import.meta.env.VITE_API_URL;
 	const imageUrl = `${API_URL}/files/${auto.img[0]}`;
+	const marcaSlug = auto.marca
+		.toLowerCase()
+		.replace(/[^a-z0-9áéíóúñü ]/g, "")
+		.replace(/\s+/g, "-")
+		.replace(/-+/g, "-");
+
+	const modeloSlug = auto.modelo
+		.toLowerCase()
+		.replace(/[^a-z0-9áéíóúñü ]/g, "")
+		.replace(/\s+/g, "-")
+		.replace(/-+/g, "-");
 
 	return (
 		<Link
-			to={`/detalle/${auto.id}`}
+			to={`/${auto.id}/${marcaSlug}-${modeloSlug}`}
 			className="card-link"
 			style={{ textDecoration: "none", color: "inherit" }}
 			state={{ fromCatalogo: true }}
 		>
-			<div className="card" style={{ width: "18rem", position: "relative" }}>
+			<div className="card" style={{ width: "16rem", position: "relative" }}>
 				{auto.oferta && <div className="oferta-nube">¡Oferta!</div>}
 				{auto.destacar && (
 					<div className="oferta-icon">
