@@ -39,7 +39,10 @@ const Filtros = () => {
 		const fetchMarcas = async () => {
 			try {
 				const data = await getMarcas();
-				setMarcas(data.map((marca) => ({ value: marca, label: marca })));
+				setMarcas([
+					{ value: "", label: "Todas" },
+					...data.map((marca) => ({ value: marca, label: marca })),
+				]);
 			} catch (error) {
 				console.error("Error cargando marcas:", error);
 			}
@@ -210,6 +213,16 @@ const Filtros = () => {
 					label={label}
 					MenuProps={{
 						disableScrollLock: true,
+					}}
+					displayEmpty
+					renderValue={(selected) => {
+						if (selected === "") {
+							return <span style={{ color: "#757575" }}>Todas</span>;
+						}
+						const selectedOption = options.find(
+							(option) => option.value === selected
+						);
+						return selectedOption ? selectedOption.label : selected;
 					}}
 				>
 					{options.map((option) => (

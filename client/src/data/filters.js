@@ -1,4 +1,5 @@
 export const categoria = [
+	{ value: "", label: "Todas" },
 	{ value: "SUV", label: "SUV" },
 	{ value: "Pick Up", label: "Pick Up" },
 	{ value: "5 Puertas", label: "5 Puertas" },

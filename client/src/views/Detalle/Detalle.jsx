@@ -41,7 +41,6 @@ import {
 	updateImgInAuto,
 } from "../../services/autos.service";
 
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DraggableImage from "../../components/DraggableImage/DraggableImage"; // Ajusta la ruta según tu estructura de archivos
@@ -158,32 +157,30 @@ export default function Detalle() {
 
 	const handleSave = async () => {
 		try {
-		  // Primero actualiza el orden de las imágenes si es necesario
-		  const newImageOrder = images.map(img => 
-			img.replace(`${import.meta.env.VITE_API_URL}/files/`, '')
-		  );
-		  
-		  if (JSON.stringify(newImageOrder) !== JSON.stringify(auto.img)) {
-			await updateImgInAuto(id, newImageOrder);
-		  }
-	  
-		  // Luego actualiza los demás datos del auto
-		  const payload = {
-			...editedAuto,
-			moneda: moneda,
-			img: newImageOrder
-		  };
-	  
-		  const response = await updateAuto(id, payload);
-		  if (response.data.status === 200) {
-			setAuto(payload);
-			setIsEditing(false);
-		  }
+			const newImageOrder = images.map((img) =>
+				img.replace(`${import.meta.env.VITE_API_URL}/files/`, "")
+			);
+
+			if (JSON.stringify(newImageOrder) !== JSON.stringify(auto.img)) {
+				await updateImgInAuto(id, newImageOrder);
+			}
+
+			const payload = {
+				...editedAuto,
+				moneda: moneda,
+				img: newImageOrder,
+			};
+
+			const response = await updateAuto(id, payload);
+			if (response.data.status === 200) {
+				setAuto(payload);
+				setIsEditing(false);
+			}
 		} catch (error) {
-		  console.error("Error al guardar los cambios:", error);
-		  setSubmitError("Error al guardar los cambios. Intente nuevamente.");
+			console.error("Error al guardar los cambios:", error);
+			setSubmitError("Error al guardar los cambios. Intente nuevamente.");
 		}
-	  };
+	};
 
 	const handleImageUploadClick = () => {
 		fileInputRef.current.click();
@@ -243,12 +240,10 @@ export default function Detalle() {
 		const imageToRemove = auto.img[index];
 
 		try {
-			// Primero eliminar la imagen del servidor
 			await axios.delete(
 				`${import.meta.env.VITE_API_URL}/files/${imageToRemove}`
 			);
 
-			// Luego actualizar el estado local
 			const newImageArray = auto.img.filter((_, i) => i !== index);
 			await updateImgInAuto(id, newImageArray);
 
@@ -310,603 +305,608 @@ export default function Detalle() {
 		const [movedImage] = updatedImages.splice(fromIndex, 1);
 		updatedImages.splice(toIndex, 0, movedImage);
 		setImages(updatedImages);
-		
-		// Ajustar el índice seleccionado si es necesario
+
 		if (selectedImageIndex === fromIndex) {
-		  setSelectedImageIndex(toIndex);
+			setSelectedImageIndex(toIndex);
 		} else if (
-		  (fromIndex < selectedImageIndex && toIndex >= selectedImageIndex) ||
-		  (fromIndex > selectedImageIndex && toIndex <= selectedImageIndex)
+			(fromIndex < selectedImageIndex && toIndex >= selectedImageIndex) ||
+			(fromIndex > selectedImageIndex && toIndex <= selectedImageIndex)
 		) {
-		  setSelectedImageIndex(prev => prev + (fromIndex < toIndex ? -1 : 1));
+			setSelectedImageIndex((prev) => prev + (fromIndex < toIndex ? -1 : 1));
 		}
-	  };
-
-
-
+	};
 
 	return (
 		<DndProvider backend={HTML5Backend}>
-		<Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
-			<Grid container spacing={3}>
-				<Grid item xs={12} md={8}>
-					<MotionCard
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5 }}
-						sx={{
-							borderRadius: 2,
-							background: "#fff",
-							boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-						}}
-					>
-						<Carousel
-							index={selectedImageIndex}
-							onChange={(index) => setSelectedImageIndex(index)}
-							animation="slide"
-							navButtonsAlwaysVisible
-							indicators={false}
-							interval={5000}
-							NavButton={({ onClick, className, style, next, prev }) => (
-								<CustomNavButton
-									onClick={onClick}
-									direction={next ? "right" : "left"}
-								/>
-							)}
-						>
-							{images.map((image, index) => (
-								<Box
-									key={index}
-									sx={{
-										height: 525,
-										position: "relative",
-										overflow: "hidden",
-										borderRadius: "8px 8px 0 0",
-									}}
-								>
-									<img
-										src={image}
-										alt={`Auto ${index + 1}`}
-										style={{
-											width: "100%",
-											height: "100%",
-											objectFit: "cover",
-										}}
-									/>
-								</Box>
-							))}
-						</Carousel>
-
-						<Box
-						
+			<Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
+				<Grid container spacing={3}>
+					<Grid item xs={12} md={8}>
+						<MotionCard
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5 }}
 							sx={{
-								p: 2,
-								display: "flex",
-								gap: 1,
-								overflowX: "auto",
-								alignItems: "center",
-								"&::-webkit-scrollbar": {
-								height: 6,
-								},
-								"&::-webkit-scrollbar-track": {
-								backgroundColor: "#f1f1f1",
-								},
-								"&::-webkit-scrollbar-thumb": {
-								backgroundColor: "#888",
-								borderRadius: 3,
-								"&:hover": {
-									backgroundColor: "#555",
-								},
-								},
+								borderRadius: 2,
+								background: "#fff",
+								boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
 							}}
+						>
+							<Carousel
+								index={selectedImageIndex}
+								onChange={(index) => setSelectedImageIndex(index)}
+								animation="slide"
+								navButtonsAlwaysVisible
+								indicators={false}
+								interval={8000}
+								NavButton={({ onClick, className, style, next, prev }) => (
+									<CustomNavButton
+										onClick={onClick}
+										direction={next ? "right" : "left"}
+									/>
+								)}
 							>
-							{images.map((image, index) => (
-								<DraggableImage
-								key={index}
-								image={image}
-								index={index}
-								moveImage={moveImage}
-								onClick={handleThumbnailClick}
-								isSelected={index === selectedImageIndex}
-								onRemove={handleRemoveImage}
-								isEditing={isEditing}
-								isAuthenticated={isAuthenticated}
-								/>
-							))}
+								{images.map((image, index) => (
+									<Box
+										key={index}
+										sx={{
+											height: { xs: 350, sm: 525 },
+											position: "relative",
+											overflow: "hidden",
+											borderRadius: "8px 8px 0 0",
+											"& img": {
+												width: "100%",
+												height: "100%",
+												objectFit: { xs: "cover", sm: "cover" },
+												objectPosition: "center center",
+											},
+										}}
+									>
+										<img
+											src={image}
+											alt={`Auto ${index + 1}`}
+											style={{
+												transform: { xs: "scale(1.5)", sm: "scale(1.5)" },
+											}}
+										/>
+									</Box>
+								))}
+							</Carousel>
 
-							{isAuthenticated && isEditing && images.length < MAX_IMAGES && (
-								<Box
+							<Box
 								sx={{
-									width: 80,
-									height: 60,
-									flexShrink: 0,
+									p: 2,
 									display: "flex",
+									gap: 1,
+									overflowX: "auto",
 									alignItems: "center",
-									justifyContent: "center",
-									border: "2px dashed #ddd",
-									borderRadius: 1,
-									cursor: "pointer",
-									"&:hover": {
-									borderColor: "#1976d2",
+									"&::-webkit-scrollbar": {
+										height: 6,
+									},
+									"&::-webkit-scrollbar-track": {
+										backgroundColor: "#f1f1f1",
+									},
+									"&::-webkit-scrollbar-thumb": {
+										backgroundColor: "#888",
+										borderRadius: 3,
+										"&:hover": {
+											backgroundColor: "#555",
+										},
 									},
 								}}
-								onClick={handleImageUploadClick}
-								>
-								<input
-									type="file"
-									ref={fileInputRef}
-									onChange={handleImageUpload}
-									accept="image/*"
-									multiple
-									style={{ display: "none" }}
-									disabled={isUploading}
-								/>
-								{isUploading ? (
-									<CircularProgress size={24} />
-								) : (
-									<AddPhotoAlternate color="action" />
+							>
+								{images.map((image, index) => (
+									<DraggableImage
+										key={index}
+										image={image}
+										index={index}
+										moveImage={moveImage}
+										onClick={handleThumbnailClick}
+										isSelected={index === selectedImageIndex}
+										onRemove={handleRemoveImage}
+										isEditing={isEditing}
+										isAuthenticated={isAuthenticated}
+									/>
+								))}
+
+								{isAuthenticated && isEditing && images.length < MAX_IMAGES && (
+									<Box
+										sx={{
+											width: 80,
+											height: 60,
+											flexShrink: 0,
+											display: "flex",
+											alignItems: "center",
+											justifyContent: "center",
+											border: "2px dashed #ddd",
+											borderRadius: 1,
+											cursor: "pointer",
+											"&:hover": {
+												borderColor: "#1976d2",
+											},
+										}}
+										onClick={handleImageUploadClick}
+									>
+										<input
+											type="file"
+											ref={fileInputRef}
+											onChange={handleImageUpload}
+											accept="image/*"
+											multiple
+											style={{ display: "none" }}
+											disabled={isUploading}
+										/>
+										{isUploading ? (
+											<CircularProgress size={24} />
+										) : (
+											<AddPhotoAlternate color="action" />
+										)}
+									</Box>
 								)}
+							</Box>
+
+							{imageError && (
+								<Box sx={{ px: 2, pb: 2 }}>
+									<Alert severity="error" sx={{ mb: 1 }}>
+										{imageError}
+									</Alert>
 								</Box>
 							)}
-							</Box>
+						</MotionCard>
+					</Grid>
 
-						{imageError && (
-							<Box sx={{ px: 2, pb: 2 }}>
-								<Alert severity="error" sx={{ mb: 1 }}>
-									{imageError}
-								</Alert>
-							</Box>
-						)}
-					</MotionCard>
-				</Grid>
-
-				<Grid item xs={12} md={4}>
-					<MotionCard
-						initial={{ opacity: 0, x: 20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.5, delay: 0.2 }}
-						sx={{
-							borderRadius: 4,
-							height: "100%",
-							background: "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
-							boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-						}}
-					>
-						<CardContent>
-							{isEditing ? (
-								<>
-									<TextField
-									inputRef={marcaRef}
-									label="Marca"
-									name="marca"
-									value={editedAuto.marca}
-									onChange={(e) => handleChange(e, "marca")}
-									fullWidth
-									margin="normal"
-									/>
-									<TextField
-									inputRef={modeloRef}
-									label="Modelo"
-									name="modelo"
-									value={editedAuto.modelo}
-									onChange={(e) => handleChange(e, "modelo")}
-									fullWidth
-									margin="normal"
-									/>
-								</>
-							) : (
-								<>
-									<MotionTypography
-									variant="h5"
-									gutterBottom
-									sx={{ fontWeight: "bold", mb: 2, mt: 2, textAlign: "center" }}
-									>
-									{auto.marca} - {auto.modelo}
-									</MotionTypography>
-								</>
-							)}
-
-							{isEditing ? (
-								<>
-									<Box display="flex" alignItems="center">
+					<Grid item xs={12} md={4}>
+						<MotionCard
+							initial={{ opacity: 0, x: 20 }}
+							animate={{ opacity: 1, x: 0 }}
+							transition={{ duration: 0.5, delay: 0.2 }}
+							sx={{
+								borderRadius: 4,
+								height: "100%",
+								background: "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
+								boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+							}}
+						>
+							<CardContent>
+								{isEditing ? (
+									<>
 										<TextField
-											inputRef={precioRef}
-											label="Precio"
-											name="precio"
-											value={editedAuto.precio}
-											onChange={(e) => handleChange(e, "precio")}
+											inputRef={marcaRef}
+											label="Marca"
+											name="marca"
+											value={editedAuto.marca}
+											onChange={(e) => handleChange(e, "marca")}
 											fullWidth
 											margin="normal"
 										/>
-										<Select
-											value={moneda}
-											onChange={(e) => setMoneda(e.target.value)}
-											sx={{ ml: 1, minWidth: 80 }}
+										<TextField
+											inputRef={modeloRef}
+											label="Modelo"
+											name="modelo"
+											value={editedAuto.modelo}
+											onChange={(e) => handleChange(e, "modelo")}
+											fullWidth
+											margin="normal"
+										/>
+									</>
+								) : (
+									<>
+										<MotionTypography
+											variant="h5"
+											gutterBottom
+											sx={{
+												fontWeight: "bold",
+												mb: 2,
+												mt: 2,
+												textAlign: "center",
+											}}
 										>
-											<MenuItem value="AR$">AR$</MenuItem>
-											<MenuItem value="U$D">U$D</MenuItem>
-										</Select>
-									</Box>
+											{auto.marca} - {auto.modelo}
+										</MotionTypography>
+									</>
+								)}
 
-									<FormControlLabel
-										control={
-											<Checkbox
-												checked={editedAuto.destacar || false}
-												onChange={(e) => handleChange(e, "destacar")}
-												name="destacar"
+								{isEditing ? (
+									<>
+										<Box display="flex" alignItems="center">
+											<TextField
+												inputRef={precioRef}
+												label="Precio"
+												name="precio"
+												value={editedAuto.precio}
+												onChange={(e) => handleChange(e, "precio")}
+												fullWidth
+												margin="normal"
 											/>
-										}
-										label="Destacar"
-									/>
+											<Select
+												value={moneda}
+												onChange={(e) => setMoneda(e.target.value)}
+												sx={{ ml: 1, minWidth: 80 }}
+											>
+												<MenuItem value="AR$">AR$</MenuItem>
+												<MenuItem value="U$D">U$D</MenuItem>
+											</Select>
+										</Box>
 
-									<FormControlLabel
-										control={
-											<Checkbox
-												checked={editedAuto.oferta || false}
-												onChange={(e) => handleChange(e, "oferta")}
-												name="oferta"
-											/>
-										}
-										label="En oferta"
-									/>
-
-									{editedAuto.oferta && (
-										<TextField
-											label="Precio de oferta"
-											name="precio_oferta"
-											value={editedAuto.precio_oferta || ""}
-											onChange={(e) => handleChange(e, "precio_oferta")}
-											fullWidth
-											margin="normal"
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={editedAuto.destacar || false}
+													onChange={(e) => handleChange(e, "destacar")}
+													name="destacar"
+												/>
+											}
+											label="Destacar"
 										/>
-									)}
-								</>
-							) : (
-								<Box
-									sx={{
-										fontSize: "1.5rem",
-										fontWeight: "bold",
-										mb: 2,
-										textAlign: "center",
-										display: "flex",
-										flexDirection: "column",
-										alignItems: "center",
-									}}
-								>
-									{auto.oferta && (
+
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={editedAuto.oferta || false}
+													onChange={(e) => handleChange(e, "oferta")}
+													name="oferta"
+												/>
+											}
+											label="En oferta"
+										/>
+
+										{editedAuto.oferta && (
+											<TextField
+												label="Precio de oferta"
+												name="precio_oferta"
+												value={editedAuto.precio_oferta || ""}
+												onChange={(e) => handleChange(e, "precio_oferta")}
+												fullWidth
+												margin="normal"
+											/>
+										)}
+									</>
+								) : (
+									<Box
+										sx={{
+											fontSize: "1.5rem",
+											fontWeight: "bold",
+											mb: 2,
+											textAlign: "center",
+											display: "flex",
+											flexDirection: "column",
+											alignItems: "center",
+										}}
+									>
+										{auto.oferta && (
+											<Box
+												component="span"
+												sx={{
+													color: "red",
+													fontSize: "1.5rem",
+													fontWeight: "bold",
+													mb: 1,
+												}}
+											>
+												{auto.moneda} {auto.precio_oferta}
+											</Box>
+										)}
 										<Box
 											component="span"
 											sx={{
-												color: "red",
-												fontSize: "1.5rem",
-												fontWeight: "bold",
-												mb: 1,
+												color: auto.oferta ? "grey.600" : "inherit",
+												textDecoration: auto.oferta ? "line-through" : "none",
+												opacity: auto.oferta ? 0.7 : 1,
 											}}
 										>
-											{auto.moneda} {auto.precio_oferta}
+											{auto.moneda} {auto.precio}
 										</Box>
-									)}
-									<Box
-										component="span"
-										sx={{
-											color: auto.oferta ? "grey.600" : "inherit",
-											textDecoration: auto.oferta ? "line-through" : "none",
-											opacity: auto.oferta ? 0.7 : 1,
-										}}
-									>
-										{auto.moneda} {auto.precio}
 									</Box>
-								</Box>
-							)}
-
-							<Grid container spacing={2} sx={{ mt: 2 }}>
-								{isEditing ? (
-									<Grid item xs={6}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											<FormControl fullWidth>
-												<InputLabel>Año</InputLabel>
-												<Select
-													inputRef={yearRef}
-													name="anio"
-													value={editedAuto.anio}
-													onChange={(e) => handleChange(e, "anio")}
-													label="Año"
-												>
-													{years.map((year) => (
-														<MenuItem key={year} value={year}>
-															{year}
-														</MenuItem>
-													))}
-												</Select>
-											</FormControl>
-										</Paper>
-									</Grid>
-								) : (
-									<Grid item xs={4}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											<SpecItem icon="📅" label="Modelo" value={auto.anio} />
-										</Paper>
-									</Grid>
-								)}
-								<Grid item xs={4}>
-									<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-										{isEditing ? (
-											<TextField
-												inputRef={motorRef}
-												label="Motor"
-												name="motor"
-												value={editedAuto.motor}
-												onChange={(e) => handleChange(e, "motor")}
-												fullWidth
-											/>
-										) : (
-											<SpecItem icon="🚗" label="Motor" value={auto.motor} />
-										)}
-									</Paper>
-								</Grid>
-								{isEditing ? (
-									<Grid item xs={6}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											<TextField
-												inputRef={kmRef}
-												label="Km"
-												name="km"
-												value={editedAuto.km}
-												onChange={(e) => handleChange(e, "km")}
-												fullWidth
-											/>
-										</Paper>
-									</Grid>
-								) : (
-									<Grid item xs={4}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											<SpecItem icon="📊" label="Km" value={auto.km} />
-										</Paper>
-									</Grid>
 								)}
 
-								<Grid item xs={6}>
-									<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-										{isEditing ? (
-											<FormControl fullWidth>
-												<InputLabel>Transmisión</InputLabel>
-												<Select
-													inputRef={transmisionRef}
-													name="transmision"
-													value={editedAuto.transmision}
-													onChange={(e) => handleChange(e, "transmision")}
-													label="Transmisión"
-												>
-													{filteredTransmision.map((option) => (
-														<MenuItem key={option.value} value={option.value}>
-															{option.label}
-														</MenuItem>
-													))}
-												</Select>
-											</FormControl>
-										) : (
-											<SpecItem
-												icon="⚙️"
-												label="Transmisión"
-												value={auto.transmision}
-											/>
-										)}
-									</Paper>
-								</Grid>
-
-								{isEditing ? (
-									<Grid item xs={12}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											<FormControl fullWidth>
-												<InputLabel>Combustible</InputLabel>
-												<Select
-													inputRef={combustibleRef}
-													name="combustible"
-													value={editedAuto.combustible}
-													onChange={(e) => handleChange(e, "combustible")}
-													label="Combustible"
-												>
-													{filteredCombustible.map((option) => (
-														<MenuItem key={option.value} value={option.value}>
-															{option.label}
-														</MenuItem>
-													))}
-												</Select>
-											</FormControl>
-										</Paper>
-									</Grid>
-								) : (
-									<Grid item xs={6}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											<SpecItem
-												icon="⛽"
-												label="Combustible"
-												value={auto.combustible}
-											/>
-										</Paper>
-									</Grid>
-								)}
-
-								<Grid item xs={12}>
-									<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-										{isEditing ? (
-											<FormControl fullWidth>
-												<InputLabel>Categoría/s</InputLabel>
-												<Select
-													multiple
-													name="categorias"
-													value={
-														editedAuto.categorias?.map((cat) =>
-															cat.id.toString()
-														) || []
-													}
-													onChange={handleCategoryChange}
-													label="Categoría/s"
-													renderValue={(selected) =>
-														selected
-															.map((id) => {
-																const cat = categoriaToCreate.find(
-																	(c) => c.value === id
-																);
-																return cat?.label || id;
-															})
-															.join(", ")
-													}
-												>
-													{categoriaToCreate.map((option) => (
-														<MenuItem key={option.value} value={option.value}>
-															<Checkbox
-																checked={editedAuto.categorias?.some(
-																	(c) => c.id.toString() === option.value
-																)}
-															/>
-															{option.label}
-														</MenuItem>
-													))}
-												</Select>
-											</FormControl>
-										) : (
-											<SpecItem
-												icon="🏷️"
-												label="Categoría/s"
-												value={
-													auto.categorias?.map((cat) => cat.categ).join(", ") ||
-													"Sin categoría"
-												}
-											/>
-										)}
-									</Paper>
-								</Grid>
-							</Grid>
-
-							{isAuthenticated && (
-								<Box>
+								<Grid container spacing={2} sx={{ mt: 2 }}>
 									{isEditing ? (
-										<Grid container spacing={2} sx={{ mt: 2 }}>
-											<Grid item xs={4}>
-												<Button
-													variant="contained"
-													color="primary"
-													fullWidth
-													onClick={handleSave}
-												>
-													Guardar
-												</Button>
-											</Grid>
-
-											<Grid item xs={4}>
-												<Button
-													variant="contained"
-													color="error"
-													fullWidth
-													onClick={() => handleDeleteAuto(auto.id)}
-												>
-													Eliminar
-												</Button>
-											</Grid>
-											<Grid item xs={4}>
-												<Button
-													variant="outlined"
-													color="secondary"
-													fullWidth
-													onClick={() => setIsEditing(false)}
-												>
-													Cancelar
-												</Button>
-											</Grid>
+										<Grid item xs={6}>
+											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+												<FormControl fullWidth>
+													<InputLabel>Año</InputLabel>
+													<Select
+														inputRef={yearRef}
+														name="anio"
+														value={editedAuto.anio}
+														onChange={(e) => handleChange(e, "anio")}
+														label="Año"
+													>
+														{years.map((year) => (
+															<MenuItem key={year} value={year}>
+																{year}
+															</MenuItem>
+														))}
+													</Select>
+												</FormControl>
+											</Paper>
 										</Grid>
 									) : (
-										<Box display="flex" justifyContent="center" mt={2}>
-											<Button
-												variant="outlined"
-												color="primary"
-												onClick={handleEdit}
-											>
-												Editar
-											</Button>
-										</Box>
+										<Grid item xs={4}>
+											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+												<SpecItem icon="📅" label="Modelo" value={auto.anio} />
+											</Paper>
+										</Grid>
 									)}
-								</Box>
-							)}
-						</CardContent>
-					</MotionCard>
+									<Grid item xs={4}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											{isEditing ? (
+												<TextField
+													inputRef={motorRef}
+													label="Motor"
+													name="motor"
+													value={editedAuto.motor}
+													onChange={(e) => handleChange(e, "motor")}
+													fullWidth
+												/>
+											) : (
+												<SpecItem icon="🚗" label="Motor" value={auto.motor} />
+											)}
+										</Paper>
+									</Grid>
+									{isEditing ? (
+										<Grid item xs={6}>
+											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+												<TextField
+													inputRef={kmRef}
+													label="Km"
+													name="km"
+													value={editedAuto.km}
+													onChange={(e) => handleChange(e, "km")}
+													fullWidth
+												/>
+											</Paper>
+										</Grid>
+									) : (
+										<Grid item xs={4}>
+											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+												<SpecItem icon="📊" label="Km" value={auto.km} />
+											</Paper>
+										</Grid>
+									)}
+
+									<Grid item xs={6}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											{isEditing ? (
+												<FormControl fullWidth>
+													<InputLabel>Transmisión</InputLabel>
+													<Select
+														inputRef={transmisionRef}
+														name="transmision"
+														value={editedAuto.transmision}
+														onChange={(e) => handleChange(e, "transmision")}
+														label="Transmisión"
+													>
+														{filteredTransmision.map((option) => (
+															<MenuItem key={option.value} value={option.value}>
+																{option.label}
+															</MenuItem>
+														))}
+													</Select>
+												</FormControl>
+											) : (
+												<SpecItem
+													icon="⚙️"
+													label="Transmisión"
+													value={auto.transmision}
+												/>
+											)}
+										</Paper>
+									</Grid>
+
+									{isEditing ? (
+										<Grid item xs={12}>
+											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+												<FormControl fullWidth>
+													<InputLabel>Combustible</InputLabel>
+													<Select
+														inputRef={combustibleRef}
+														name="combustible"
+														value={editedAuto.combustible}
+														onChange={(e) => handleChange(e, "combustible")}
+														label="Combustible"
+													>
+														{filteredCombustible.map((option) => (
+															<MenuItem key={option.value} value={option.value}>
+																{option.label}
+															</MenuItem>
+														))}
+													</Select>
+												</FormControl>
+											</Paper>
+										</Grid>
+									) : (
+										<Grid item xs={6}>
+											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+												<SpecItem
+													icon="⛽"
+													label="Combustible"
+													value={auto.combustible}
+												/>
+											</Paper>
+										</Grid>
+									)}
+
+									<Grid item xs={12}>
+										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+											{isEditing ? (
+												<FormControl fullWidth>
+													<InputLabel>Categoría/s</InputLabel>
+													<Select
+														multiple
+														name="categorias"
+														value={
+															editedAuto.categorias?.map((cat) =>
+																cat.id.toString()
+															) || []
+														}
+														onChange={handleCategoryChange}
+														label="Categoría/s"
+														renderValue={(selected) =>
+															selected
+																.map((id) => {
+																	const cat = categoriaToCreate.find(
+																		(c) => c.value === id
+																	);
+																	return cat?.label || id;
+																})
+																.join(", ")
+														}
+													>
+														{categoriaToCreate.map((option) => (
+															<MenuItem key={option.value} value={option.value}>
+																<Checkbox
+																	checked={editedAuto.categorias?.some(
+																		(c) => c.id.toString() === option.value
+																	)}
+																/>
+																{option.label}
+															</MenuItem>
+														))}
+													</Select>
+												</FormControl>
+											) : (
+												<SpecItem
+													icon="🏷️"
+													label="Categoría/s"
+													value={
+														auto.categorias
+															?.map((cat) => cat.categ)
+															.join(", ") || "Sin categoría"
+													}
+												/>
+											)}
+										</Paper>
+									</Grid>
+								</Grid>
+
+								{isAuthenticated && (
+									<Box>
+										{isEditing ? (
+											<Grid container spacing={2} sx={{ mt: 2 }}>
+												<Grid item xs={4}>
+													<Button
+														variant="contained"
+														color="primary"
+														fullWidth
+														onClick={handleSave}
+													>
+														Guardar
+													</Button>
+												</Grid>
+
+												<Grid item xs={4}>
+													<Button
+														variant="contained"
+														color="error"
+														fullWidth
+														onClick={() => handleDeleteAuto(auto.id)}
+													>
+														Eliminar
+													</Button>
+												</Grid>
+												<Grid item xs={4}>
+													<Button
+														variant="outlined"
+														color="secondary"
+														fullWidth
+														onClick={() => setIsEditing(false)}
+													>
+														Cancelar
+													</Button>
+												</Grid>
+											</Grid>
+										) : (
+											<Box display="flex" justifyContent="center" mt={2}>
+												<Button
+													variant="outlined"
+													color="primary"
+													onClick={handleEdit}
+												>
+													Editar
+												</Button>
+											</Box>
+										)}
+									</Box>
+								)}
+							</CardContent>
+						</MotionCard>
+					</Grid>
+
+					<Grid item xs={12}>
+						<MotionCard
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5, delay: 0.4 }}
+							sx={{
+								borderRadius: 4,
+								mt: 4,
+								background: "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
+								boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+								p: 3,
+							}}
+						>
+							<CardContent>
+								<Typography
+									variant="h5"
+									gutterBottom
+									sx={{
+										fontWeight: "bold",
+										display: "flex",
+										alignItems: "center",
+										gap: 1,
+									}}
+								>
+									🛡️ Beneficios Exclusivos
+								</Typography>
+
+								<Grid container spacing={2} sx={{ mt: 2 }}>
+									{[
+										{ icon: "✨", title: "Entrega Inmediata" },
+										{ icon: "🔄", title: "Recibimos tu usado (Consultar)" },
+										{
+											icon: "💰",
+											title: "Financiación solo con DNI (50% - 80%)",
+										},
+										{ icon: "🛡️", title: "Gestoría general" },
+									].map((beneficio, index) => (
+										<Grid item xs={12} sm={6} key={index}>
+											<Paper
+												elevation={3}
+												sx={{
+													p: 2,
+													display: "flex",
+													alignItems: "center",
+													gap: 2,
+													borderRadius: 2,
+													background:
+														theme.palette.mode === "dark" ? "#333" : "#fff",
+													boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+												}}
+											>
+												<Typography variant="h4" component="span">
+													{beneficio.icon}
+												</Typography>
+												<Box>
+													<Typography variant="h6" fontWeight="bold">
+														{beneficio.title}
+													</Typography>
+													<Typography variant="body2" color="text.secondary">
+														{beneficio.description}
+													</Typography>
+												</Box>
+											</Paper>
+										</Grid>
+									))}
+								</Grid>
+							</CardContent>
+						</MotionCard>
+					</Grid>
 				</Grid>
 
 				<Grid item xs={12}>
-					<MotionCard
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5, delay: 0.4 }}
-						sx={{
-							borderRadius: 4,
-							mt: 4,
-							background: "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
-							boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-							p: 3,
-						}}
-					>
-						<CardContent>
-							<Typography
-								variant="h5"
-								gutterBottom
-								sx={{
-									fontWeight: "bold",
-									display: "flex",
-									alignItems: "center",
-									gap: 1,
-								}}
-							>
-								🛡️ Beneficios Exclusivos
-							</Typography>
-
-							<Grid container spacing={2} sx={{ mt: 2 }}>
-								{[
-									{ icon: "✨", title: "Entrega Inmediata" },
-									{ icon: "🔄", title: "Recibimos tu usado (Consultar)" },
-									{
-										icon: "💰",
-										title: "Financiación solo con DNI (50% - 80%)",
-									},
-									{ icon: "🛡️", title: "Gestoría general" },
-								].map((beneficio, index) => (
-									<Grid item xs={12} sm={6} key={index}>
-										<Paper
-											elevation={3}
-											sx={{
-												p: 2,
-												display: "flex",
-												alignItems: "center",
-												gap: 2,
-												borderRadius: 2,
-												background:
-													theme.palette.mode === "dark" ? "#333" : "#fff",
-												boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-											}}
-										>
-											<Typography variant="h4" component="span">
-												{beneficio.icon}
-											</Typography>
-											<Box>
-												<Typography variant="h6" fontWeight="bold">
-													{beneficio.title}
-												</Typography>
-												<Typography variant="body2" color="text.secondary">
-													{beneficio.description}
-												</Typography>
-											</Box>
-										</Paper>
-									</Grid>
-								))}
-							</Grid>
-						</CardContent>
-					</MotionCard>
+					<CardsRelacionados categorias={categorias} idAutoActual={auto.id} />
 				</Grid>
-			</Grid>
-
-			<Grid item xs={12}>
-				<CardsRelacionados categorias={categorias} idAutoActual={auto.id} />
-			</Grid>
-		</Container>
+			</Container>
 		</DndProvider>
 	);
 }

@@ -7,18 +7,17 @@ import { faMedal } from "@fortawesome/free-solid-svg-icons/faMedal";
 export default function Card({ auto }) {
 	const API_URL = import.meta.env.VITE_API_URL;
 	const imageUrl = `${API_URL}/files/${auto.img[0]}`;
-	const marcaSlug = auto.marca
-		.toLowerCase()
-		.replace(/[^a-z0-9áéíóúñü ]/g, "")
-		.replace(/\s+/g, "-")
-		.replace(/-+/g, "-");
+	    const createSlug = (str) => {
+        return str
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9áéíóúñü ]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-");
+    };
 
-	const modeloSlug = auto.modelo
-		.toLowerCase()
-		.replace(/[^a-z0-9áéíóúñü ]/g, "")
-		.replace(/\s+/g, "-")
-		.replace(/-+/g, "-");
-
+    const marcaSlug = createSlug(auto.marca);
+    const modeloSlug = createSlug(auto.modelo);
 	return (
 		<Link
 			to={`/${auto.id}/${marcaSlug}-${modeloSlug}`}

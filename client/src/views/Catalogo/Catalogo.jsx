@@ -22,9 +22,28 @@ export default function Catalogo() {
 		const savedPage = localStorage.getItem("catalogoCurrentPage");
 		return savedPage ? parseInt(savedPage) : 1;
 	});
+	const [dolarBlue, setDolarBlue] = useState(null);
 	const itemsPerPage = 12;
 	const isMobile = useMediaQuery("(max-width:600px)");
 	const { filtros, setFiltros } = useFiltros();
+
+	useEffect(() => {
+		const fetchDolarBlue = async () => {
+			try {
+				const response = await fetch("https://api.bluelytics.com.ar/v2/latest");
+				const data = await response.json();
+				setDolarBlue(data.blue.value_avg);
+			} catch (error) {
+				console.error("Error al obtener el valor del dólar:", error);
+			}
+		};
+
+		fetchDolarBlue();
+	}, []);
+
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [filtros]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -50,7 +69,7 @@ export default function Catalogo() {
 	}, []);
 
 	useEffect(() => {
-		if (autos.length === 0) return;
+		if (autos.length === 0 || dolarBlue === null) return;
 
 		let autosFiltrados = autos.filter((auto) => {
 			const precioAuto = auto.oferta ? auto.precio_oferta : auto.precio;
@@ -80,25 +99,27 @@ export default function Catalogo() {
 			);
 		});
 
-		if (filtros.ordenamiento === "precio-asc") {
+		if (
+			filtros.ordenamiento === "precio-asc" ||
+			filtros.ordenamiento === "precio-desc"
+		) {
 			autosFiltrados.sort((a, b) => {
-				const precioA = parseInt(
-					(a.oferta ? a.precio_oferta : a.precio).replace(/\./g, "")
-				);
-				const precioB = parseInt(
-					(b.oferta ? b.precio_oferta : b.precio).replace(/\./g, "")
-				);
-				return precioA - precioB;
-			});
-		} else if (filtros.ordenamiento === "precio-desc") {
-			autosFiltrados.sort((a, b) => {
-				const precioA = parseInt(
-					(a.oferta ? a.precio_oferta : a.precio).replace(/\./g, "")
-				);
-				const precioB = parseInt(
-					(b.oferta ? b.precio_oferta : b.precio).replace(/\./g, "")
-				);
-				return precioB - precioA;
+				const getPrecioEnPesos = (auto) => {
+					const precioString = auto.oferta ? auto.precio_oferta : auto.precio;
+					const precioNum = parseInt(precioString.replace(/\./g, ""));
+
+					if (auto.moneda === "U$D") {
+						return precioNum * dolarBlue;
+					}
+					return precioNum;
+				};
+
+				const precioA = getPrecioEnPesos(a);
+				const precioB = getPrecioEnPesos(b);
+
+				return filtros.ordenamiento === "precio-asc"
+					? precioA - precioB
+					: precioB - precioA;
 			});
 		}
 
@@ -106,10 +127,13 @@ export default function Catalogo() {
 
 		if (autosFiltrados.length > 0) {
 			window.scrollTo({ top: 0, behavior: "smooth" });
-			localStorage.setItem("catalogoCurrentPage", currentPage);
 			localStorage.setItem("catalogoFilters", JSON.stringify(filtros));
+
+			if (currentPage !== 1) {
+				localStorage.setItem("catalogoCurrentPage", currentPage);
+			}
 		}
-	}, [autos, filtros, currentPage]);
+	}, [autos, filtros, currentPage, dolarBlue]);
 
 	const totalPages = Math.ceil(filteredAutos.length / itemsPerPage);
 	const startIndex = (currentPage - 1) * itemsPerPage;
@@ -162,8 +186,19 @@ export default function Catalogo() {
 												xs: "repeat(1, 1fr)",
 												sm: "repeat(2, 1fr)",
 												md: "repeat(3, 1fr)",
+												lg: "repeat(3, 1fr)",
+												xl: "repeat(4, 1fr)",
 											},
-											gap: { xs: "15px", sm: "20px", md: "30px" },
+											"@media (min-width: 900px) and (max-width: 1600px)": {
+												gridTemplateColumns: "repeat(3, 1fr)",
+											},
+											gap: {
+												xs: "15px",
+												sm: "20px",
+												md: "25px",
+												lg: "30px",
+												xl: "30px",
+											},
 											justifyItems: "center",
 										}}
 									>
@@ -171,12 +206,9 @@ export default function Catalogo() {
 											<Box
 												key={auto.id}
 												sx={{
-													transition: "transform 0.3s, box-shadow 0.3s",
+													transition: "transform 0.3s",
 													"&:hover": {
 														transform: isMobile ? "none" : "scale(1.05)",
-														boxShadow: isMobile
-															? "none"
-															: "0px 4px 20px rgba(0, 0, 0, 0.2)",
 													},
 												}}
 											>
