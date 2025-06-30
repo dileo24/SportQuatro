@@ -196,11 +196,21 @@ const Filtros = () => {
 
 	const renderSelect = (name, label, options) => {
 		const value = filtros[name] === undefined ? "" : filtros[name];
-		const hasValue = value !== "" && value !== null && value !== undefined;
 
 		return (
 			<FormControl fullWidth>
-				<InputLabel id={`${name}-label`} shrink={labelShrink[name] || hasValue}>
+				<InputLabel
+					id={`${name}-label`}
+					shrink={true}
+					sx={{
+						position: "absolute",
+						transform: "translate(14px, -9px) scale(0.75)",
+						backgroundColor: "background.paper",
+						px: 1,
+						zIndex: 1,
+						pointerEvents: "none",
+					}}
+				>
 					{label}
 				</InputLabel>
 				<Select
@@ -208,8 +218,6 @@ const Filtros = () => {
 					name={name}
 					value={value}
 					onChange={handleChange}
-					onFocus={() => handleFocus(name)}
-					onBlur={() => handleBlur(name, value)}
 					label={label}
 					MenuProps={{
 						disableScrollLock: true,
@@ -264,9 +272,12 @@ const Filtros = () => {
 				{renderTextFieldWithClear("kmHasta", "Km Hasta")}
 			</Box>
 
-			<Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
+			<Box sx={{ display: "flex", gap: 1 }}>
 				{renderSelect("categoria", "Categoria", categoria)}
 				{renderSelect("transmision", "Transmisión", tiposTransmision)}
+			</Box>
+
+			<Box sx={{ display: "flex", gap: 1 }}>
 				{renderSelect("combustible", "Combustible", tiposCombustible)}
 				{renderSelect("oferta", "En oferta", oferta)}
 			</Box>

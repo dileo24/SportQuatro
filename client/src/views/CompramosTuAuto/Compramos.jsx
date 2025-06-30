@@ -10,7 +10,7 @@ import {
 	CardMedia,
 } from "@mui/material";
 import heroCompramos from "../../assets/heroCompramos.webp";
-import imgCompramos from "../../assets/img_compramos.jpg";
+import imgCompramos from "../../assets/img_compramos.jpeg";
 
 export default function CompramosTuAuto() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
