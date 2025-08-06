@@ -75,6 +75,7 @@ export default function Detalle() {
 	const modeloRef = useRef(null);
 	const marcaRef = useRef(null);
 	const precioRef = useRef(null);
+	const [cursorPosition, setCursorPosition] = useState(null);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -87,6 +88,14 @@ export default function Detalle() {
 		}
 		setYears(yearsArray);
 	}, [id]);
+
+	useEffect(() => {
+		if (cursorPosition !== null && precioRef.current) {
+			const newCursorPosition = cursorPosition;
+			precioRef.current.setSelectionRange(newCursorPosition, newCursorPosition);
+			setCursorPosition(null);
+		}
+		}, [editedAuto.precio, cursorPosition]);
 
 	const fetchAuto = async () => {
 		try {
@@ -122,24 +131,26 @@ export default function Detalle() {
 	};
 
 	const handleChange = (e, key) => {
-		const { name, value, type, checked } = e.target;
+		const { name, value, type, checked, selectionStart } = e.target;
 
 		if (name === "precio" || name === "precio_oferta" || name === "km") {
+			setCursorPosition(selectionStart);
+			
 			const cleanValue = value.replace(/[^0-9.]/g, "");
 			const numericValue = cleanValue.replace(/\./g, "");
 			const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 			setEditedAuto((prev) => ({
-				...prev,
-				[name]: formattedValue,
+			...prev,
+			[name]: formattedValue,
 			}));
 		} else {
 			setEditedAuto((prev) => ({
-				...prev,
-				[name]: type === "checkbox" ? checked : value,
+			...prev,
+			[name]: type === "checkbox" ? checked : value,
 			}));
 		}
-	};
+		};
 
 	const handleCategoryChange = (event) => {
 		const { value } = event.target;
@@ -516,6 +527,9 @@ export default function Detalle() {
 												onChange={(e) => handleChange(e, "precio")}
 												fullWidth
 												margin="normal"
+												onSelect={(e) => {
+													setCursorPosition(e.target.selectionStart);
+												}}
 											/>
 											<Select
 												value={moneda}
