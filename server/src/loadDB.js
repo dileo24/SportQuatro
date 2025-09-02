@@ -6,7 +6,10 @@ require("dotenv").config();
 
 async function fnCategorias() {
   for (const categ of categorias) {
-    await Categoria.create(categ);
+    await Categoria.findOrCreate({
+      where: { categ: categ.categ },
+      defaults: categ
+    });
   }
 }
 async function fnAutos() {

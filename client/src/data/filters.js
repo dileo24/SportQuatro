@@ -6,7 +6,7 @@ export const categoria = [
 	{ value: "4 Puertas", label: "4 Puertas" },
 	{ value: "3 Puertas", label: "3 Puertas" },
 	{ value: "Utilitario", label: "Utilitario" },
-	{ value: "Clásico", label: "Clásico" },
+	{ value: "Clásico", label: "Clásicos" },
 	{ value: "0km", label: "0km" },
 	{ value: "Moto", label: "Moto" },
 ];
@@ -18,9 +18,9 @@ export const categoriaToCreate = [
 	{ value: "4", label: "4 Puertas" },
 	{ value: "5", label: "3 Puertas" },
 	{ value: "6", label: "Utilitario" },
-	{ value: "7", label: "Clásicos" },
-	{ value: "8", label: "0km" },
-	{ value: "9", label: "Moto" },
+	{ value: "7", label: "0km" },
+	{ value: "8", label: "Moto" },
+	{ value: "9", label: "Clásicos" },
 ];
 
 export const tiposCombustible = [

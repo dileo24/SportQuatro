@@ -9,7 +9,7 @@ const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
   native: false,
   define: {
     timestamps: false,
-  },S
+  },
 }); */
 
 //deploy
