@@ -86,20 +86,30 @@ export default function NuevoAuto() {
 		const { name, value, type, checked } = e.target;
 
 		if (name === "precio" || name === "precio_oferta" || name === "km") {
-			const cleanValue = value.replace(/[^0-9.]/g, "");
-			const numericValue = cleanValue.replace(/\./g, "");
-			const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+			const isNumeric = /^[\d.]+$/.test(value.trim());
 
-			setFormData((prev) => ({
-				...prev,
-				[name]: formattedValue,
-			}));
+			if (isNumeric) {
+				const cleanValue = value.replace(/[^0-9.]/g, "");
+				const numericValue = cleanValue.replace(/\./g, "");
+				const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+				setFormData((prev) => ({
+					...prev,
+					[name]: formattedValue,
+				}));
+			} else {
+				setFormData((prev) => ({
+					...prev,
+					[name]: value,
+				}));
+			}
 		} else {
 			setFormData((prev) => ({
 				...prev,
 				[name]: type === "checkbox" ? checked : value,
 			}));
 		}
+
 		if (submitError) setSubmitError(null);
 	};
 

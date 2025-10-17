@@ -135,22 +135,31 @@ export default function Detalle() {
 
 		if (name === "precio" || name === "precio_oferta" || name === "km") {
 			setCursorPosition(selectionStart);
-			
-			const cleanValue = value.replace(/[^0-9.]/g, "");
-			const numericValue = cleanValue.replace(/\./g, "");
-			const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-			setEditedAuto((prev) => ({
-			...prev,
-			[name]: formattedValue,
-			}));
+			const isNumeric = /^[\d.]+$/.test(value.trim());
+
+			if (isNumeric) {
+				const cleanValue = value.replace(/[^0-9.]/g, "");
+				const numericValue = cleanValue.replace(/\./g, "");
+				const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+				setEditedAuto((prev) => ({
+					...prev,
+					[name]: formattedValue,
+				}));
+			} else {
+				setEditedAuto((prev) => ({
+					...prev,
+					[name]: value,
+				}));
+			}
 		} else {
 			setEditedAuto((prev) => ({
-			...prev,
-			[name]: type === "checkbox" ? checked : value,
+				...prev,
+				[name]: type === "checkbox" ? checked : value,
 			}));
 		}
-		};
+	};
 
 	const handleCategoryChange = (event) => {
 		const { value } = event.target;
