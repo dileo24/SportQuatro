@@ -1,4 +1,5 @@
 const { Auto, Categoria } = require("../../db");
+const { Sequelize } = require("sequelize");
 
 const allAutos = async (req, res, next) => {
   try {
@@ -10,7 +11,7 @@ const allAutos = async (req, res, next) => {
           through: { attributes: [] },
         },
       ],
-      order: [["id", "ASC"]],
+      order: Sequelize.literal('RANDOM()')
     });
 
     res.status(200).json({

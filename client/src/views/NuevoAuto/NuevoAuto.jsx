@@ -337,7 +337,6 @@ export default function NuevoAuto() {
 											value={formData.km}
 											onChange={handleChange}
 											fullWidth
-											required
 										/>
 									</Grid>
 									<Grid item xs={12} md={3}>

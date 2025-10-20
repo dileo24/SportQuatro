@@ -336,6 +336,10 @@ export default function Detalle() {
 		}
 	};
 
+	const hasValidKm = (kmValue) => {
+		return kmValue !== null && kmValue !== '';
+	};
+
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
@@ -621,186 +625,200 @@ export default function Detalle() {
 									</Box>
 								)}
 
-								<Grid container spacing={2} sx={{ mt: 2 }}>
-									{isEditing ? (
-										<Grid item xs={6}>
-											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-												<FormControl fullWidth>
-													<InputLabel>Año</InputLabel>
-													<Select
-														inputRef={yearRef}
-														name="anio"
-														value={editedAuto.anio}
-														onChange={(e) => handleChange(e, "anio")}
-														label="Año"
-													>
-														{years.map((year) => (
-															<MenuItem key={year} value={year}>
-																{year}
-															</MenuItem>
-														))}
-													</Select>
-												</FormControl>
-											</Paper>
-										</Grid>
-									) : (
-										<Grid item xs={4}>
-											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-												<SpecItem icon="📅" label="Modelo" value={auto.anio} />
-											</Paper>
-										</Grid>
-									)}
-									<Grid item xs={4}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											{isEditing ? (
-												<TextField
-													inputRef={motorRef}
-													label="Motor"
-													name="motor"
-													value={editedAuto.motor}
-													onChange={(e) => handleChange(e, "motor")}
-													fullWidth
-												/>
-											) : (
-												<SpecItem icon="🚗" label="Motor" value={auto.motor} />
-											)}
-										</Paper>
-									</Grid>
-									{isEditing ? (
-										<Grid item xs={6}>
-											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-												<TextField
-													inputRef={kmRef}
-													label="Km"
-													name="km"
-													value={editedAuto.km}
-													onChange={(e) => handleChange(e, "km")}
-													fullWidth
-												/>
-											</Paper>
-										</Grid>
-									) : (
-										<Grid item xs={4}>
-											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-												<SpecItem icon="📊" label="Km" value={auto.km} />
-											</Paper>
-										</Grid>
-									)}
+			<Grid container spacing={2} sx={{ mt: 2 }}>
+				{isEditing ? (
+					// En modo edición siempre mostrar todos los campos
+					<>
+						<Grid item xs={6}>
+							<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+								<FormControl fullWidth>
+									<InputLabel>Año</InputLabel>
+									<Select
+										inputRef={yearRef}
+										name="anio"
+										value={editedAuto.anio}
+										onChange={(e) => handleChange(e, "anio")}
+										label="Año"
+									>
+										{years.map((year) => (
+											<MenuItem key={year} value={year}>
+												{year}
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+							</Paper>
+						</Grid>
+						
+						<Grid item xs={6}>
+							<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+								<TextField
+									inputRef={kmRef}
+									label="Km"
+									name="km"
+									value={editedAuto.km}
+									onChange={(e) => handleChange(e, "km")}
+									fullWidth
+								/>
+							</Paper>
+						</Grid>
+					</>
+				) : (
+					// En modo visualización: mostrar solo si tiene valor válido
+					<>
+						<Grid item xs={hasValidKm(auto.km) ? 4 : 6}>
+							<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+								<SpecItem icon="📅" label="Modelo" value={auto.anio} />
+							</Paper>
+						</Grid>
+						
+						{hasValidKm(auto.km) && (
+							<Grid item xs={4}>
+								<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+									<SpecItem icon="📊" label="Km" value={auto.km} />
+								</Paper>
+							</Grid>
+						)}
+					</>
+				)}
 
-									<Grid item xs={6}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											{isEditing ? (
-												<FormControl fullWidth>
-													<InputLabel>Transmisión</InputLabel>
-													<Select
-														inputRef={transmisionRef}
-														name="transmision"
-														value={editedAuto.transmision}
-														onChange={(e) => handleChange(e, "transmision")}
-														label="Transmisión"
-													>
-														{filteredTransmision.map((option) => (
-															<MenuItem key={option.value} value={option.value}>
-																{option.label}
-															</MenuItem>
-														))}
-													</Select>
-												</FormControl>
-											) : (
-												<SpecItem
-													icon="⚙️"
-													label="Transmisión"
-													value={auto.transmision}
-												/>
-											)}
-										</Paper>
-									</Grid>
+				{/* Motor siempre visible */}
+				<Grid item xs={hasValidKm(auto.km) ? 4 : 6}>
+					<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+						{isEditing ? (
+							<TextField
+								inputRef={motorRef}
+								label="Motor"
+								name="motor"
+								value={editedAuto.motor}
+								onChange={(e) => handleChange(e, "motor")}
+								fullWidth
+							/>
+						) : (
+							<SpecItem icon="🚗" label="Motor" value={auto.motor} />
+						)}
+					</Paper>
+				</Grid>
 
-									{isEditing ? (
-										<Grid item xs={12}>
-											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-												<FormControl fullWidth>
-													<InputLabel>Combustible</InputLabel>
-													<Select
-														inputRef={combustibleRef}
-														name="combustible"
-														value={editedAuto.combustible}
-														onChange={(e) => handleChange(e, "combustible")}
-														label="Combustible"
-													>
-														{filteredCombustible.map((option) => (
-															<MenuItem key={option.value} value={option.value}>
-																{option.label}
-															</MenuItem>
-														))}
-													</Select>
-												</FormControl>
-											</Paper>
-										</Grid>
-									) : (
-										<Grid item xs={6}>
-											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-												<SpecItem
-													icon="⛽"
-													label="Combustible"
-													value={auto.combustible}
-												/>
-											</Paper>
-										</Grid>
-									)}
+				{/* Transmisión siempre visible */}
+				<Grid item xs={6}>
+					<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+						{isEditing ? (
+							<FormControl fullWidth>
+								<InputLabel>Transmisión</InputLabel>
+								<Select
+									inputRef={transmisionRef}
+									name="transmision"
+									value={editedAuto.transmision}
+									onChange={(e) => handleChange(e, "transmision")}
+									label="Transmisión"
+								>
+									{filteredTransmision.map((option) => (
+										<MenuItem key={option.value} value={option.value}>
+											{option.label}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						) : (
+							<SpecItem
+								icon="⚙️"
+								label="Transmisión"
+								value={auto.transmision}
+							/>
+						)}
+					</Paper>
+				</Grid>
 
-									<Grid item xs={12}>
-										<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-											{isEditing ? (
-												<FormControl fullWidth>
-													<InputLabel>Categoría/s</InputLabel>
-													<Select
-														multiple
-														name="categorias"
-														value={
-															editedAuto.categorias?.map((cat) =>
-																cat.id.toString()
-															) || []
-														}
-														onChange={handleCategoryChange}
-														label="Categoría/s"
-														renderValue={(selected) =>
-															selected
-																.map((id) => {
-																	const cat = categoriaToCreate.find(
-																		(c) => c.value === id
-																	);
-																	return cat?.label || id;
-																})
-																.join(", ")
-														}
-													>
-														{categoriaToCreate.map((option) => (
-															<MenuItem key={option.value} value={option.value}>
-																<Checkbox
-																	checked={editedAuto.categorias?.some(
-																		(c) => c.id.toString() === option.value
-																	)}
-																/>
-																{option.label}
-															</MenuItem>
-														))}
-													</Select>
-												</FormControl>
-											) : (
-												<SpecItem
-													icon="🏷️"
-													label="Categoría/s"
-													value={
-														auto.categorias
-															?.map((cat) => cat.categ)
-															.join(", ") || "Sin categoría"
-													}
-												/>
-											)}
-										</Paper>
-									</Grid>
-								</Grid>
+				{/* Combustible - ajustar grid según si hay KM o no */}
+				{isEditing ? (
+					// En modo edición: mostrar en grid completo
+					<Grid item xs={12}>
+						<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+							<FormControl fullWidth>
+								<InputLabel>Combustible</InputLabel>
+								<Select
+									inputRef={combustibleRef}
+									name="combustible"
+									value={editedAuto.combustible}
+									onChange={(e) => handleChange(e, "combustible")}
+									label="Combustible"
+								>
+									{filteredCombustible.map((option) => (
+										<MenuItem key={option.value} value={option.value}>
+											{option.label}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						</Paper>
+					</Grid>
+				) : (
+					// En modo visualización: ajustar tamaño según si hay KM
+					<Grid item xs={hasValidKm(auto.km) ? 6 : 6}>
+						<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+							<SpecItem
+								icon="⛽"
+								label="Combustible"
+								value={auto.combustible}
+							/>
+						</Paper>
+					</Grid>
+				)}
+
+				{/* Categorías siempre visible */}
+				<Grid item xs={12}>
+					<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+						{isEditing ? (
+							<FormControl fullWidth>
+								<InputLabel>Categoría/s</InputLabel>
+								<Select
+									multiple
+									name="categorias"
+									value={
+										editedAuto.categorias?.map((cat) =>
+											cat.id.toString()
+										) || []
+									}
+									onChange={handleCategoryChange}
+									label="Categoría/s"
+									renderValue={(selected) =>
+										selected
+											.map((id) => {
+												const cat = categoriaToCreate.find(
+													(c) => c.value === id
+												);
+												return cat?.label || id;
+											})
+											.join(", ")
+									}
+								>
+									{categoriaToCreate.map((option) => (
+										<MenuItem key={option.value} value={option.value}>
+											<Checkbox
+												checked={editedAuto.categorias?.some(
+													(c) => c.id.toString() === option.value
+												)}
+											/>
+											{option.label}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						) : (
+							<SpecItem
+								icon="🏷️"
+								label="Categoría/s"
+								value={
+									auto.categorias
+										?.map((cat) => cat.categ)
+										.join(", ") || "Sin categoría"
+								}
+							/>
+						)}
+					</Paper>
+				</Grid>
+			</Grid>
 
 								{isAuthenticated && (
 									<Box>

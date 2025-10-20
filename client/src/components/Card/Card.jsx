@@ -18,6 +18,11 @@ export default function Card({ auto }) {
 
     const marcaSlug = createSlug(auto.marca);
     const modeloSlug = createSlug(auto.modelo);
+
+	const hasValidKm = (kmValue) => {
+		return kmValue !== null && kmValue !== '';
+	};
+
 	return (
 		<Link
 			to={`/${auto.id}/${marcaSlug}-${modeloSlug}`}
@@ -65,7 +70,7 @@ export default function Card({ auto }) {
 									{auto.moneda === "AR$" ? "$" : "U$D"}
 									{auto.precio}
 								</span>
-								<span className="mileage">{auto.km} km</span>
+								{hasValidKm(auto.km) && (<span className="mileage">{auto.km} km</span>)}
 							</div>
 						)}
 					</div>

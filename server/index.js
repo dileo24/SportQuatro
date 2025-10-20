@@ -32,7 +32,5 @@ conn.sync({ alter: true }).then(async () => {
       await fnAdmin();
     }
     console.log("Server listening at 3001");
-    console.log(`Categorías existentes: ${nombresExistentes}`);
-    console.log(`Categorías faltantes: ${categoriasFaltantes}`);
   });
 });

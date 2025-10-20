@@ -27,7 +27,7 @@ module.exports = sequelize => {
       },
       km: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       transmision: {
         type: DataTypes.STRING,
