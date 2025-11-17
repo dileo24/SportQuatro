@@ -71,9 +71,18 @@ export default function Catalogo() {
 	useEffect(() => {
 		if (autos.length === 0 || dolarBlue === null) return;
 
+		const getPrecioEnPesos = (auto) => {
+			const precioString = auto.oferta ? auto.precio_oferta : auto.precio;
+			const precioNum = parseInt(precioString.replace(/\./g, ""));
+
+			if (auto.moneda === "U$D") {
+				return precioNum * dolarBlue;
+			}
+			return precioNum;
+		};
+
 		let autosFiltrados = autos.filter((auto) => {
-			const precioAuto = auto.oferta ? auto.precio_oferta : auto.precio;
-			const precioNum = parseInt(precioAuto.replace(/\./g, ""));
+			const precioAuto = getPrecioEnPesos(auto);
 
 			return (
 				(filtros.anioDesde === "" ||
@@ -85,9 +94,9 @@ export default function Catalogo() {
 				(filtros.kmHasta === "" ||
 					parseInt(auto.km.replace(/\./g, "")) <= parseInt(filtros.kmHasta)) &&
 				(filtros.precioDesde === "" ||
-					precioNum >= parseInt(filtros.precioDesde)) &&
+					precioAuto >= parseInt(filtros.precioDesde)) &&
 				(filtros.precioHasta === "" ||
-					precioNum <= parseInt(filtros.precioHasta)) &&
+					precioAuto <= parseInt(filtros.precioHasta)) &&
 				(filtros.transmision === "" ||
 					auto.transmision === filtros.transmision) &&
 				(filtros.combustible === "" ||
@@ -104,16 +113,6 @@ export default function Catalogo() {
 			filtros.ordenamiento === "precio-desc"
 		) {
 			autosFiltrados.sort((a, b) => {
-				const getPrecioEnPesos = (auto) => {
-					const precioString = auto.oferta ? auto.precio_oferta : auto.precio;
-					const precioNum = parseInt(precioString.replace(/\./g, ""));
-
-					if (auto.moneda === "U$D") {
-						return precioNum * dolarBlue;
-					}
-					return precioNum;
-				};
-
 				const precioA = getPrecioEnPesos(a);
 				const precioB = getPrecioEnPesos(b);
 
