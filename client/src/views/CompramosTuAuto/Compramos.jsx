@@ -327,109 +327,6 @@ export default function CompramosTuAuto() {
 					</Grid>
 				</Grid>
 			</Container>
-			<Container maxWidth="lg" sx={{ py: 6 }}>
-				<Box sx={{ textAlign: "center", mb: 6 }}>
-					<Typography
-						variant="h3"
-						component="h2"
-						sx={{
-							fontWeight: "bold",
-							color: "error.main",
-							mb: 3,
-						}}
-					>
-						¿Por qué vender tu auto con nosotros?
-					</Typography>
-					<Typography
-						variant="h6"
-						sx={{
-							maxWidth: "800px",
-							margin: "0 auto",
-							lineHeight: 1.6,
-						}}
-					>
-						Ofrecemos transparencia, seguridad y el mejor precio. Nuestro equipo
-						de expertos evaluará tu vehículo y te hará una oferta justa.
-					</Typography>
-				</Box>
-
-				{/* <Grid container spacing={4}>
-					<Grid item xs={12} md={6}>
-						<Paper
-							elevation={3}
-							sx={{ p: 4, height: "100%", backgroundColor: "#fff8e1" }}
-						>
-							<Typography
-								variant="h4"
-								component="h3"
-								sx={{
-									fontWeight: "bold",
-									color: "primary.main",
-									mb: 3,
-								}}
-							>
-								Evitá estafas al vender tu auto
-							</Typography>
-
-							<Box component="ul" sx={{ pl: 3 }}>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									Nunca des dinero por adelantado
-								</Typography>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									Revisá la identidad del comprador
-								</Typography>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									No firmes documentos sin leerlos
-								</Typography>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									Realizá transacciones en lugares seguros
-								</Typography>
-								<Typography component="li" variant="body1">
-									Verificá el pago antes de entregar el vehículo
-								</Typography>
-							</Box>
-						</Paper>
-					</Grid>
-
-			
-					<Grid item xs={12} md={6}>
-						<Paper
-							elevation={3}
-							sx={{ p: 4, height: "100%", backgroundColor: "#f5f5f5" }}
-						>
-							<Typography
-								variant="h4"
-								component="h3"
-								sx={{
-									fontWeight: "bold",
-									color: "primary.main",
-									mb: 3,
-								}}
-							>
-								Proceso de compra
-							</Typography>
-
-							<Box component="ol" sx={{ pl: 3 }}>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									Completá el formulario con los datos de tu vehículo
-								</Typography>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									Uno de nuestros asesores se contactará contigo
-								</Typography>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									Coordinamos una inspección del vehículo
-								</Typography>
-								<Typography component="li" variant="body1" sx={{ mb: 2 }}>
-									Recibí una oferta formal por tu auto
-								</Typography>
-								<Typography component="li" variant="body1">
-									Acuerdo de compra-venta y pago inmediato
-								</Typography>
-							</Box>
-						</Paper>
-					</Grid>
-				</Grid> */}
-			</Container>
 
 			{/* FAQ Section */}
 			<Box sx={{ py: 6, backgroundColor: "#f5f5f5" }}>
@@ -450,33 +347,34 @@ export default function CompramosTuAuto() {
 					<Grid container spacing={4}>
 						<Grid item xs={12} md={6}>
 							<Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
-								¿Cómo determinar el precio?
+								¿Cómo funciona la búsqueda del auto?
 							</Typography>
 							<Typography variant="body1" paragraph>
-								Evaluamos el estado general del vehículo, kilometraje, año,
-								modelo, demanda en el mercado y comparamos con valores actuales.
+								Nos indicás la marca, modelo, año o características que estás buscando. Nuestro equipo revisa nuestra red de proveedores, concesionarias y particulares para encontrar las mejores opciones disponibles.
 							</Typography>
 						</Grid>
 						<Grid item xs={12} md={6}>
 							<Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
-								¿Necesito tener toda la documentación?
+								¿Cuánto tarda encontrar un vehículo?
 							</Typography>
 							<Typography variant="body1" paragraph>
-								Si, es importante que cuentes con toda la documentación en regla
-								para agilizar el proceso. En caso de que falte alguna
-								documentación (08, verificación, informe de dominio, libre de
-								deuda) se deja pago y nos encargamos, para agilizar la
-								operación. No recibimos autos prendados, ni planes de ahorro.
+								Depende del modelo y la disponibilidad en el mercado. En muchos casos podemos ofrecer opciones dentro de las primeras 24 a 72 horas.
 							</Typography>
 						</Grid>
-						<Grid item xs={12} md={12}>
+						<Grid item xs={12} md={6}>
 							<Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
-								¿Cuánto tiempo tarda el proceso?
+								¿Tiene algún costo la búsqueda?
 							</Typography>
 							<Typography variant="body1" paragraph>
-								Una vez que recibimos tu solicitud, nos contactamos dentro de
-								las 24 horas. Luego pactamos una reunión para realizarle un
-								peritaje a tu vehículo y cerrar la operación.
+								No. La búsqueda del vehículo es totalmente gratuita. Solo pagás en caso de avanzar con la compra del auto que elijas.
+							</Typography>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+								¿Puedo financiar el vehículo que consigan?
+							</Typography>
+							<Typography variant="body1" paragraph>
+								Sí. Trabajamos con distintas opciones de financiación para que puedas acceder al vehículo que buscás de la forma más conveniente.
 							</Typography>
 						</Grid>
 					</Grid>
