@@ -11,7 +11,7 @@ const allAutos = async (req, res, next) => {
           through: { attributes: [] },
         },
       ],
-      order: Sequelize.literal('RANDOM()')
+      order: [["id", "DESC"]]
     });
 
     res.status(200).json({

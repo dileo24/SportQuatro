@@ -13,9 +13,9 @@ const transporter = nodeMailer.createTransport({
 
 const sendCarFormEmail = async (req, res, next) => {
   try {
-    const { nombre, email, telefono, marca, modelo, año, kilometros, detalles } = req.body;
+    const { nombre, email, telefono, marca, modelo, transmision, año, kilometros, detalles } = req.body;
 
-    if (!nombre || !email || !telefono || !marca || !modelo || !año || !kilometros) {
+    if (!nombre || !email || !telefono || !marca || !modelo || !transmision || !año || !kilometros) {
       return res.status(400).json({
         status: 400,
         error: "Todos los campos marcados como obligatorios son requeridos",
@@ -56,8 +56,12 @@ const sendCarFormEmail = async (req, res, next) => {
                 <td style="padding: 8px; border-bottom: 1px solid #ddd;">${marca}</td>
               </tr>
               <tr>
-                <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;">Modelo:</td>
+                <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;">Modelo y versión:</td>
                 <td style="padding: 8px; border-bottom: 1px solid #ddd;">${modelo}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;">Transmisión:</td>
+                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${transmision}</td>
               </tr>
               <tr>
                 <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;">Año:</td>

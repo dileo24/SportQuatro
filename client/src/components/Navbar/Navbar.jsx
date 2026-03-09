@@ -50,7 +50,7 @@ export default function Navbar() {
 		{ label: "Financiación", path: "/financiacion" },
 		{ label: "Nosotros", path: "/nosotros" },
 		{ label: "Contacto", path: "/contacto" },
-		{ label: "Compramos tu auto", path: "/compramos" },
+		{ label: "Conseguimos tu próximo auto", path: "/compramos" },
 		...(isAuthenticated ? [{ label: "Nuevo auto", path: "/nuevo_auto" }] : []),
 	];
 

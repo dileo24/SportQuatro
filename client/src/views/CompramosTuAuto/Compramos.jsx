@@ -8,6 +8,7 @@ import {
 	Button,
 	Paper,
 	CardMedia,
+	MenuItem,
 } from "@mui/material";
 import heroCompramos from "../../assets/heroCompramos.webp";
 import imgCompramos from "../../assets/img_compramos.jpeg";
@@ -20,6 +21,7 @@ export default function CompramosTuAuto() {
 		telefono: "",
 		marca: "",
 		modelo: "",
+		transmision: "",
 		año: "",
 		kilometros: "",
 		detalles: "",
@@ -74,6 +76,7 @@ export default function CompramosTuAuto() {
 			!formData.telefono ||
 			!formData.marca ||
 			!formData.modelo ||
+			!formData.transmision ||
 			!formData.año ||
 			!formData.kilometros
 		) {
@@ -102,6 +105,7 @@ export default function CompramosTuAuto() {
 					telefono: "",
 					marca: "",
 					modelo: "",
+					transmision: "",
 					año: "",
 					kilometros: "",
 					detalles: "",
@@ -155,7 +159,7 @@ export default function CompramosTuAuto() {
 						fontSize: { xs: "2rem", md: "3rem" },
 					}}
 				>
-					Vendé tu auto con nosotros
+					¿Estás buscando otra opción y no está en el catálogo?
 				</Typography>
 				<Typography
 					variant="h5"
@@ -167,7 +171,7 @@ export default function CompramosTuAuto() {
 						px: 2,
 					}}
 				>
-					Obtené el mejor precio y evitá complicaciones
+					Nos encargamos de conseguir el auto ideal para vos: rápido, seguro y con la mejor financiación
 				</Typography>
 			</Box>
 
@@ -183,8 +187,7 @@ export default function CompramosTuAuto() {
 								Completa el formulario
 							</Typography>
 							<Typography variant="body1" gutterBottom>
-								Déjanos tus datos y nos pondremos en contacto para ofrecerte la
-								mejor cotización.
+								Dejanos tus datos, el/los vehículos que estás buscando y nosotros nos contactaremos para ofrecerle las mejores opciones.
 							</Typography>
 
 							<form onSubmit={handleSubmit}>
@@ -210,7 +213,7 @@ export default function CompramosTuAuto() {
 											required
 										/>
 									</Grid>
-									<Grid item xs={12}>
+									<Grid item xs={12} sm={6}>
 										<TextField
 											fullWidth
 											label="Teléfono/Celular"
@@ -233,7 +236,7 @@ export default function CompramosTuAuto() {
 									<Grid item xs={12} sm={6}>
 										<TextField
 											fullWidth
-											label="Modelo"
+											label="Modelo y versión"
 											name="modelo"
 											value={formData.modelo}
 											onChange={handleChange}
@@ -241,6 +244,20 @@ export default function CompramosTuAuto() {
 										/>
 									</Grid>
 									<Grid item xs={12} sm={6}>
+									<TextField
+										fullWidth
+										select
+										label="Transmisión"
+										name="transmision"
+										value={formData.transmision}
+										onChange={handleChange}
+										required
+									>
+										<MenuItem value="Manual">Manual</MenuItem>
+										<MenuItem value="Automática">Automática</MenuItem>
+									</TextField>
+									</Grid>
+									<Grid item xs={6} sm={6}>
 										<TextField
 											fullWidth
 											label="Año"
@@ -255,7 +272,7 @@ export default function CompramosTuAuto() {
 											required
 										/>
 									</Grid>
-									<Grid item xs={12} sm={6}>
+									<Grid item xs={6} sm={6}>
 										<TextField
 											fullWidth
 											label="Kilómetros"
