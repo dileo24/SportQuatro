@@ -10,6 +10,7 @@ import colLogo from "../../assets/col_logo.png";
 import galLogo from "../../assets/gal_logo.png";
 import srLogo from "../../assets/sr_logo.png";
 import svLogo from "../../assets/sv_logo.png";
+import brLogo from "../../assets/br_logo.png";
 
 export default function Financiacion() {
 	useEffect(() => {
@@ -68,8 +69,7 @@ export default function Financiacion() {
 						px: 2,
 					}}
 				>
-					Soluciones crediticias simples y accesibles para que puedas adquirir
-					tu vehículo soñado
+					Soluciones crediticias simples y accesibles para que puedas adquirir tu vehículo soñado
 				</Typography>
 			</Box>
 
@@ -81,10 +81,8 @@ export default function Financiacion() {
 						</Typography>
 						<br />
 						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
-							En Sportquatro entendemos que cada cliente tiene necesidades
-							financieras diferentes. Por eso hemos diseñado un sistema de
-							créditos prendarios que se adapta a tu situación particular, con
-							condiciones claras y trámites simplificados.
+							En Sportquatro entendemos que cada cliente tiene necesidades financieras diferentes. Por eso hemos diseñado un sistema de
+							créditos prendarios que se adapta a tu situación particular, con condiciones claras y trámites simplificados.
 						</Typography>
 						<br />
 
@@ -99,8 +97,7 @@ export default function Financiacion() {
 								No es necesario estar bancarizado
 							</Typography>
 							<Typography component="li" paragraph sx={{ fontSize: "1.1rem" }}>
-								Todos los trámites se realizan y firman directamente en nuestra
-								agencia
+								Todos los trámites se realizan y firman directamente en nuestra agencia
 							</Typography>
 						</Box>
 					</Grid>
@@ -141,15 +138,13 @@ export default function Financiacion() {
 						</Typography>{" "}
 						<br />
 						<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
-							Trabajamos con múltiples alternativas financieras para que
-							encuentres el plan que mejor se ajuste a tus posibilidades.
-							Nuestros asesores te guiarán en todo el proceso para que tomes la
-							mejor decisión.
+							Trabajamos con múltiples alternativas financieras para que encuentres el plan que mejor se ajuste a tus posibilidades.
+							Nuestros asesores te guiarán en todo el proceso para que tomes la mejor decisión.
 						</Typography>
 						<br />
 						<Box component="ul" sx={{ pl: 3 }}>
 							<Typography component="li" paragraph sx={{ fontSize: "1.1rem" }}>
-								Financiación exclusiva hasta el 80% del valor (según la unidad).
+								Financiación exclusiva hasta el 100% del valor (según la unidad).
 							</Typography>
 							<Typography component="li" paragraph sx={{ fontSize: "1.1rem" }}>
 								Créditos en UVAs o tasas fijas en pesos.
@@ -184,20 +179,9 @@ export default function Financiacion() {
 							Trabajamos con los bancos de tu confianza
 						</Typography>
 
-						<Grid
-							container
-							spacing={4}
-							justifyContent="center"
-							alignItems="center"
-						>
-							{[
-								{ logo: hsbcLogo, name: "HSBC" },
-								{ logo: colLogo, name: "Columbia" },
-								{ logo: galLogo, name: "Galicia" },
-								{ logo: srLogo, name: "Santander Río" },
-								{ logo: svLogo, name: "Supervielle" },
-							].map((bank, index) => (
-								<Grid item xs={6} sm={4} md={2.4} key={index}>
+						<Grid container spacing={4} justifyContent="center" alignItems="center">
+							{[hsbcLogo, colLogo, galLogo, srLogo, svLogo, brLogo].map((bank, index) => (
+								<Grid item xs={6} sm={4} md={2} key={index}>
 									<Box
 										sx={{
 											display: "flex",
@@ -208,8 +192,7 @@ export default function Financiacion() {
 									>
 										<Box
 											component="img"
-											src={bank.logo}
-											alt={bank.name}
+											src={bank}
 											sx={{
 												height: { xs: 60, md: 80 },
 												width: "auto",
@@ -223,9 +206,6 @@ export default function Financiacion() {
 												},
 											}}
 										/>
-										<Typography variant="body1" sx={{ mt: 2 }}>
-											{bank.name}
-										</Typography>
 									</Box>
 								</Grid>
 							))}
@@ -253,32 +233,16 @@ export default function Financiacion() {
 
 						<Grid container spacing={4} alignItems="center">
 							<Grid item xs={12} md={6}>
-								<Typography
-									variant="body1"
-									paragraph
-									sx={{ fontSize: "1.1rem" }}
-								>
-									¿Querés saber cuánto pagarías por el auto de tus sueños?
-									Nuestro simulador te permite calcular cuotas estimativas en el
+								<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
+									¿Querés saber cuánto pagarías por el auto de tus sueños? Nuestro simulador te permite calcular cuotas estimativas en el
 									momento, sin compromiso.
 								</Typography>
-								<Typography
-									variant="body1"
-									paragraph
-									sx={{ fontSize: "1.1rem" }}
-								>
-									Indícanos cómo tenés pensado realizar la operación (monto
-									inicial, plazo deseado, etc.) y nuestros asesores te
-									prepararán una simulación personalizada el mismo día, con
-									todas las opciones disponibles.
+								<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
+									Indícanos cómo tenés pensado realizar la operación (monto inicial, plazo deseado, etc.) y nuestros asesores te prepararán
+									una simulación personalizada el mismo día, con todas las opciones disponibles.
 								</Typography>
-								<Typography
-									variant="body1"
-									paragraph
-									sx={{ fontSize: "1.1rem", fontWeight: "bold" }}
-								>
-									¡Contactanos y llevate tu auto hoy mismo con un plan de pago a
-									tu medida!
+								<Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+									¡Contactanos y llevate tu auto hoy mismo con un plan de pago a tu medida!
 								</Typography>
 							</Grid>
 
