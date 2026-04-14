@@ -897,16 +897,16 @@ export default function Detalle() {
 										gap: 1,
 									}}
 								>
-									🛡️ Beneficios Exclusivos
+									🛡️ Beneficios exclusivos
 								</Typography>
 
 								<Grid container spacing={2} sx={{ mt: 2 }}>
 									{[
-										{ icon: "✨", title: "Entrega Inmediata" },
+										{ icon: "✨", title: "Entrega inmediata" },
 										{ icon: "🔄", title: "Recibimos tu usado (Consultar)" },
 										{
 											icon: "💰",
-											title: "Financiación solo con DNI (50% - 80%)",
+											title: "Financiación a tu medida",
 										},
 										{ icon: "🛡️", title: "Gestoría general" },
 									].map((beneficio, index) => (
