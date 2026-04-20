@@ -104,7 +104,8 @@ export default function Catalogo() {
 				(filtros.oferta === "" || auto.oferta === filtros.oferta) &&
 				(filtros.categoria === "" ||
 					auto.categorias.some((cat) => cat.categ === filtros.categoria)) &&
-				(filtros.marca === "" || auto.marca === filtros.marca)
+				(filtros.marca === "" || auto.marca === filtros.marca) &&
+				(filtros.color === "" || auto.color === filtros.color)
 			);
 		});
 

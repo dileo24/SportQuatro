@@ -22,17 +22,9 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { Close } from "@mui/icons-material";
-import {
-	tiposCombustible,
-	tiposTransmision,
-	categoriaToCreate,
-} from "../../data/filters";
+import { tiposCombustible, tiposTransmision, categoriaToCreate, tiposColor } from "../../data/filters";
 import { useAuth } from "../../context/AuthContext";
-import {
-	postAuto,
-	postImagen,
-	updateImgInAuto,
-} from "../../services/autos.service";
+import { postAuto, postImagen, updateImgInAuto } from "../../services/autos.service";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DraggableImage from "../../components/DraggableImage/DraggableImage";
@@ -51,11 +43,13 @@ export default function NuevoAuto() {
 		km: "",
 		transmision: "",
 		combustible: "",
+		color: "",
 		moneda: "AR$",
 		precio: "",
 		destacar: false,
 		oferta: false,
 		precio_oferta: "",
+		precio_contado: "",
 		img: [],
 		id_categ: [],
 	});
@@ -85,7 +79,7 @@ export default function NuevoAuto() {
 	const handleChange = (e) => {
 		const { name, value, type, checked } = e.target;
 
-		if (name === "precio" || name === "precio_oferta" || name === "km") {
+		if (name === "precio" || name === "precio_contado" || name === "precio_oferta" || name === "km") {
 			const isNumeric = /^[\d.]+$/.test(value.trim());
 
 			if (isNumeric) {
@@ -128,9 +122,7 @@ export default function NuevoAuto() {
 		setImageError("");
 
 		if (images.length + files.length > MAX_IMAGES) {
-			setImageError(
-				`Solo puedes subir un máximo de ${MAX_IMAGES} imágenes. Inténtelo de nuevo.`
-			);
+			setImageError(`Solo puedes subir un máximo de ${MAX_IMAGES} imágenes. Inténtelo de nuevo.`);
 			return;
 		}
 
@@ -198,21 +190,14 @@ export default function NuevoAuto() {
 			navigate(`/${autoId}/${autoModelo}`);
 		} catch (error) {
 			console.error("Error en el proceso:", error);
-			setSubmitError(
-				error.response?.data?.message ||
-					"Ocurrió un error al crear el auto. Por favor intenta nuevamente."
-			);
+			setSubmitError(error.response?.data?.message || "Ocurrió un error al crear el auto. Por favor intenta nuevamente.");
 		} finally {
 			setIsSubmitting(false);
 		}
 	};
 
-	const filteredCombustible = tiposCombustible.filter(
-		(opt) => opt.value !== ""
-	);
-	const filteredTransmision = tiposTransmision.filter(
-		(opt) => opt.value !== ""
-	);
+	const filteredCombustible = tiposCombustible.filter((opt) => opt.value !== "");
+	const filteredTransmision = tiposTransmision.filter((opt) => opt.value !== "");
 
 	const handleThumbnailClick = (index) => {
 		setSelectedImageIndex(index);
@@ -265,8 +250,7 @@ export default function NuevoAuto() {
 									height: "100%",
 									boxShadow: "none",
 									padding: "0px",
-									background:
-										"linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
+									background: "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
 								}}
 							>
 								<Grid container spacing={3}>
@@ -298,7 +282,7 @@ export default function NuevoAuto() {
 											required
 										/>
 									</Grid>
-									<Grid item xs={12} md={3}>
+									<Grid item xs={12} md={2}>
 										<TextField
 											autoComplete="off"
 											label="Motor"
@@ -309,7 +293,7 @@ export default function NuevoAuto() {
 											required
 										/>
 									</Grid>
-									<Grid item xs={12} md={3}>
+									<Grid item xs={12} md={2}>
 										<FormControl fullWidth required>
 											<InputLabel>Año</InputLabel>
 											<Select
@@ -329,15 +313,8 @@ export default function NuevoAuto() {
 											</Select>
 										</FormControl>
 									</Grid>
-									<Grid item xs={12} md={3}>
-										<TextField
-											autoComplete="off"
-											label="Kilometraje"
-											name="km"
-											value={formData.km}
-											onChange={handleChange}
-											fullWidth
-										/>
+									<Grid item xs={12} md={2}>
+										<TextField autoComplete="off" label="Kilometraje" name="km" value={formData.km} onChange={handleChange} fullWidth />
 									</Grid>
 									<Grid item xs={12} md={3}>
 										<FormControl fullWidth required>
@@ -360,7 +337,7 @@ export default function NuevoAuto() {
 											</Select>
 										</FormControl>
 									</Grid>
-									<Grid item xs={12} md={4}>
+									<Grid item xs={12} md={3}>
 										<FormControl fullWidth required>
 											<InputLabel>Transmisión</InputLabel>
 											<Select
@@ -380,7 +357,7 @@ export default function NuevoAuto() {
 											</Select>
 										</FormControl>
 									</Grid>
-									<Grid item xs={12} md={4}>
+									<Grid item xs={12} md={3}>
 										<FormControl fullWidth required>
 											<InputLabel>Combustible</InputLabel>
 											<Select
@@ -400,7 +377,38 @@ export default function NuevoAuto() {
 											</Select>
 										</FormControl>
 									</Grid>
-									<Grid item xs={12} md={4}>
+									<Grid item xs={12} md={3}>
+										<FormControl fullWidth required>
+											<InputLabel>Color</InputLabel>
+											<Select
+												name="color"
+												value={formData.color}
+												onChange={handleChange}
+												label="Color"
+												MenuProps={{
+													disableScrollLock: true,
+												}}
+											>
+												{tiposColor.map((option) => (
+													<MenuItem key={option.value} value={option.value}>
+														<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+															<Box
+																sx={{
+																	width: 24,
+																	height: 24,
+																	borderRadius: "50%",
+																	backgroundColor: option.value,
+																	border: "1px solid #ccc",
+																}}
+															/>
+															<span>{option.label}</span>
+														</Box>
+													</MenuItem>
+												))}
+											</Select>
+										</FormControl>
+									</Grid>
+									<Grid item xs={12} md={3}>
 										<Box display="flex" alignItems="center">
 											<TextField
 												autoComplete="off"
@@ -426,28 +434,29 @@ export default function NuevoAuto() {
 											</FormControl>
 										</Box>
 									</Grid>
+									<Grid item xs={12} md={3}>
+										<Box display="flex" alignItems="center">
+											<TextField
+												autoComplete="off"
+												label="Precio contado"
+												name="precio_contado"
+												value={formData.precio_contado}
+												onChange={handleChange}
+												fullWidth
+												required
+											/>
+										</Box>
+									</Grid>
 									<Grid item xs={12} md={6}>
 										<FormControlLabel
-											control={
-												<Checkbox
-													name="destacar"
-													checked={formData.destacar}
-													onChange={handleChange}
-												/>
-											}
+											control={<Checkbox name="destacar" checked={formData.destacar} onChange={handleChange} />}
 											label="Destacar este vehículo"
 										/>
 									</Grid>
 									<Grid item xs={12} md={6}>
 										<Box display="flex" alignItems="center" gap={2}>
 											<FormControlLabel
-												control={
-													<Checkbox
-														name="oferta"
-														checked={formData.oferta}
-														onChange={handleChange}
-													/>
-												}
+												control={<Checkbox name="oferta" checked={formData.oferta} onChange={handleChange} />}
 												label="En oferta"
 											/>
 											{formData.oferta && (
@@ -482,9 +491,7 @@ export default function NuevoAuto() {
 														multiple
 														onChange={handleImageUpload}
 														hidden
-														disabled={
-															images.length >= MAX_IMAGES || isSubmitting
-														}
+														disabled={images.length >= MAX_IMAGES || isSubmitting}
 													/>
 												</Button>
 												{images.length > 0 && (
@@ -535,12 +542,7 @@ export default function NuevoAuto() {
 
 									<Grid item xs={12}>
 										<Box display="flex" justifyContent="flex-end" gap={2}>
-											<Button
-												variant="outlined"
-												color="secondary"
-												onClick={() => navigate(-1)}
-												disabled={isSubmitting}
-											>
+											<Button variant="outlined" color="secondary" onClick={() => navigate(-1)} disabled={isSubmitting}>
 												Cancelar
 											</Button>
 											<Button
@@ -548,9 +550,7 @@ export default function NuevoAuto() {
 												variant="contained"
 												color="primary"
 												disabled={isSubmitting}
-												startIcon={
-													isSubmitting ? <CircularProgress size={20} /> : null
-												}
+												startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
 											>
 												{isSubmitting ? "Creando..." : "Crear Auto"}
 											</Button>

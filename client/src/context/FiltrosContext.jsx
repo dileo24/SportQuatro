@@ -25,6 +25,7 @@ export const FiltrosProvider = ({ children }) => {
 		transmision: "",
 		combustible: "",
 		categoria: "",
+		color: "",
 		marca: "",
 		oferta: "",
 		ordenamiento: "",

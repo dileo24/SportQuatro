@@ -47,3 +47,16 @@ export const ordenamientos = [
 	{ value: "precio-asc", label: "Precio: Menor a Mayor" },
 	{ value: "precio-desc", label: "Precio: Mayor a Menor" },
 ];
+
+export const tiposColor = [
+  { value: "#000000", label: "Negro" },
+  { value: "#FFFFFF", label: "Blanco" },
+  { value: "#808080", label: "Gris" },
+  { value: "#FF0000", label: "Rojo" },
+  { value: "#0000FF", label: "Azul" },
+  { value: "#8B0000", label: "Bordó" },
+  { value: "#7e4d0e", label: "Marrón" },
+  { value: "#f1e7c6", label: "Crema" },
+  { value: "#088a1e", label: "Verde" },
+  { value: "#FFA500", label: "Naranja" },
+];

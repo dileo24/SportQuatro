@@ -57,6 +57,14 @@ module.exports = sequelize => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      color: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      precio_contado: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       img: {
         type: DataTypes.JSON,
         allowNull: true,

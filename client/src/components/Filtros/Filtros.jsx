@@ -19,6 +19,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import {
 	tiposCombustible,
 	tiposTransmision,
+	tiposColor,
 	ordenamientos,
 	categoria,
 	oferta,
@@ -133,6 +134,7 @@ const Filtros = () => {
 			marca: "",
 			oferta: "",
 			categoria: "",
+			color: "",
 			ordenamiento: "",
 		});
 		setTempValues({
@@ -149,6 +151,7 @@ const Filtros = () => {
 			oferta: false,
 			categoria: false,
 			marca: false,
+			color: false,
 		});
 	};
 
@@ -158,6 +161,8 @@ const Filtros = () => {
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
+		console.log(name, value);
+		
 		if (
 			[
 				"anioDesde",
@@ -168,6 +173,7 @@ const Filtros = () => {
 				"categoria",
 				"marca",
 				"ordenamiento",
+				"color"
 			].includes(name)
 		) {
 			setFiltros((prev) => ({ ...prev, [name]: value }));
@@ -280,6 +286,77 @@ const Filtros = () => {
 			<Box sx={{ display: "flex", gap: 1 }}>
 				{renderSelect("combustible", "Combustible", tiposCombustible)}
 				{renderSelect("oferta", "En oferta", oferta)}
+			</Box>
+
+			<Box sx={{ display: "flex", gap: 1 }}>
+			<FormControl fullWidth>
+				<InputLabel
+				id="color-label"
+				shrink={true}
+				sx={{
+					position: "absolute",
+					transform: "translate(14px, -9px) scale(0.75)",
+					backgroundColor: "background.paper",
+					px: 1,
+					zIndex: 1,
+					pointerEvents: "none",
+				}}
+				>
+				Color
+				</InputLabel>
+				<Select
+				labelId="color-label"
+				name="color"
+				value={filtros.color || ""}
+				onChange={handleChange}
+				label="Color"
+				MenuProps={{
+					disableScrollLock: true,
+				}}
+				displayEmpty
+				renderValue={(selected) => {
+					if (selected === "") {
+					return <span style={{ color: "#757575" }}>Todos</span>;
+					}
+					const selectedColor = tiposColor.find(c => c.value === selected);
+					return selectedColor ? (
+					<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+						<Box
+						sx={{
+							width: 20,
+							height: 20,
+							borderRadius: "50%",
+							backgroundColor: selectedColor.value,
+							border: "1px solid #ccc",
+						}}
+						/>
+						<span>{selectedColor.label}</span>
+					</Box>
+					) : selected;
+				}}
+				>
+				<MenuItem value="">
+					<span>Todos</span>
+				</MenuItem>
+				
+				{tiposColor.map((option) => (
+					<MenuItem key={option.value} value={option.value}>
+					<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+						<Box
+						sx={{
+							width: 24,
+							height: 24,
+							borderRadius: "50%",
+							backgroundColor: option.value,
+							border: "1px solid #ccc",
+						}}
+						/>
+						<span>{option.label}</span>
+					</Box>
+					</MenuItem>
+				))}
+				</Select>
+			</FormControl>
 			</Box>
 
 			{isMobile && hasActiveFilters && (
