@@ -6,8 +6,10 @@ import { faMedal } from "@fortawesome/free-solid-svg-icons/faMedal";
 
 export default function Card({ auto }) {
 	const API_URL = import.meta.env.VITE_API_URL;
-	const imageUrl = `${API_URL}/files/${auto.img[0]}`;
-	    const createSlug = (str) => {
+	const imageUrl = auto.img[0]?.startsWith("http") 
+		? auto.img[0] 
+		: `${API_URL}/files/${auto.img[0]}`;
+	const createSlug = (str) => {
         return str
             .toLowerCase()
             .trim()

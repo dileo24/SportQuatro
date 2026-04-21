@@ -51,6 +51,7 @@ export const ordenamientos = [
 export const tiposColor = [
   { value: "#000000", label: "Negro" },
   { value: "#FFFFFF", label: "Blanco" },
+  { value: "#C0C0C0", label: "Plateado" },
   { value: "#808080", label: "Gris" },
   { value: "#FF0000", label: "Rojo" },
   { value: "#0000FF", label: "Azul" },

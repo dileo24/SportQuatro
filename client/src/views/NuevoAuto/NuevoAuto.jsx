@@ -174,7 +174,7 @@ export default function NuevoAuto() {
 					const uploadResponse = await postImagen(formDataImg);
 
 					if (uploadResponse.data.fileName) {
-						fileNamesArray.push(uploadResponse.data.fileName);
+						fileNamesArray.push(uploadResponse.data.url);
 					}
 				} catch (uploadError) {
 					console.error(`Error subiendo imagen ${index + 1}:`, uploadError);

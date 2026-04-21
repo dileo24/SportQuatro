@@ -22,10 +22,6 @@ export default function Home() {
 					</p>
 					<p className="texto2">Agencia de seleccionados en Córdoba capital</p>
 				</div>
-
-				<div className="imgDivContainer">
-					<div className="imgDiv"></div>
-				</div>
 			</div>
 			<div className="button-container">
 				<NavLink className="NavLink" to={`/catalogo`}>

@@ -81,7 +81,9 @@ export default function CardsRelacionados({ categorias, idAutoActual }) {
 					>
 						{grupo.map((auto, index) => {
 							const imagenAuto = auto.img?.length
-								? `${import.meta.env.VITE_API_URL}/files/${auto.img[0]}`
+								? (auto.img[0].startsWith("http") 
+									? auto.img[0] 
+									: `${import.meta.env.VITE_API_URL}/files/${auto.img[0]}`)
 								: "/placeholder.jpg";
 
 							return (

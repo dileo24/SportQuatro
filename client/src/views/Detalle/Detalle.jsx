@@ -104,11 +104,11 @@ export default function Detalle() {
 				setMoneda(autoData.moneda);
 				setEditedAuto(autoData);
 				setCategorias(autoData.categorias.map((cat) => cat.id));
-
-				const loadedImages =
-					autoData.img && autoData.img.length > 0
-						? autoData.img.map((img) => `${import.meta.env.VITE_API_URL}/files/${img}`)
-						: ["/placeholder.jpg"];
+				const loadedImages = autoData.img && autoData.img.length > 0
+				? autoData.img.map((img) => 
+					img.startsWith("http") ? img : `${import.meta.env.VITE_API_URL}/files/${img}`
+					)
+				: ["/placeholder.jpg"];
 
 				setImages(loadedImages);
 				setSelectedImageIndex(0);
@@ -172,7 +172,10 @@ export default function Detalle() {
 
 	const handleSave = async () => {
 		try {
-			const newImageOrder = images.map((img) => img.replace(`${import.meta.env.VITE_API_URL}/files/`, ""));
+			const newImageOrder = images.map((img) => img.startsWith("http") 
+					? img  // ya es URL completa, no tocar
+					: img.replace(`${import.meta.env.VITE_API_URL}/files/`, "") // registro viejo
+			);
 
 			if (JSON.stringify(newImageOrder) !== JSON.stringify(auto.img)) {
 				await updateImgInAuto(id, newImageOrder);
@@ -225,9 +228,9 @@ export default function Detalle() {
 			const responses = await Promise.all(uploadPromises);
 
 			responses.forEach((response) => {
-				if (response.data.fileName) {
-					currentImages.push(response.data.fileName);
-					newImageUrls.push(`${import.meta.env.VITE_API_URL}/files/${response.data.fileName}`);
+				if (response.data.url) {
+					currentImages.push(response.data.url);
+					newImageUrls.push(response.data.url);
 				}
 			});
 
@@ -249,9 +252,12 @@ export default function Detalle() {
 
 	const handleRemoveImage = async (index) => {
 		const imageToRemove = auto.img[index];
+		 const imageId = imageToRemove.startsWith("http")
+			? imageToRemove.split("/").pop().replace(".webp", "")
+			: imageToRemove;
 
 		try {
-			await axios.delete(`${import.meta.env.VITE_API_URL}/files/${imageToRemove}`);
+			await axios.delete(`${import.meta.env.VITE_API_URL}/files/${imageId}`);
 
 			const newImageArray = auto.img.filter((_, i) => i !== index);
 			await updateImgInAuto(id, newImageArray);
@@ -602,27 +608,29 @@ export default function Detalle() {
 										/>
 									</Box>
 								) : (
-									<Box
-										sx={{
-											fontSize: "1.5rem",
-											fontWeight: "bold",
-											mb: 2,
-											textAlign: "center",
-											display: "flex",
-											flexDirection: "column",
-											alignItems: "center",
-										}}
-									>
+									auto.precio_contado && (
 										<Box
 											sx={{
-												fontSize: "1rem",
-												color: "text.secondary",
-												mt: -1,
+												fontSize: "1.5rem",
+												fontWeight: "bold",
+												mb: 2,
+												textAlign: "center",
+												display: "flex",
+												flexDirection: "column",
+												alignItems: "center",
 											}}
+										>
+											<Box
+												sx={{
+													fontSize: "1rem",
+													color: "text.secondary",
+													mt: -1,
+												}}
 											>
-											Precio contado: {auto.precio_contado}
+												Precio contado: {auto.precio_contado}
 											</Box>
-									</Box>
+										</Box>
+									)
 								)}
 
 								<Grid container spacing={2} sx={{ mt: 2 }}>
@@ -853,11 +861,11 @@ export default function Detalle() {
 									) : (
 										<Grid item xs={6}>
 											<Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-													<SpecItem
-														icon="🏷️"
-														label="Categoría/s"
-														value={auto.categorias?.map((cat) => cat.categ).join(", ") || "Sin categoría"}
-													/>
+												<SpecItem
+													icon="🏷️"
+													label="Categoría/s"
+													value={auto.categorias?.map((cat) => cat.categ).join(", ") || "Sin categoría"}
+												/>
 											</Paper>
 										</Grid>
 									)}
